@@ -1,0 +1,6 @@
+A Performance Management System is a specialized management information system (MIS). 
+It is designed to track and monitor the performance of employees and provide insights to managers in order to help them make data-driven decisions. 
+Specifically, it will help businesses collect, store, and analyze data on employee performance based on the completion of checklists and forms.
+TaskTracker is a Performance Management System that gives managers the ability to create customized checklists and publish it.
+Then, it allows employees to fill these checklists and submit their answers while notifying the associated manager.
+Finally, it gives managers the option to review filled checklists and monitor employee's performance based on their answers, then give them feedback.

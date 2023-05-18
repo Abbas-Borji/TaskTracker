@@ -1,0 +1,23 @@
+A- Functional Requirements:
+
+    1- User Registration: Admins should be able to setup an account for a manager or an employee.
+    2- User Login: Users should be able to login into their accounts.
+    3- Checklist Creation: Managers should be able to create customized checklists by setting up questions and their corresponding possible answer-options.
+    4- Checklist Publication: Managers should be able to publish checklists in order to make them accessible to employees.
+    5- Checklist Filling: Employees should be able to fill out the checklists by providing answers to the assigned questions.
+    6- Checklist Submission: Employees should be able to submit the checklists they filled for review.
+    7- Checklist Notification: Managers should receive notifications when employees submit their completed checklists.
+    8- Checklist Review: Managers should be able to review filled checklists.
+    9- Checklist Feedback: Managers should be able to provide feedback to employees based on their submitted checklists.
+    10- Performance Monitoring: The system should provide performance metrics and analytics to managers, allowing them to monitor and track employee performance over time.
+
+B- Non-Functional Requirements:
+
+    1- Usability: The system should have a user-friendly interface that is easy to navigate and understand for both managers and employees.
+    2- Security: The system should ensure the confidentiality and integrity of employee data by implementing appropriate security measures, such as encryption and access controls.
+    3- Scalability: The system should be able to handle a growing number of users, checklists, and submissions without significant performance degradation.
+    4- Reliability: The system should be available and accessible to users at all times, with minimal downtime or disruptions.
+    5- Performance: The system should have fast response times, allowing users to perform their tasks efficiently.
+    6- Compatibility: The system should be compatible with different devices and platforms, such as desktops, laptops, and mobile devices.
+    7- Integration: The system should be able to integrate with other relevant systems, such as HR systems or communication tools, to exchange data and provide a seamless experience.
+    8- Data Backup and Recovery: The system should regularly backup data and provide mechanisms for data recovery in case of any system failures or data loss.
