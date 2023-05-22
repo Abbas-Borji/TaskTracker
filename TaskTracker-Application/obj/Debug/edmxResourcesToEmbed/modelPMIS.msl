@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="PMISModelStoreContainer" CdmEntityContainer="PMISEntities">
+    <EntitySetMapping Name="answers">
+      <EntityTypeMapping TypeName="PMISModel.answer">
+        <MappingFragment StoreEntitySet="answer">
+          <ScalarProperty Name="answerID" ColumnName="answerID" />
+          <ScalarProperty Name="questionID" ColumnName="questionID" />
+          <ScalarProperty Name="submissionID" ColumnName="submissionID" />
+          <ScalarProperty Name="text" ColumnName="text" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="checklists">
+      <EntityTypeMapping TypeName="PMISModel.checklist">
+        <MappingFragment StoreEntitySet="checklist">
+          <ScalarProperty Name="checklistID" ColumnName="checklistID" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="managerID" ColumnName="managerID" />
+          <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+          <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="questions">
+      <EntityTypeMapping TypeName="PMISModel.question">
+        <MappingFragment StoreEntitySet="question">
+          <ScalarProperty Name="questionID" ColumnName="questionID" />
+          <ScalarProperty Name="checklistID" ColumnName="checklistID" />
+          <ScalarProperty Name="text" ColumnName="text" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="submissions">
+      <EntityTypeMapping TypeName="PMISModel.submission">
+        <MappingFragment StoreEntitySet="submission">
+          <ScalarProperty Name="submissionID" ColumnName="submissionID" />
+          <ScalarProperty Name="checklistID" ColumnName="checklistID" />
+          <ScalarProperty Name="userID" ColumnName="userID" />
+          <ScalarProperty Name="submissionDate" ColumnName="submissionDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="PMISModel.sysdiagram">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="users">
+      <EntityTypeMapping TypeName="PMISModel.user">
+        <MappingFragment StoreEntitySet="user">
+          <ScalarProperty Name="userID" ColumnName="userID" />
+          <ScalarProperty Name="fullName" ColumnName="fullName" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="role" ColumnName="role" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
