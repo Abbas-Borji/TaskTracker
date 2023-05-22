@@ -23,9 +23,16 @@ submissionID (Primary Key)
 checklistID (Foreign Key)
 userID (Foreign Key)
 submissionDate
+submissionID (Primary Key)
+checklistID (Foreign Key)
+userID (Foreign Key)
+submissionDate
 
 4- Question: Represents the individual questions within a checklist.
 
+questionID (Primary Key)
+checklistID (Foreign Key)
+text
 questionID (Primary Key)
 checklistID (Foreign Key)
 text
@@ -39,17 +46,17 @@ response
 
 Relationships:
 
-1- User-Checklist (1-to-Many):
+1- managerCreatesChecklist (1-to-Many):
 
 One manager can create multiple checklists.
 One checklist is created by only one manager.
-Manager_ID (User) references User_ID (User)
+userID (checklist) references userID (user)
 
-2- User-Submission (1-to-Many):
+2- userSubmitsChecklist (1-to-Many):
 
 One employee can submit multiple checklists.
 One checklist can be submitted by only one employee.
-Employee_ID (User) references User_ID (User)
+userID (submission) references userID (user)
 
 3- Question-Answer (1-to-Many):
 
@@ -58,7 +65,7 @@ One answer belongs to only one question.
 Submission_ID (Submission) references Submission_ID (Answer)
 Question_ID (Question) references Question_ID (Answer)
 
-4- Submission-Answer (1-to-Many):
+5- answerSubmitted (1-to-Many):
 
 One submission can have multiple answers.
 One answer belongs to only one submission.

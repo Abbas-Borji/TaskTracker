@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="614fd0b160ef4b1a87adf130d5eedf9b" Name="Diagram1">
+        <EntityTypeShape EntityType="PMISModel.answer" Width="1.5" PointX="7.5" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMISModel.checklist" Width="1.5" PointX="3" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMISModel.question" Width="1.5" PointX="5.25" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMISModel.submission" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMISModel.sysdiagram" Width="1.5" PointX="5.75" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMISModel.user" Width="1.5" PointX="0.75" PointY="3.625" IsExpanded="true" />
+        <AssociationConnector Association="PMISModel.answerOfQuestion" ManuallyRouted="false" />
+        <AssociationConnector Association="PMISModel.answerSubmitted" ManuallyRouted="false" />
+        <AssociationConnector Association="PMISModel.checklistQuestion" ManuallyRouted="false" />
+        <AssociationConnector Association="PMISModel.checklistSubmission" ManuallyRouted="false" />
+        <AssociationConnector Association="PMISModel.managerCreatesChecklist" ManuallyRouted="false" />
+        <AssociationConnector Association="PMISModel.userSubmitsChecklist" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
