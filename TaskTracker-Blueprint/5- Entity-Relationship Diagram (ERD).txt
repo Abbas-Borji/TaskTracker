@@ -1,41 +1,41 @@
-// Textual Representation
+// Textual Representation - Needs Refactoring
 
 Entities:
 
 1- User: Represents the users of the system, including employees, managers, and admins.
 
-User_ID (Primary Key)
-Full_Name
-Email
-Username
-Password
-Role
+userID (Primary Key)
+fullName
+email
+username
+password
+role
 
 2- Checklist: Represents the checklists created by managers.
 
-Checklist_ID (Primary Key)
-Title
-Manager_ID (Foreign Key)
+checklistID (Primary Key)
+title
+managerID (Foreign Key)
 
 3- Submission: Represents the completed checklists submitted by employees.
 
-Submission_ID (Primary Key)
-Checklist_ID (Foreign Key)
-Employee_ID (Foreign Key)
-Submission_Date
+submissionID (Primary Key)
+checklistID (Foreign Key)
+userID (Foreign Key)
+submissionDate
 
 4- Question: Represents the individual questions within a checklist.
 
-Question_ID (Primary Key)
-Checklist_ID (Foreign Key)
-Text
+questionID (Primary Key)
+checklistID (Foreign Key)
+text
 
 5- Answer: Represents the answers provided by employees for each question.
 
-Answer_ID (Primary Key)
-Submission_ID (Foreign Key)
-Question_ID (Foreign Key)
-Response
+answerID (Primary Key)
+submissionID (Foreign Key)
+questionID (Foreign Key)
+response
 
 Relationships:
 
@@ -51,11 +51,12 @@ One employee can submit multiple checklists.
 One checklist can be submitted by only one employee.
 Employee_ID (User) references User_ID (User)
 
-3- Checklist-Question (1-to-Many):
+3- Question-Answer (1-to-Many):
 
-One checklist can have multiple questions.
-One question belongs to only one checklist.
-Checklist_ID (Checklist) references Checklist_ID (Question)
+One question can have multiple answers.
+One answer belongs to only one question.
+Submission_ID (Submission) references Submission_ID (Answer)
+Question_ID (Question) references Question_ID (Answer)
 
 4- Submission-Answer (1-to-Many):
 
@@ -63,3 +64,9 @@ One submission can have multiple answers.
 One answer belongs to only one submission.
 Submission_ID (Submission) references Submission_ID (Answer)
 Question_ID (Question) references Question_ID (Answer)
+
+5- Checklist-Question (Many-to-Many):
+
+One checklist can have 0 or more questions.
+One question belongs to one or more checklists.
+This relationship will be presented as a separate entity (isQuestionOf), acting as a junction table.
