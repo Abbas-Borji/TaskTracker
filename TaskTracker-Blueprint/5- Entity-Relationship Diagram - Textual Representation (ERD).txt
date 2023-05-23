@@ -45,13 +45,15 @@ checklistID(isQuestionOf) references checklistID(checklist)
 questionID(isQuestionOf) references questionID(question)
 This relationship will be presented as a separate entity (isQuestionOf), acting as a junction table.
 
-7- chosenAnswers (Many-to-Many / Entity):
+7- submittedAnswerOptions (Many-to-Many Ternary Relationship / Entity):
 
 One submission can have one or more answerOptions.
 One answerOption belongs to 0 or more submissions.
-submissionID(chosenAnswers) references submissionID(submission)
-answerOptionID(chosenAnswers) references answerOptionID(answerOption)
-This relationship will be presented as a separate entity (chosenAnswers), acting as a junction table.
+One question can be included in one or more submissions.
+submissionID(submittedAnswerOptions) references submissionID(submission)
+questionID(submittedAnswerOptions) references questionID(question)
+answerOptionID(submittedAnswerOptions) references answerOptionID(answerOption)
+This relationship will be presented as a separate entity (submittedAnswerOptions).
 
 
 Relationships:
@@ -79,4 +81,3 @@ questionID (answerOption) references questionID (question)
 A checklist can be submitted 0 or more times.
 A submission can contain only one checklist.
 checklistID(submission) references checklistID(checklist)
-
