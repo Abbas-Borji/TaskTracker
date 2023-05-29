@@ -14,3 +14,6 @@ C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Deb
 C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Debug\TaskTracker-Application.csproj.CopyComplete
 C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Debug\TaskTracker-Application.exe
 C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Debug\TaskTracker-Application.pdb
+C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Debug\TaskTracker_Application.signupForm.resources
+C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Debug\TaskTracker_Application.employeeForm.resources
+C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Debug\TaskTracker_Application.managerForm.resources

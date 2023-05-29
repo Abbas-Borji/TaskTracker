@@ -13,32 +13,70 @@ namespace TaskTracker_Application
     public partial class loginForm : Form
     {
         user temp = new user();
+        static PMISEntities tempEntities = new PMISEntities();
+        List<user> users = tempEntities.users.ToList<user>();
+        string role = "";
         public loginForm()
         {
             InitializeComponent();
         }
 
-        private void buttonLogin_Click(object sender, EventArgs e)
-        {
-            PMISEntities tempEntities = new PMISEntities();
-            temp.fullName = textBox1.Text;
-            temp.email = textBox2.Text;
-            temp.username = textBox3.Text;
-            temp.password = textBox4.Text;
-            temp.role = textBox5.Text;
-            tempEntities.users.Add(temp);
-            tempEntities.SaveChanges();
-        }
-
         private void loginForm_Load(object sender, EventArgs e)
         {
-            populateDGV();
+            
         }
 
-        private void populateDGV()
+        private void buttonLogin_Click(object sender, EventArgs e)
         {
-            PMISEntities tempEntities = new PMISEntities();
-            usersDGV.DataSource = tempEntities.users.ToList<user>();
+            foreach (user user in users)
+            {
+                if (user.username == textUsername.Text)
+                {
+                    if (user.password == textPassword.Text)
+                    {
+                        role = user.role;
+                        login();
+                    }
+
+                    else
+                    {
+                        MessageBox.Show("Incorrect Password");
+                    }
+                }
+
+                else
+                {
+                    MessageBox.Show("Incorrect Username");
+                }
+            }
+        }
+
+        private void login()
+        {
+            Application.Exit();
+            if(role == "Employee")
+            {
+                employeeForm newForm = new employeeForm();
+                newForm.Show();
+                this.Hide();
+            }
+            if(role == "Manager")
+            {
+                managerForm newForm = new managerForm();
+                newForm.Show();
+                this.Hide();
+            }
+
+        }
+
+        private void loginEmployee() 
+        {
+            
+        }
+
+        private void loginManager()
+        {
+            
         }
     }
 }

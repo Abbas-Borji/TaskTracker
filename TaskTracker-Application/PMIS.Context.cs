@@ -25,11 +25,12 @@ namespace TaskTracker_Application
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<answer> answers { get; set; }
+        public virtual DbSet<answerOption> answerOptions { get; set; }
         public virtual DbSet<checklist> checklists { get; set; }
         public virtual DbSet<question> questions { get; set; }
         public virtual DbSet<submission> submissions { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<user> users { get; set; }
+        public virtual DbSet<submittedAnswerOption> submittedAnswerOptions { get; set; }
     }
 }

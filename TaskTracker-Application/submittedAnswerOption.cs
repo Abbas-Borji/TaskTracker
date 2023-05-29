@@ -12,13 +12,13 @@ namespace TaskTracker_Application
     using System;
     using System.Collections.Generic;
     
-    public partial class answer
+    public partial class submittedAnswerOption
     {
-        public int answerID { get; set; }
-        public int questionID { get; set; }
         public int submissionID { get; set; }
-        public string text { get; set; }
+        public int questionID { get; set; }
+        public int answerOptionID { get; set; }
     
+        public virtual answerOption answerOption { get; set; }
         public virtual question question { get; set; }
         public virtual submission submission { get; set; }
     }

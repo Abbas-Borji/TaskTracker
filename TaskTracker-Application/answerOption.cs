@@ -12,24 +12,20 @@ namespace TaskTracker_Application
     using System;
     using System.Collections.Generic;
     
-    public partial class question
+    public partial class answerOption
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public question()
+        public answerOption()
         {
-            this.answerOptions = new HashSet<answerOption>();
             this.submittedAnswerOptions = new HashSet<submittedAnswerOption>();
-            this.checklists = new HashSet<checklist>();
         }
     
+        public int answerOptionID { get; set; }
         public int questionID { get; set; }
         public string text { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<answerOption> answerOptions { get; set; }
+        public virtual question question { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<submittedAnswerOption> submittedAnswerOptions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<checklist> checklists { get; set; }
     }
 }

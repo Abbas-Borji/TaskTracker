@@ -34,58 +34,53 @@
             this.groupBoxLogin = new System.Windows.Forms.GroupBox();
             this.labelPassword = new System.Windows.Forms.Label();
             this.textPassword = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.usersDGV = new System.Windows.Forms.DataGridView();
             this.groupBoxLogin.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.usersDGV)).BeginInit();
             this.SuspendLayout();
             // 
             // textUsername
             // 
-            this.textUsername.Location = new System.Drawing.Point(183, 84);
+            this.textUsername.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textUsername.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textUsername.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textUsername.Location = new System.Drawing.Point(78, 107);
             this.textUsername.Name = "textUsername";
-            this.textUsername.Size = new System.Drawing.Size(246, 22);
+            this.textUsername.Size = new System.Drawing.Size(267, 30);
             this.textUsername.TabIndex = 0;
             // 
             // labelUsername
             // 
             this.labelUsername.AutoSize = true;
-            this.labelUsername.Location = new System.Drawing.Point(180, 54);
+            this.labelUsername.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelUsername.Location = new System.Drawing.Point(75, 77);
             this.labelUsername.Name = "labelUsername";
-            this.labelUsername.Size = new System.Drawing.Size(73, 16);
+            this.labelUsername.Size = new System.Drawing.Size(105, 23);
             this.labelUsername.TabIndex = 1;
             this.labelUsername.Text = "Username:";
             // 
             // buttonLogin
             // 
-            this.buttonLogin.Location = new System.Drawing.Point(257, 230);
+            this.buttonLogin.BackColor = System.Drawing.Color.SteelBlue;
+            this.buttonLogin.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonLogin.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.buttonLogin.Location = new System.Drawing.Point(155, 250);
             this.buttonLogin.Name = "buttonLogin";
-            this.buttonLogin.Size = new System.Drawing.Size(102, 39);
+            this.buttonLogin.Size = new System.Drawing.Size(117, 49);
             this.buttonLogin.TabIndex = 2;
             this.buttonLogin.Text = "Sign In";
-            this.buttonLogin.UseVisualStyleBackColor = true;
+            this.buttonLogin.UseVisualStyleBackColor = false;
             this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
             // 
             // groupBoxLogin
             // 
-            this.groupBoxLogin.Controls.Add(this.usersDGV);
-            this.groupBoxLogin.Controls.Add(this.textBox5);
-            this.groupBoxLogin.Controls.Add(this.textBox4);
-            this.groupBoxLogin.Controls.Add(this.textBox3);
-            this.groupBoxLogin.Controls.Add(this.textBox2);
-            this.groupBoxLogin.Controls.Add(this.textBox1);
             this.groupBoxLogin.Controls.Add(this.labelPassword);
             this.groupBoxLogin.Controls.Add(this.textPassword);
             this.groupBoxLogin.Controls.Add(this.labelUsername);
             this.groupBoxLogin.Controls.Add(this.buttonLogin);
             this.groupBoxLogin.Controls.Add(this.textUsername);
+            this.groupBoxLogin.Font = new System.Drawing.Font("Cambria", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBoxLogin.Location = new System.Drawing.Point(28, 31);
             this.groupBoxLogin.Name = "groupBoxLogin";
-            this.groupBoxLogin.Size = new System.Drawing.Size(612, 314);
+            this.groupBoxLogin.Size = new System.Drawing.Size(431, 340);
             this.groupBoxLogin.TabIndex = 3;
             this.groupBoxLogin.TabStop = false;
             this.groupBoxLogin.Text = "Login";
@@ -93,76 +88,37 @@
             // labelPassword
             // 
             this.labelPassword.AutoSize = true;
-            this.labelPassword.Location = new System.Drawing.Point(180, 135);
+            this.labelPassword.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPassword.Location = new System.Drawing.Point(75, 158);
             this.labelPassword.Name = "labelPassword";
-            this.labelPassword.Size = new System.Drawing.Size(70, 16);
+            this.labelPassword.Size = new System.Drawing.Size(104, 23);
             this.labelPassword.TabIndex = 4;
             this.labelPassword.Text = "Password:";
             // 
             // textPassword
             // 
-            this.textPassword.Location = new System.Drawing.Point(183, 165);
+            this.textPassword.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textPassword.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textPassword.Location = new System.Drawing.Point(78, 188);
             this.textPassword.Name = "textPassword";
-            this.textPassword.Size = new System.Drawing.Size(246, 22);
+            this.textPassword.Size = new System.Drawing.Size(267, 30);
             this.textPassword.TabIndex = 3;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(488, 48);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 22);
-            this.textBox1.TabIndex = 5;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(488, 84);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 22);
-            this.textBox2.TabIndex = 6;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(488, 129);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 22);
-            this.textBox3.TabIndex = 7;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(488, 165);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 22);
-            this.textBox4.TabIndex = 8;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(488, 210);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 22);
-            this.textBox5.TabIndex = 9;
-            // 
-            // usersDGV
-            // 
-            this.usersDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.usersDGV.Location = new System.Drawing.Point(0, 164);
-            this.usersDGV.Name = "usersDGV";
-            this.usersDGV.RowHeadersWidth = 51;
-            this.usersDGV.RowTemplate.Height = 24;
-            this.usersDGV.Size = new System.Drawing.Size(240, 150);
-            this.usersDGV.TabIndex = 4;
             // 
             // loginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(667, 375);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(509, 416);
             this.Controls.Add(this.groupBoxLogin);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "loginForm";
             this.Text = "PMIS";
             this.Load += new System.EventHandler(this.loginForm_Load);
             this.groupBoxLogin.ResumeLayout(false);
             this.groupBoxLogin.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.usersDGV)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -175,12 +131,6 @@
         private System.Windows.Forms.GroupBox groupBoxLogin;
         private System.Windows.Forms.Label labelPassword;
         private System.Windows.Forms.TextBox textPassword;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.DataGridView usersDGV;
     }
 }
 

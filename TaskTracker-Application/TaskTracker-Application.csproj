@@ -55,11 +55,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="answer.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+    <Compile Include="answerOption.cs">
+      <DependentUpon>PMIS.tt</DependentUpon>
     </Compile>
     <Compile Include="checklist.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>PMIS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="employeeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="employeeForm.Designer.cs">
+      <DependentUpon>employeeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="loginForm.cs">
       <SubType>Form</SubType>
@@ -67,37 +73,58 @@
     <Compile Include="loginForm.Designer.cs">
       <DependentUpon>loginForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model1.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.Context.tt</DependentUpon>
+    <Compile Include="managerForm.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Model1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.tt</DependentUpon>
+    <Compile Include="managerForm.Designer.cs">
+      <DependentUpon>managerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="modelPMIS.Designer.cs">
+    <Compile Include="PMIS.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>modelPMIS.edmx</DependentUpon>
+      <DependentUpon>PMIS.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PMIS.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PMIS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PMIS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PMIS.edmx</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="question.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>PMIS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="signupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="signupForm.Designer.cs">
+      <DependentUpon>signupForm.cs</DependentUpon>
     </Compile>
     <Compile Include="submission.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>PMIS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="submittedAnswerOption.cs">
+      <DependentUpon>PMIS.tt</DependentUpon>
     </Compile>
     <Compile Include="sysdiagram.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>PMIS.tt</DependentUpon>
     </Compile>
     <Compile Include="user.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>PMIS.tt</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="employeeForm.resx">
+      <DependentUpon>employeeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="loginForm.resx">
       <DependentUpon>loginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="managerForm.resx">
+      <DependentUpon>managerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -108,14 +135,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EntityDeploy Include="modelPMIS.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>modelPMIS.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="modelPMIS.edmx.diagram">
-      <DependentUpon>modelPMIS.edmx</DependentUpon>
-    </None>
+    <EmbeddedResource Include="signupForm.resx">
+      <DependentUpon>signupForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
+    <EntityDeploy Include="PMIS.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PMIS.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="PMIS.edmx.diagram">
+      <DependentUpon>PMIS.edmx</DependentUpon>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -133,15 +163,15 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Model1.Context.tt">
+    <Content Include="PMIS.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>modelPMIS.edmx</DependentUpon>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+      <DependentUpon>PMIS.edmx</DependentUpon>
+      <LastGenOutput>PMIS.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Model1.tt">
+    <Content Include="PMIS.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>modelPMIS.edmx</DependentUpon>
-      <LastGenOutput>Model1.cs</LastGenOutput>
+      <DependentUpon>PMIS.edmx</DependentUpon>
+      <LastGenOutput>PMIS.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

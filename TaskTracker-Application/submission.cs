@@ -17,17 +17,17 @@ namespace TaskTracker_Application
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public submission()
         {
-            this.answers = new HashSet<answer>();
+            this.submittedAnswerOptions = new HashSet<submittedAnswerOption>();
         }
     
         public int submissionID { get; set; }
         public int checklistID { get; set; }
         public int userID { get; set; }
-        public System.DateTime submissionDate { get; set; }
+        public System.DateTime submittedAt { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<answer> answers { get; set; }
         public virtual checklist checklist { get; set; }
         public virtual user user { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<submittedAnswerOption> submittedAnswerOptions { get; set; }
     }
 }

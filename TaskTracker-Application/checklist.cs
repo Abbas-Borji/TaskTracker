@@ -18,19 +18,17 @@ namespace TaskTracker_Application
         public checklist()
         {
             this.questions = new HashSet<question>();
-            this.submissions = new HashSet<submission>();
         }
     
         public int checklistID { get; set; }
-        public string title { get; set; }
+        public string name { get; set; }
         public int managerID { get; set; }
         public System.DateTime createdAt { get; set; }
         public Nullable<System.DateTime> modifiedAt { get; set; }
     
+        public virtual user user { get; set; }
+        public virtual submission submission { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<question> questions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<submission> submissions { get; set; }
-        public virtual user user { get; set; }
     }
 }
