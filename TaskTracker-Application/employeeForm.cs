@@ -19,7 +19,14 @@ namespace TaskTracker_Application
 
         private void employeeForm_Load(object sender, EventArgs e)
         {
-            textBox1.Text = "Welcome!";
+            
+        }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loginForm newForm = new loginForm();
+            newForm.Show();
+            this.Hide();
         }
     }
 }

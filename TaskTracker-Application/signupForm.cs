@@ -26,14 +26,32 @@ namespace TaskTracker_Application
 
         private void buttonSignup_Click(object sender, EventArgs e)
         {
-            PMISEntities tempEntities = new PMISEntities();
-            temp.fullName = textFullName.Text;
-            temp.email = textEmail.Text;
-            temp.username = textUsername.Text;
-            temp.password = textPassword.Text;
-            temp.role = "Employee";
-            tempEntities.users.Add(temp);
-            tempEntities.SaveChanges();
+            try
+            {
+                PMISEntities tempEntities = new PMISEntities();
+                temp.fullName = textFullName.Text;
+                temp.email = textEmail.Text;
+                temp.username = textUsername.Text;
+                temp.password = textPassword.Text;
+                temp.role = "Employee";
+                tempEntities.users.Add(temp);
+                tempEntities.SaveChanges();
+                loginForm newForm = new loginForm(temp.username, temp.password);
+                newForm.Show();
+                this.Hide();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private void linkLabelSignup_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            loginForm newForm = new loginForm();
+            newForm.Show();
+            this.Hide();
         }
     }
 }

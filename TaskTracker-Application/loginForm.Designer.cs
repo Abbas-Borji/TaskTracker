@@ -28,10 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(loginForm));
             this.textUsername = new System.Windows.Forms.TextBox();
             this.labelUsername = new System.Windows.Forms.Label();
             this.buttonLogin = new System.Windows.Forms.Button();
             this.groupBoxLogin = new System.Windows.Forms.GroupBox();
+            this.linkLabelSignup = new System.Windows.Forms.LinkLabel();
+            this.label1 = new System.Windows.Forms.Label();
             this.labelPassword = new System.Windows.Forms.Label();
             this.textPassword = new System.Windows.Forms.TextBox();
             this.groupBoxLogin.SuspendLayout();
@@ -42,7 +45,7 @@
             this.textUsername.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textUsername.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textUsername.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textUsername.Location = new System.Drawing.Point(78, 107);
+            this.textUsername.Location = new System.Drawing.Point(78, 91);
             this.textUsername.Name = "textUsername";
             this.textUsername.Size = new System.Drawing.Size(267, 30);
             this.textUsername.TabIndex = 0;
@@ -51,7 +54,7 @@
             // 
             this.labelUsername.AutoSize = true;
             this.labelUsername.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelUsername.Location = new System.Drawing.Point(75, 77);
+            this.labelUsername.Location = new System.Drawing.Point(75, 61);
             this.labelUsername.Name = "labelUsername";
             this.labelUsername.Size = new System.Drawing.Size(105, 23);
             this.labelUsername.TabIndex = 1;
@@ -72,6 +75,8 @@
             // 
             // groupBoxLogin
             // 
+            this.groupBoxLogin.Controls.Add(this.linkLabelSignup);
+            this.groupBoxLogin.Controls.Add(this.label1);
             this.groupBoxLogin.Controls.Add(this.labelPassword);
             this.groupBoxLogin.Controls.Add(this.textPassword);
             this.groupBoxLogin.Controls.Add(this.labelUsername);
@@ -85,11 +90,34 @@
             this.groupBoxLogin.TabStop = false;
             this.groupBoxLogin.Text = "Login";
             // 
+            // linkLabelSignup
+            // 
+            this.linkLabelSignup.AutoSize = true;
+            this.linkLabelSignup.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabelSignup.Location = new System.Drawing.Point(262, 217);
+            this.linkLabelSignup.Name = "linkLabelSignup";
+            this.linkLabelSignup.Size = new System.Drawing.Size(69, 18);
+            this.linkLabelSignup.TabIndex = 5;
+            this.linkLabelSignup.TabStop = true;
+            this.linkLabelSignup.Text = "Register";
+            this.linkLabelSignup.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelSignup_LinkClicked);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Arial", 8F);
+            this.label1.Location = new System.Drawing.Point(76, 217);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(180, 16);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Don\'t have an account yet?";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
             // labelPassword
             // 
             this.labelPassword.AutoSize = true;
             this.labelPassword.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPassword.Location = new System.Drawing.Point(75, 158);
+            this.labelPassword.Location = new System.Drawing.Point(75, 142);
             this.labelPassword.Name = "labelPassword";
             this.labelPassword.Size = new System.Drawing.Size(104, 23);
             this.labelPassword.TabIndex = 4;
@@ -100,8 +128,9 @@
             this.textPassword.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textPassword.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textPassword.Location = new System.Drawing.Point(78, 188);
+            this.textPassword.Location = new System.Drawing.Point(78, 172);
             this.textPassword.Name = "textPassword";
+            this.textPassword.PasswordChar = '*';
             this.textPassword.Size = new System.Drawing.Size(267, 30);
             this.textPassword.TabIndex = 3;
             // 
@@ -112,9 +141,11 @@
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(509, 416);
             this.Controls.Add(this.groupBoxLogin);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "loginForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "PMIS";
             this.Load += new System.EventHandler(this.loginForm_Load);
             this.groupBoxLogin.ResumeLayout(false);
@@ -131,6 +162,8 @@
         private System.Windows.Forms.GroupBox groupBoxLogin;
         private System.Windows.Forms.Label labelPassword;
         private System.Windows.Forms.TextBox textPassword;
+        private System.Windows.Forms.LinkLabel linkLabelSignup;
+        private System.Windows.Forms.Label label1;
     }
 }
 

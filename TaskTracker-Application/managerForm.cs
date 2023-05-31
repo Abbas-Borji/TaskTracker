@@ -16,5 +16,17 @@ namespace TaskTracker_Application
         {
             InitializeComponent();
         }
+
+        private void managerForm_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loginForm newForm = new loginForm();
+            newForm.Show();
+            this.Hide();
+        }
     }
 }

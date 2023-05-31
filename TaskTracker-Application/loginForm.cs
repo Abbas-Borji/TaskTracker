@@ -21,6 +21,13 @@ namespace TaskTracker_Application
             InitializeComponent();
         }
 
+        public loginForm(string username, string password)
+        {
+            InitializeComponent();
+            textUsername.Text = username;
+            textPassword.Text = password;
+        }
+
         private void loginForm_Load(object sender, EventArgs e)
         {
             
@@ -28,55 +35,75 @@ namespace TaskTracker_Application
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            foreach (user user in users)
+            user matchedUser = users.FirstOrDefault(user => user.username == textUsername.Text);
+
+            if (matchedUser != null)
             {
-                if (user.username == textUsername.Text)
+                if (matchedUser.password == textPassword.Text)
                 {
-                    if (user.password == textPassword.Text)
-                    {
-                        role = user.role;
-                        login();
-                    }
-
-                    else
-                    {
-                        MessageBox.Show("Incorrect Password");
-                    }
+                    role = matchedUser.role;
+                    login();
+                    return; // Exit the method after successful login
                 }
-
                 else
                 {
-                    MessageBox.Show("Incorrect Username");
+                    MessageBox.Show("Incorrect Password");
+                    return; // Exit the method when password is incorrect
                 }
             }
+
+            MessageBox.Show("Incorrect Username");
         }
 
         private void login()
         {
-            Application.Exit();
             if(role == "Employee")
             {
-                employeeForm newForm = new employeeForm();
-                newForm.Show();
-                this.Hide();
+                loginEmployee();
             }
-            if(role == "Manager")
+            else if(role == "Manager")
             {
-                managerForm newForm = new managerForm();
-                newForm.Show();
-                this.Hide();
+                loginManager();
             }
-
+            else if (role == "Admin")
+            {
+                loginAdmin();
+            }
+            else
+                Application.Exit();
         }
 
         private void loginEmployee() 
         {
-            
+            employeeForm newForm = new employeeForm();
+            newForm.Show();
+            this.Hide();
         }
 
         private void loginManager()
         {
-            
+            managerForm newForm = new managerForm();
+            newForm.Show();
+            this.Hide();
+        }
+
+        private void loginAdmin()
+        {
+            adminForm newForm = new adminForm();
+            newForm.Show();
+            this.Hide();
+        }
+
+        private void linkLabelSignup_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            signupForm newForm = new signupForm();
+            newForm.Show();
+            this.Hide();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
