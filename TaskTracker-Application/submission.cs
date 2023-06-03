@@ -24,6 +24,7 @@ namespace TaskTracker_Application
         public int checklistID { get; set; }
         public int userID { get; set; }
         public System.DateTime submittedAt { get; set; }
+        public Nullable<bool> deleted { get; set; }
     
         public virtual checklist checklist { get; set; }
         public virtual user user { get; set; }

@@ -55,6 +55,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="addUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="addUser.Designer.cs">
+      <DependentUpon>addUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="adminForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,6 +78,9 @@
     </Compile>
     <Compile Include="employeeForm.Designer.cs">
       <DependentUpon>employeeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="isQuestionOf.cs">
+      <DependentUpon>PMIS.tt</DependentUpon>
     </Compile>
     <Compile Include="loginForm.cs">
       <SubType>Form</SubType>
@@ -120,9 +129,18 @@
     <Compile Include="sysdiagram.cs">
       <DependentUpon>PMIS.tt</DependentUpon>
     </Compile>
+    <Compile Include="updateUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="updateUser.Designer.cs">
+      <DependentUpon>updateUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="user.cs">
       <DependentUpon>PMIS.tt</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="addUser.resx">
+      <DependentUpon>addUser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="adminForm.resx">
       <DependentUpon>adminForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -146,6 +164,9 @@
     </Compile>
     <EmbeddedResource Include="signupForm.resx">
       <DependentUpon>signupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="updateUser.resx">
+      <DependentUpon>updateUser.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <EntityDeploy Include="PMIS.edmx">

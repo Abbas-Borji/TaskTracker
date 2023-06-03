@@ -30,7 +30,8 @@ namespace TaskTracker_Application
 
         private void loginForm_Load(object sender, EventArgs e)
         {
-            
+            tempEntities = new PMISEntities();
+            users = tempEntities.users.ToList<user>();
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)

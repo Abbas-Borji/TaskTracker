@@ -7,14 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace TaskTracker_Application
 {
-    public partial class signupForm : Form
+    public partial class addUser : Form
     {
         user temp = new user();
-        public signupForm()
+        public addUser()
         {
             InitializeComponent();
         }
@@ -43,11 +42,9 @@ namespace TaskTracker_Application
             }
         }
 
-        private void linkLabelSignup_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void addUser_Load(object sender, EventArgs e)
         {
-            loginForm newForm = new loginForm();
-            newForm.Show();
-            this.Hide();
+
         }
     }
 }

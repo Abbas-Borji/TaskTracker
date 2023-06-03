@@ -120,6 +120,7 @@
             this.comboBoxUsers.Name = "comboBoxUsers";
             this.comboBoxUsers.Size = new System.Drawing.Size(292, 27);
             this.comboBoxUsers.TabIndex = 0;
+            this.comboBoxUsers.SelectedIndexChanged += new System.EventHandler(this.comboBoxUsers_SelectedIndexChanged);
             // 
             // groupBox2
             // 
@@ -158,6 +159,7 @@
             this.buttonAddUser.TabIndex = 7;
             this.buttonAddUser.Text = "Add User";
             this.buttonAddUser.UseVisualStyleBackColor = false;
+            this.buttonAddUser.Click += new System.EventHandler(this.buttonAddUser_Click);
             // 
             // buttonUpdateUserInfo
             // 
@@ -170,6 +172,7 @@
             this.buttonUpdateUserInfo.TabIndex = 6;
             this.buttonUpdateUserInfo.Text = "Update User";
             this.buttonUpdateUserInfo.UseVisualStyleBackColor = false;
+            this.buttonUpdateUserInfo.Click += new System.EventHandler(this.buttonUpdateUserInfo_Click);
             // 
             // buttonDeleteUser
             // 
@@ -182,6 +185,7 @@
             this.buttonDeleteUser.TabIndex = 5;
             this.buttonDeleteUser.Text = "Delete User";
             this.buttonDeleteUser.UseVisualStyleBackColor = false;
+            this.buttonDeleteUser.Click += new System.EventHandler(this.buttonDeleteUser_Click);
             // 
             // listBoxUsers
             // 

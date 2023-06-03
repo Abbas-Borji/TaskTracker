@@ -18,3 +18,5 @@ C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Deb
 C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Debug\TaskTracker-Application.exe
 C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Debug\TaskTracker-Application.pdb
 C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\bin\Debug\TaskTracker-Application.pdb
+C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Debug\TaskTracker_Application.addUser.resources
+C:\Users\abbas\Documents\Projects\4- TaskTracker\TaskTracker-Application\obj\Debug\TaskTracker_Application.updateUser.resources

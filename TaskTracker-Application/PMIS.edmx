@@ -12,6 +12,7 @@
           <Property Name="answerOptionID" Type="int" Nullable="false" />
           <Property Name="questionID" Type="int" Nullable="false" />
           <Property Name="text" Type="varchar" MaxLength="2000" />
+          <Property Name="deleted" Type="bit" />
         </EntityType>
         <EntityType Name="checklist">
           <Key>
@@ -22,6 +23,7 @@
           <Property Name="managerID" Type="int" Nullable="false" />
           <Property Name="createdAt" Type="date" Nullable="false" />
           <Property Name="modifiedAt" Type="date" />
+          <Property Name="deleted" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PMIS.dbo.isQuestionOf' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -32,6 +34,7 @@ warning 6002: The table/view 'PMIS.dbo.isQuestionOf' does not have a primary key
           </Key>
           <Property Name="checklistID" Type="int" Nullable="false" />
           <Property Name="questionID" Type="int" Nullable="false" />
+          <Property Name="deleted" Type="bit" />
         </EntityType>
         <EntityType Name="question">
           <Key>
@@ -39,6 +42,7 @@ warning 6002: The table/view 'PMIS.dbo.isQuestionOf' does not have a primary key
           </Key>
           <Property Name="questionID" Type="int" Nullable="false" />
           <Property Name="text" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="deleted" Type="bit" />
         </EntityType>
         <EntityType Name="submission">
           <Key>
@@ -48,6 +52,7 @@ warning 6002: The table/view 'PMIS.dbo.isQuestionOf' does not have a primary key
           <Property Name="checklistID" Type="int" Nullable="false" />
           <Property Name="userID" Type="int" Nullable="false" />
           <Property Name="submittedAt" Type="date" Nullable="false" />
+          <Property Name="deleted" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -60,6 +65,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <Property Name="submissionID" Type="int" Nullable="false" />
           <Property Name="questionID" Type="int" Nullable="false" />
           <Property Name="answerOptionID" Type="int" Nullable="false" />
+          <Property Name="deleted" Type="bit" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -81,6 +87,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <Property Name="username" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="role" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="deleted" Type="bit" />
         </EntityType>
         <Association Name="FK_answerOption_question">
           <End Role="question" Type="Self.question" Multiplicity="1" />
@@ -200,14 +207,16 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <EntitySet Name="isQuestionOf" EntityType="Self.isQuestionOf" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [isQuestionOf].[checklistID] AS [checklistID], 
-    [isQuestionOf].[questionID] AS [questionID]
+    [isQuestionOf].[questionID] AS [questionID], 
+    [isQuestionOf].[deleted] AS [deleted]
     FROM [dbo].[isQuestionOf] AS [isQuestionOf]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="submittedAnswerOptions" EntityType="Self.submittedAnswerOptions" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [submittedAnswerOptions].[submissionID] AS [submissionID], 
     [submittedAnswerOptions].[questionID] AS [questionID], 
-    [submittedAnswerOptions].[answerOptionID] AS [answerOptionID]
+    [submittedAnswerOptions].[answerOptionID] AS [answerOptionID], 
+    [submittedAnswerOptions].[deleted] AS [deleted]
     FROM [dbo].[submittedAnswerOptions] AS [submittedAnswerOptions]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_answerOption_question" Association="Self.FK_answerOption_question">
@@ -259,6 +268,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <Property Name="answerOptionID" Type="Int32" Nullable="false" />
           <Property Name="questionID" Type="Int32" Nullable="false" />
           <Property Name="text" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="deleted" Type="Boolean" />
           <NavigationProperty Name="question" Relationship="Self.FK_answerOption_question" FromRole="answerOption" ToRole="question" />
           <NavigationProperty Name="submittedAnswerOptions" Relationship="Self.FK_submittedAnswerOptions_answerOption" FromRole="answerOption" ToRole="submittedAnswerOptions" />
         </EntityType>
@@ -271,9 +281,10 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <Property Name="managerID" Type="Int32" Nullable="false" />
           <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="modifiedAt" Type="DateTime" Precision="0" />
+          <Property Name="deleted" Type="Boolean" />
           <NavigationProperty Name="user" Relationship="Self.FK_checklist_user" FromRole="checklist" ToRole="user" />
+          <NavigationProperty Name="isQuestionOfs" Relationship="Self.FK_isQuestionOf_checklist" FromRole="checklist" ToRole="isQuestionOf" />
           <NavigationProperty Name="submission" Relationship="Self.FK_submission_checklist" FromRole="checklist" ToRole="submission" />
-          <NavigationProperty Name="questions" Relationship="Self.isQuestionOf" FromRole="checklist" ToRole="question" />
         </EntityType>
         <EntityType Name="question">
           <Key>
@@ -281,9 +292,10 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           </Key>
           <Property Name="questionID" Type="Int32" Nullable="false" />
           <Property Name="text" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="deleted" Type="Boolean" />
           <NavigationProperty Name="answerOptions" Relationship="Self.FK_answerOption_question" FromRole="question" ToRole="answerOption" />
+          <NavigationProperty Name="isQuestionOfs" Relationship="Self.FK_isQuestionOf_question1" FromRole="question" ToRole="isQuestionOf" />
           <NavigationProperty Name="submittedAnswerOptions" Relationship="Self.FK_submittedAnswerOptions_question" FromRole="question" ToRole="submittedAnswerOptions" />
-          <NavigationProperty Name="checklists" Relationship="Self.isQuestionOf" FromRole="question" ToRole="checklist" />
         </EntityType>
         <EntityType Name="submission">
           <Key>
@@ -293,6 +305,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <Property Name="checklistID" Type="Int32" Nullable="false" />
           <Property Name="userID" Type="Int32" Nullable="false" />
           <Property Name="submittedAt" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="deleted" Type="Boolean" />
           <NavigationProperty Name="checklist" Relationship="Self.FK_submission_checklist" FromRole="submission" ToRole="checklist" />
           <NavigationProperty Name="user" Relationship="Self.FK_submission_user" FromRole="submission" ToRole="user" />
           <NavigationProperty Name="submittedAnswerOptions" Relationship="Self.FK_submittedAnswerOptions_submission" FromRole="submission" ToRole="submittedAnswerOptions" />
@@ -317,8 +330,20 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="deleted" Type="Boolean" />
           <NavigationProperty Name="checklists" Relationship="Self.FK_checklist_user" FromRole="user" ToRole="checklist" />
           <NavigationProperty Name="submissions" Relationship="Self.FK_submission_user" FromRole="user" ToRole="submission" />
+        </EntityType>
+        <EntityType Name="isQuestionOf">
+          <Key>
+            <PropertyRef Name="checklistID" />
+            <PropertyRef Name="questionID" />
+          </Key>
+          <Property Name="checklistID" Type="Int32" Nullable="false" />
+          <Property Name="questionID" Type="Int32" Nullable="false" />
+          <Property Name="deleted" Type="Boolean" />
+          <NavigationProperty Name="checklist" Relationship="Self.FK_isQuestionOf_checklist" FromRole="isQuestionOf" ToRole="checklist" />
+          <NavigationProperty Name="question" Relationship="Self.FK_isQuestionOf_question1" FromRole="isQuestionOf" ToRole="question" />
         </EntityType>
         <EntityType Name="submittedAnswerOption">
           <Key>
@@ -329,6 +354,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <Property Name="submissionID" Type="Int32" Nullable="false" />
           <Property Name="questionID" Type="Int32" Nullable="false" />
           <Property Name="answerOptionID" Type="Int32" Nullable="false" />
+          <Property Name="deleted" Type="Boolean" />
           <NavigationProperty Name="answerOption" Relationship="Self.FK_submittedAnswerOptions_answerOption" FromRole="submittedAnswerOptions" ToRole="answerOption" />
           <NavigationProperty Name="question" Relationship="Self.FK_submittedAnswerOptions_question" FromRole="submittedAnswerOptions" ToRole="question" />
           <NavigationProperty Name="submission" Relationship="Self.FK_submittedAnswerOptions_submission" FromRole="submittedAnswerOptions" ToRole="submission" />
@@ -369,6 +395,18 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_isQuestionOf_checklist">
+          <End Role="checklist" Type="Self.checklist" Multiplicity="1" />
+          <End Role="isQuestionOf" Type="Self.isQuestionOf" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="checklist">
+              <PropertyRef Name="checklistID" />
+            </Principal>
+            <Dependent Role="isQuestionOf">
+              <PropertyRef Name="checklistID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_submission_checklist">
           <End Role="checklist" Type="Self.checklist" Multiplicity="1" />
           <End Role="submission" Type="Self.submission" Multiplicity="0..1" />
@@ -378,6 +416,18 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
             </Principal>
             <Dependent Role="submission">
               <PropertyRef Name="submissionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_isQuestionOf_question1">
+          <End Role="question" Type="Self.question" Multiplicity="1" />
+          <End Role="isQuestionOf" Type="Self.isQuestionOf" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="question">
+              <PropertyRef Name="questionID" />
+            </Principal>
+            <Dependent Role="isQuestionOf">
+              <PropertyRef Name="questionID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -417,10 +467,6 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="isQuestionOf">
-          <End Role="checklist" Type="Self.checklist" Multiplicity="*" />
-          <End Role="question" Type="Self.question" Multiplicity="*" />
-        </Association>
         <EntityContainer Name="PMISEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="answerOptions" EntityType="Self.answerOption" />
           <EntitySet Name="checklists" EntityType="Self.checklist" />
@@ -428,6 +474,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <EntitySet Name="submissions" EntityType="Self.submission" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="users" EntityType="Self.user" />
+          <EntitySet Name="isQuestionOfs" EntityType="Self.isQuestionOf" />
           <EntitySet Name="submittedAnswerOptions" EntityType="Self.submittedAnswerOption" />
           <AssociationSet Name="FK_answerOption_question" Association="Self.FK_answerOption_question">
             <End Role="question" EntitySet="questions" />
@@ -441,9 +488,17 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
             <End Role="user" EntitySet="users" />
             <End Role="checklist" EntitySet="checklists" />
           </AssociationSet>
+          <AssociationSet Name="FK_isQuestionOf_checklist" Association="Self.FK_isQuestionOf_checklist">
+            <End Role="checklist" EntitySet="checklists" />
+            <End Role="isQuestionOf" EntitySet="isQuestionOfs" />
+          </AssociationSet>
           <AssociationSet Name="FK_submission_checklist" Association="Self.FK_submission_checklist">
             <End Role="checklist" EntitySet="checklists" />
             <End Role="submission" EntitySet="submissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_isQuestionOf_question1" Association="Self.FK_isQuestionOf_question1">
+            <End Role="question" EntitySet="questions" />
+            <End Role="isQuestionOf" EntitySet="isQuestionOfs" />
           </AssociationSet>
           <AssociationSet Name="FK_submittedAnswerOptions_question" Association="Self.FK_submittedAnswerOptions_question">
             <End Role="question" EntitySet="questions" />
@@ -456,10 +511,6 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <AssociationSet Name="FK_submittedAnswerOptions_submission" Association="Self.FK_submittedAnswerOptions_submission">
             <End Role="submission" EntitySet="submissions" />
             <End Role="submittedAnswerOptions" EntitySet="submittedAnswerOptions" />
-          </AssociationSet>
-          <AssociationSet Name="isQuestionOf" Association="Self.isQuestionOf">
-            <End Role="checklist" EntitySet="checklists" />
-            <End Role="question" EntitySet="questions" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -474,6 +525,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
                 <ScalarProperty Name="answerOptionID" ColumnName="answerOptionID" />
                 <ScalarProperty Name="questionID" ColumnName="questionID" />
                 <ScalarProperty Name="text" ColumnName="text" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -485,6 +537,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
                 <ScalarProperty Name="managerID" ColumnName="managerID" />
                 <ScalarProperty Name="createdAt" ColumnName="createdAt" />
                 <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -493,6 +546,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
               <MappingFragment StoreEntitySet="question">
                 <ScalarProperty Name="questionID" ColumnName="questionID" />
                 <ScalarProperty Name="text" ColumnName="text" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -503,6 +557,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
                 <ScalarProperty Name="checklistID" ColumnName="checklistID" />
                 <ScalarProperty Name="userID" ColumnName="userID" />
                 <ScalarProperty Name="submittedAt" ColumnName="submittedAt" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -526,6 +581,16 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
                 <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="role" ColumnName="role" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="isQuestionOfs">
+            <EntityTypeMapping TypeName="PMISModel.isQuestionOf">
+              <MappingFragment StoreEntitySet="isQuestionOf">
+                <ScalarProperty Name="checklistID" ColumnName="checklistID" />
+                <ScalarProperty Name="questionID" ColumnName="questionID" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -535,17 +600,10 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
                 <ScalarProperty Name="submissionID" ColumnName="submissionID" />
                 <ScalarProperty Name="questionID" ColumnName="questionID" />
                 <ScalarProperty Name="answerOptionID" ColumnName="answerOptionID" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="isQuestionOf" TypeName="PMISModel.isQuestionOf" StoreEntitySet="isQuestionOf">
-            <EndProperty Name="checklist">
-              <ScalarProperty Name="checklistID" ColumnName="checklistID" />
-            </EndProperty>
-            <EndProperty Name="question">
-              <ScalarProperty Name="questionID" ColumnName="questionID" />
-            </EndProperty>
-          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

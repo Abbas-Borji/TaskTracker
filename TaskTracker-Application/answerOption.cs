@@ -23,6 +23,7 @@ namespace TaskTracker_Application
         public int answerOptionID { get; set; }
         public int questionID { get; set; }
         public string text { get; set; }
+        public Nullable<bool> deleted { get; set; }
     
         public virtual question question { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

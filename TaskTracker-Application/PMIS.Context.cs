@@ -31,6 +31,7 @@ namespace TaskTracker_Application
         public virtual DbSet<submission> submissions { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<user> users { get; set; }
+        public virtual DbSet<isQuestionOf> isQuestionOfs { get; set; }
         public virtual DbSet<submittedAnswerOption> submittedAnswerOptions { get; set; }
     }
 }

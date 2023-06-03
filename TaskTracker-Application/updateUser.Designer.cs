@@ -1,6 +1,6 @@
 ﻿namespace TaskTracker_Application
 {
-    partial class signupForm
+    partial class updateUser
     {
         /// <summary>
         /// Required designer variable.
@@ -28,10 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(signupForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(updateUser));
             this.groupBoxLogin = new System.Windows.Forms.GroupBox();
-            this.linkLabelSignup = new System.Windows.Forms.LinkLabel();
-            this.label1 = new System.Windows.Forms.Label();
             this.labelFullName = new System.Windows.Forms.Label();
             this.textFullName = new System.Windows.Forms.TextBox();
             this.labelEmail = new System.Windows.Forms.Label();
@@ -46,8 +44,6 @@
             // 
             // groupBoxLogin
             // 
-            this.groupBoxLogin.Controls.Add(this.linkLabelSignup);
-            this.groupBoxLogin.Controls.Add(this.label1);
             this.groupBoxLogin.Controls.Add(this.labelFullName);
             this.groupBoxLogin.Controls.Add(this.textFullName);
             this.groupBoxLogin.Controls.Add(this.labelEmail);
@@ -58,34 +54,12 @@
             this.groupBoxLogin.Controls.Add(this.buttonSignup);
             this.groupBoxLogin.Controls.Add(this.textUsername);
             this.groupBoxLogin.Font = new System.Drawing.Font("Cambria", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxLogin.Location = new System.Drawing.Point(44, 45);
+            this.groupBoxLogin.Location = new System.Drawing.Point(45, 45);
             this.groupBoxLogin.Name = "groupBoxLogin";
-            this.groupBoxLogin.Size = new System.Drawing.Size(419, 509);
-            this.groupBoxLogin.TabIndex = 4;
+            this.groupBoxLogin.Size = new System.Drawing.Size(419, 482);
+            this.groupBoxLogin.TabIndex = 6;
             this.groupBoxLogin.TabStop = false;
-            this.groupBoxLogin.Text = "Create Account";
-            // 
-            // linkLabelSignup
-            // 
-            this.linkLabelSignup.AutoSize = true;
-            this.linkLabelSignup.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabelSignup.Location = new System.Drawing.Point(255, 383);
-            this.linkLabelSignup.Name = "linkLabelSignup";
-            this.linkLabelSignup.Size = new System.Drawing.Size(48, 18);
-            this.linkLabelSignup.TabIndex = 10;
-            this.linkLabelSignup.TabStop = true;
-            this.linkLabelSignup.Text = "Login";
-            this.linkLabelSignup.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelSignup_LinkClicked);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial", 8F);
-            this.label1.Location = new System.Drawing.Point(69, 383);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(172, 16);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Already have an account?";
+            this.groupBoxLogin.Text = "Update User";
             // 
             // labelFullName
             // 
@@ -163,11 +137,11 @@
             this.buttonSignup.BackColor = System.Drawing.Color.SteelBlue;
             this.buttonSignup.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSignup.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.buttonSignup.Location = new System.Drawing.Point(149, 423);
+            this.buttonSignup.Location = new System.Drawing.Point(148, 401);
             this.buttonSignup.Name = "buttonSignup";
             this.buttonSignup.Size = new System.Drawing.Size(117, 49);
             this.buttonSignup.TabIndex = 2;
-            this.buttonSignup.Text = "Sign Up";
+            this.buttonSignup.Text = "Update";
             this.buttonSignup.UseVisualStyleBackColor = false;
             this.buttonSignup.Click += new System.EventHandler(this.buttonSignup_Click);
             // 
@@ -181,19 +155,18 @@
             this.textUsername.Size = new System.Drawing.Size(267, 30);
             this.textUsername.TabIndex = 0;
             // 
-            // signupForm
+            // updateUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(509, 602);
+            this.ClientSize = new System.Drawing.Size(509, 572);
             this.Controls.Add(this.groupBoxLogin);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "signupForm";
+            this.Name = "updateUser";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "PMIS";
+            this.Load += new System.EventHandler(this.updateUser_Load);
             this.groupBoxLogin.ResumeLayout(false);
             this.groupBoxLogin.PerformLayout();
             this.ResumeLayout(false);
@@ -212,7 +185,5 @@
         private System.Windows.Forms.Label labelUsername;
         private System.Windows.Forms.Button buttonSignup;
         private System.Windows.Forms.TextBox textUsername;
-        private System.Windows.Forms.LinkLabel linkLabelSignup;
-        private System.Windows.Forms.Label label1;
     }
 }

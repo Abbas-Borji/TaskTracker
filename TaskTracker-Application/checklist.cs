@@ -17,7 +17,7 @@ namespace TaskTracker_Application
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public checklist()
         {
-            this.questions = new HashSet<question>();
+            this.isQuestionOfs = new HashSet<isQuestionOf>();
         }
     
         public int checklistID { get; set; }
@@ -25,10 +25,11 @@ namespace TaskTracker_Application
         public int managerID { get; set; }
         public System.DateTime createdAt { get; set; }
         public Nullable<System.DateTime> modifiedAt { get; set; }
+        public Nullable<bool> deleted { get; set; }
     
         public virtual user user { get; set; }
-        public virtual submission submission { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<question> questions { get; set; }
+        public virtual ICollection<isQuestionOf> isQuestionOfs { get; set; }
+        public virtual submission submission { get; set; }
     }
 }

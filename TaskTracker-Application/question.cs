@@ -18,18 +18,19 @@ namespace TaskTracker_Application
         public question()
         {
             this.answerOptions = new HashSet<answerOption>();
+            this.isQuestionOfs = new HashSet<isQuestionOf>();
             this.submittedAnswerOptions = new HashSet<submittedAnswerOption>();
-            this.checklists = new HashSet<checklist>();
         }
     
         public int questionID { get; set; }
         public string text { get; set; }
+        public Nullable<bool> deleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<answerOption> answerOptions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<submittedAnswerOption> submittedAnswerOptions { get; set; }
+        public virtual ICollection<isQuestionOf> isQuestionOfs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<checklist> checklists { get; set; }
+        public virtual ICollection<submittedAnswerOption> submittedAnswerOptions { get; set; }
     }
 }

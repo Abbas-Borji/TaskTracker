@@ -7,6 +7,7 @@
           <ScalarProperty Name="answerOptionID" ColumnName="answerOptionID" />
           <ScalarProperty Name="questionID" ColumnName="questionID" />
           <ScalarProperty Name="text" ColumnName="text" />
+          <ScalarProperty Name="deleted" ColumnName="deleted" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -18,6 +19,7 @@
           <ScalarProperty Name="managerID" ColumnName="managerID" />
           <ScalarProperty Name="createdAt" ColumnName="createdAt" />
           <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+          <ScalarProperty Name="deleted" ColumnName="deleted" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -26,6 +28,7 @@
         <MappingFragment StoreEntitySet="question">
           <ScalarProperty Name="questionID" ColumnName="questionID" />
           <ScalarProperty Name="text" ColumnName="text" />
+          <ScalarProperty Name="deleted" ColumnName="deleted" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -36,6 +39,7 @@
           <ScalarProperty Name="checklistID" ColumnName="checklistID" />
           <ScalarProperty Name="userID" ColumnName="userID" />
           <ScalarProperty Name="submittedAt" ColumnName="submittedAt" />
+          <ScalarProperty Name="deleted" ColumnName="deleted" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -59,6 +63,16 @@
           <ScalarProperty Name="username" ColumnName="username" />
           <ScalarProperty Name="password" ColumnName="password" />
           <ScalarProperty Name="role" ColumnName="role" />
+          <ScalarProperty Name="deleted" ColumnName="deleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="isQuestionOfs">
+      <EntityTypeMapping TypeName="PMISModel.isQuestionOf">
+        <MappingFragment StoreEntitySet="isQuestionOf">
+          <ScalarProperty Name="checklistID" ColumnName="checklistID" />
+          <ScalarProperty Name="questionID" ColumnName="questionID" />
+          <ScalarProperty Name="deleted" ColumnName="deleted" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -68,16 +82,9 @@
           <ScalarProperty Name="submissionID" ColumnName="submissionID" />
           <ScalarProperty Name="questionID" ColumnName="questionID" />
           <ScalarProperty Name="answerOptionID" ColumnName="answerOptionID" />
+          <ScalarProperty Name="deleted" ColumnName="deleted" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="isQuestionOf" TypeName="PMISModel.isQuestionOf" StoreEntitySet="isQuestionOf">
-      <EndProperty Name="checklist">
-        <ScalarProperty Name="checklistID" ColumnName="checklistID" />
-      </EndProperty>
-      <EndProperty Name="question">
-        <ScalarProperty Name="questionID" ColumnName="questionID" />
-      </EndProperty>
-    </AssociationSetMapping>
   </EntityContainerMapping>
 </Mapping>

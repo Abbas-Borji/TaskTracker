@@ -7,6 +7,7 @@
     <Property Name="answerOptionID" Type="int" Nullable="false" />
     <Property Name="questionID" Type="int" Nullable="false" />
     <Property Name="text" Type="varchar" MaxLength="2000" />
+    <Property Name="deleted" Type="bit" />
   </EntityType>
   <EntityType Name="checklist">
     <Key>
@@ -17,6 +18,7 @@
     <Property Name="managerID" Type="int" Nullable="false" />
     <Property Name="createdAt" Type="date" Nullable="false" />
     <Property Name="modifiedAt" Type="date" />
+    <Property Name="deleted" Type="bit" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'PMIS.dbo.isQuestionOf' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -27,6 +29,7 @@ warning 6002: The table/view 'PMIS.dbo.isQuestionOf' does not have a primary key
     </Key>
     <Property Name="checklistID" Type="int" Nullable="false" />
     <Property Name="questionID" Type="int" Nullable="false" />
+    <Property Name="deleted" Type="bit" />
   </EntityType>
   <EntityType Name="question">
     <Key>
@@ -34,6 +37,7 @@ warning 6002: The table/view 'PMIS.dbo.isQuestionOf' does not have a primary key
     </Key>
     <Property Name="questionID" Type="int" Nullable="false" />
     <Property Name="text" Type="varchar" MaxLength="1000" Nullable="false" />
+    <Property Name="deleted" Type="bit" />
   </EntityType>
   <EntityType Name="submission">
     <Key>
@@ -43,6 +47,7 @@ warning 6002: The table/view 'PMIS.dbo.isQuestionOf' does not have a primary key
     <Property Name="checklistID" Type="int" Nullable="false" />
     <Property Name="userID" Type="int" Nullable="false" />
     <Property Name="submittedAt" Type="date" Nullable="false" />
+    <Property Name="deleted" Type="bit" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -55,6 +60,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
     <Property Name="submissionID" Type="int" Nullable="false" />
     <Property Name="questionID" Type="int" Nullable="false" />
     <Property Name="answerOptionID" Type="int" Nullable="false" />
+    <Property Name="deleted" Type="bit" />
   </EntityType>
   <EntityType Name="sysdiagrams">
     <Key>
@@ -76,6 +82,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
     <Property Name="username" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="role" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="deleted" Type="bit" />
   </EntityType>
   <Association Name="FK_answerOption_question">
     <End Role="question" Type="Self.question" Multiplicity="1" />
@@ -195,14 +202,16 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
     <EntitySet Name="isQuestionOf" EntityType="Self.isQuestionOf" store:Type="Tables" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [isQuestionOf].[checklistID] AS [checklistID], 
-    [isQuestionOf].[questionID] AS [questionID]
+    [isQuestionOf].[questionID] AS [questionID], 
+    [isQuestionOf].[deleted] AS [deleted]
     FROM [dbo].[isQuestionOf] AS [isQuestionOf]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="submittedAnswerOptions" EntityType="Self.submittedAnswerOptions" store:Type="Tables" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [submittedAnswerOptions].[submissionID] AS [submissionID], 
     [submittedAnswerOptions].[questionID] AS [questionID], 
-    [submittedAnswerOptions].[answerOptionID] AS [answerOptionID]
+    [submittedAnswerOptions].[answerOptionID] AS [answerOptionID], 
+    [submittedAnswerOptions].[deleted] AS [deleted]
     FROM [dbo].[submittedAnswerOptions] AS [submittedAnswerOptions]</DefiningQuery>
     </EntitySet>
     <AssociationSet Name="FK_answerOption_question" Association="Self.FK_answerOption_question">

@@ -13,7 +13,8 @@ namespace TaskTracker_Application
     public partial class adminForm : Form
     {
         static PMISEntities tempEntities = new PMISEntities();
-        List<user> users = tempEntities.users.ToList<user>();
+        List<user> users = tempEntities.users.Where(user => user.deleted == false).ToList<user>();
+
         public adminForm()
         {
             InitializeComponent();
@@ -21,14 +22,7 @@ namespace TaskTracker_Application
 
         private void adminForm_Load(object sender, EventArgs e)
         {
-            comboBoxUsers.DataSource = users.Where(user => user.role != "Admin").ToList();
-            comboBoxUsers.DisplayMember = "fullName";
-            comboBoxUsers.ValueMember = "userID";
-        }
-
-        private void listBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            listBoxUsers.DataSource = users;
+            refreshUsersList();
         }
 
         private void buttonUpdateUserRole_Click(object sender, EventArgs e)
@@ -51,6 +45,78 @@ namespace TaskTracker_Application
         private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             loginForm newForm = new loginForm();
+            newForm.Show();
+            this.Hide();
+        }
+
+        private void buttonDeleteUser_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int selectedID = Convert.ToInt32(listBoxUsers.SelectedValue.ToString());
+                users.FirstOrDefault(user => user.userID == selectedID).deleted = true;
+                tempEntities.SaveChanges();
+                refreshUsersList();
+                MessageBox.Show("User was deleted successfully!");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private void refreshUsersList()
+        {
+            List<user> newUsers = tempEntities.users.Where(user => user.deleted == false).ToList();
+
+            comboBoxUsers.DataSource = newUsers.Where(user => user.role != "Admin").ToList();
+            listBoxUsers.DataSource = newUsers.Where(user => user.role != "Admin").ToList();
+
+            setListControlDisplayAndValueMembers(comboBoxUsers);
+            setListControlDisplayAndValueMembers(listBoxUsers);
+        }
+
+        private void setListControlDisplayAndValueMembers(ListControl listControl)
+        {
+            listControl.DisplayMember = "fullName";
+            listControl.ValueMember = "userID";
+        }
+
+        private void refreshRolesList()
+        {            
+            user selectedUser = (user)comboBoxUsers.SelectedItem;
+            int selectedID = selectedUser.userID;
+            string currentRole = users.FirstOrDefault(user => user.userID == selectedID)?.role;
+
+            if (currentRole != null)
+            {
+                comboBoxRoles.SelectedItem = currentRole;
+            }
+        }
+
+        private void comboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            refreshRolesList();
+            listBoxUsers.SelectedItem = comboBoxUsers.SelectedItem;
+        }
+
+        private void listBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboBoxUsers.SelectedItem = listBoxUsers.SelectedItem;
+        }
+
+        private void buttonAddUser_Click(object sender, EventArgs e)
+        {
+            addUser newForm = new addUser();
+            newForm.Show();
+            this.Hide();
+        }
+
+        private void buttonUpdateUserInfo_Click(object sender, EventArgs e)
+        {
+            int selectedID = Convert.ToInt32(listBoxUsers.SelectedValue.ToString());
+            updateUser newForm = new updateUser(selectedID);
             newForm.Show();
             this.Hide();
         }
