@@ -39,6 +39,7 @@
             this.labelUsername = new System.Windows.Forms.Label();
             this.buttonSignup = new System.Windows.Forms.Button();
             this.textUsername = new System.Windows.Forms.TextBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.groupBoxLogin.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -155,12 +156,24 @@
             this.textUsername.Size = new System.Drawing.Size(267, 30);
             this.textUsername.TabIndex = 0;
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(17, 18);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(38, 16);
+            this.linkLabel1.TabIndex = 6;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Back";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // addUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(509, 572);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.groupBoxLogin);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "addUser";
@@ -170,6 +183,7 @@
             this.groupBoxLogin.ResumeLayout(false);
             this.groupBoxLogin.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -185,5 +199,6 @@
         private System.Windows.Forms.Label labelUsername;
         private System.Windows.Forms.Button buttonSignup;
         private System.Windows.Forms.TextBox textUsername;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

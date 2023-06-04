@@ -9,19 +9,19 @@
           <Key>
             <PropertyRef Name="answerOptionID" />
           </Key>
-          <Property Name="answerOptionID" Type="int" Nullable="false" />
+          <Property Name="answerOptionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="questionID" Type="int" Nullable="false" />
-          <Property Name="text" Type="varchar" MaxLength="2000" />
+          <Property Name="text" Type="varchar" MaxLength="2000" Nullable="false" />
           <Property Name="deleted" Type="bit" />
         </EntityType>
         <EntityType Name="checklist">
           <Key>
             <PropertyRef Name="checklistID" />
           </Key>
-          <Property Name="checklistID" Type="int" Nullable="false" />
+          <Property Name="checklistID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="managerID" Type="int" Nullable="false" />
-          <Property Name="createdAt" Type="date" Nullable="false" />
+          <Property Name="createdAt" Type="date" />
           <Property Name="modifiedAt" Type="date" />
           <Property Name="deleted" Type="bit" />
         </EntityType>
@@ -40,7 +40,7 @@ warning 6002: The table/view 'PMIS.dbo.isQuestionOf' does not have a primary key
           <Key>
             <PropertyRef Name="questionID" />
           </Key>
-          <Property Name="questionID" Type="int" Nullable="false" />
+          <Property Name="questionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="text" Type="varchar" MaxLength="1000" Nullable="false" />
           <Property Name="deleted" Type="bit" />
         </EntityType>
@@ -265,9 +265,9 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <Key>
             <PropertyRef Name="answerOptionID" />
           </Key>
-          <Property Name="answerOptionID" Type="Int32" Nullable="false" />
+          <Property Name="answerOptionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="questionID" Type="Int32" Nullable="false" />
-          <Property Name="text" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="text" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="deleted" Type="Boolean" />
           <NavigationProperty Name="question" Relationship="Self.FK_answerOption_question" FromRole="answerOption" ToRole="question" />
           <NavigationProperty Name="submittedAnswerOptions" Relationship="Self.FK_submittedAnswerOptions_answerOption" FromRole="answerOption" ToRole="submittedAnswerOptions" />
@@ -276,10 +276,10 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <Key>
             <PropertyRef Name="checklistID" />
           </Key>
-          <Property Name="checklistID" Type="Int32" Nullable="false" />
+          <Property Name="checklistID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="managerID" Type="Int32" Nullable="false" />
-          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="createdAt" Type="DateTime" Precision="0" />
           <Property Name="modifiedAt" Type="DateTime" Precision="0" />
           <Property Name="deleted" Type="Boolean" />
           <NavigationProperty Name="user" Relationship="Self.FK_checklist_user" FromRole="checklist" ToRole="user" />
@@ -290,7 +290,7 @@ warning 6002: The table/view 'PMIS.dbo.submittedAnswerOptions' does not have a p
           <Key>
             <PropertyRef Name="questionID" />
           </Key>
-          <Property Name="questionID" Type="Int32" Nullable="false" />
+          <Property Name="questionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="text" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="deleted" Type="Boolean" />
           <NavigationProperty Name="answerOptions" Relationship="Self.FK_answerOption_question" FromRole="question" ToRole="answerOption" />

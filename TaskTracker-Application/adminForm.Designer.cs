@@ -36,6 +36,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxUsers = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonCreateChecklist = new System.Windows.Forms.Button();
+            this.buttonEditChecklist = new System.Windows.Forms.Button();
+            this.listBoxChecklists = new System.Windows.Forms.ListBox();
+            this.buttonDeleteChecklist = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonAddUser = new System.Windows.Forms.Button();
             this.buttonUpdateUserInfo = new System.Windows.Forms.Button();
@@ -44,6 +48,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -125,6 +130,10 @@
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.Color.White;
+            this.groupBox2.Controls.Add(this.buttonCreateChecklist);
+            this.groupBox2.Controls.Add(this.buttonEditChecklist);
+            this.groupBox2.Controls.Add(this.listBoxChecklists);
+            this.groupBox2.Controls.Add(this.buttonDeleteChecklist);
             this.groupBox2.Font = new System.Drawing.Font("Cambria", 16.2F);
             this.groupBox2.Location = new System.Drawing.Point(43, 401);
             this.groupBox2.Name = "groupBox2";
@@ -132,6 +141,53 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Edit Checklists";
+            // 
+            // buttonCreateChecklist
+            // 
+            this.buttonCreateChecklist.BackColor = System.Drawing.Color.SteelBlue;
+            this.buttonCreateChecklist.Font = new System.Drawing.Font("Arial", 10F);
+            this.buttonCreateChecklist.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.buttonCreateChecklist.Location = new System.Drawing.Point(492, 62);
+            this.buttonCreateChecklist.Name = "buttonCreateChecklist";
+            this.buttonCreateChecklist.Size = new System.Drawing.Size(179, 39);
+            this.buttonCreateChecklist.TabIndex = 10;
+            this.buttonCreateChecklist.Text = "Create Checklist";
+            this.buttonCreateChecklist.UseVisualStyleBackColor = false;
+            this.buttonCreateChecklist.Click += new System.EventHandler(this.buttonCreateChecklist_Click);
+            // 
+            // buttonEditChecklist
+            // 
+            this.buttonEditChecklist.BackColor = System.Drawing.Color.SteelBlue;
+            this.buttonEditChecklist.Font = new System.Drawing.Font("Arial", 10F);
+            this.buttonEditChecklist.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.buttonEditChecklist.Location = new System.Drawing.Point(492, 150);
+            this.buttonEditChecklist.Name = "buttonEditChecklist";
+            this.buttonEditChecklist.Size = new System.Drawing.Size(179, 39);
+            this.buttonEditChecklist.TabIndex = 9;
+            this.buttonEditChecklist.Text = "Edit Checklist";
+            this.buttonEditChecklist.UseVisualStyleBackColor = false;
+            // 
+            // listBoxChecklists
+            // 
+            this.listBoxChecklists.Font = new System.Drawing.Font("Arial", 10F);
+            this.listBoxChecklists.FormattingEnabled = true;
+            this.listBoxChecklists.ItemHeight = 19;
+            this.listBoxChecklists.Location = new System.Drawing.Point(29, 62);
+            this.listBoxChecklists.Name = "listBoxChecklists";
+            this.listBoxChecklists.Size = new System.Drawing.Size(408, 213);
+            this.listBoxChecklists.TabIndex = 8;
+            // 
+            // buttonDeleteChecklist
+            // 
+            this.buttonDeleteChecklist.BackColor = System.Drawing.Color.SteelBlue;
+            this.buttonDeleteChecklist.Font = new System.Drawing.Font("Arial", 10F);
+            this.buttonDeleteChecklist.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.buttonDeleteChecklist.Location = new System.Drawing.Point(492, 236);
+            this.buttonDeleteChecklist.Name = "buttonDeleteChecklist";
+            this.buttonDeleteChecklist.Size = new System.Drawing.Size(179, 39);
+            this.buttonDeleteChecklist.TabIndex = 8;
+            this.buttonDeleteChecklist.Text = "Delete Checklist";
+            this.buttonDeleteChecklist.UseVisualStyleBackColor = false;
             // 
             // groupBox3
             // 
@@ -240,6 +296,7 @@
             this.Load += new System.EventHandler(this.adminForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -264,5 +321,9 @@
         private System.Windows.Forms.Button buttonUpdateUserInfo;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
+        private System.Windows.Forms.Button buttonCreateChecklist;
+        private System.Windows.Forms.Button buttonEditChecklist;
+        private System.Windows.Forms.ListBox listBoxChecklists;
+        private System.Windows.Forms.Button buttonDeleteChecklist;
     }
 }

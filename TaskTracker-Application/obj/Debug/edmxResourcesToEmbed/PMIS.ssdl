@@ -4,19 +4,19 @@
     <Key>
       <PropertyRef Name="answerOptionID" />
     </Key>
-    <Property Name="answerOptionID" Type="int" Nullable="false" />
+    <Property Name="answerOptionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="questionID" Type="int" Nullable="false" />
-    <Property Name="text" Type="varchar" MaxLength="2000" />
+    <Property Name="text" Type="varchar" MaxLength="2000" Nullable="false" />
     <Property Name="deleted" Type="bit" />
   </EntityType>
   <EntityType Name="checklist">
     <Key>
       <PropertyRef Name="checklistID" />
     </Key>
-    <Property Name="checklistID" Type="int" Nullable="false" />
+    <Property Name="checklistID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
     <Property Name="managerID" Type="int" Nullable="false" />
-    <Property Name="createdAt" Type="date" Nullable="false" />
+    <Property Name="createdAt" Type="date" />
     <Property Name="modifiedAt" Type="date" />
     <Property Name="deleted" Type="bit" />
   </EntityType>
@@ -35,7 +35,7 @@ warning 6002: The table/view 'PMIS.dbo.isQuestionOf' does not have a primary key
     <Key>
       <PropertyRef Name="questionID" />
     </Key>
-    <Property Name="questionID" Type="int" Nullable="false" />
+    <Property Name="questionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="text" Type="varchar" MaxLength="1000" Nullable="false" />
     <Property Name="deleted" Type="bit" />
   </EntityType>

@@ -111,7 +111,7 @@
             this.label1.Size = new System.Drawing.Size(180, 16);
             this.label1.TabIndex = 4;
             this.label1.Text = "Don\'t have an account yet?";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            
             // 
             // labelPassword
             // 

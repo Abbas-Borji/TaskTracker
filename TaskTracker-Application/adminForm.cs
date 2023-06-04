@@ -12,8 +12,11 @@ namespace TaskTracker_Application
 {
     public partial class adminForm : Form
     {
+        string userName = Session.userName;
+        int userID = Session.userID;
         static PMISEntities tempEntities = new PMISEntities();
         List<user> users = tempEntities.users.Where(user => user.deleted == false).ToList<user>();
+        List<checklist> checklists = tempEntities.checklists.Where(checklist => checklist.deleted == false).ToList<checklist>();
 
         public adminForm()
         {
@@ -23,6 +26,7 @@ namespace TaskTracker_Application
         private void adminForm_Load(object sender, EventArgs e)
         {
             refreshUsersList();
+            refreshChecklistsList();
         }
 
         private void buttonUpdateUserRole_Click(object sender, EventArgs e)
@@ -120,5 +124,21 @@ namespace TaskTracker_Application
             newForm.Show();
             this.Hide();
         }
+
+        private void buttonCreateChecklist_Click(object sender, EventArgs e)
+        {
+            createChecklist newForm = new createChecklist();
+            newForm.Show();
+            this.Hide();
+        }
+
+        private void refreshChecklistsList()
+        {
+            List<checklist> newChecklists = tempEntities.checklists.Where(checklist => checklist.deleted == false).ToList();
+            listBoxChecklists.DataSource = newChecklists;
+            listBoxChecklists.DisplayMember = "name";
+            listBoxChecklists.ValueMember = "checklistID";
+        }
+
     }
 }

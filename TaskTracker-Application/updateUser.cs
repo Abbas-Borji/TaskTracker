@@ -53,5 +53,12 @@ namespace TaskTracker_Application
             textUsername.Text = temp.username;
             textPassword.Text = temp.password;
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            adminForm newForm = new adminForm();
+            newForm.Show();
+            this.Hide();
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace TaskTracker_Application
         public int checklistID { get; set; }
         public string name { get; set; }
         public int managerID { get; set; }
-        public System.DateTime createdAt { get; set; }
+        public Nullable<System.DateTime> createdAt { get; set; }
         public Nullable<System.DateTime> modifiedAt { get; set; }
         public Nullable<bool> deleted { get; set; }
     

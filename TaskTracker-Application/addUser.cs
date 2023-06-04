@@ -46,5 +46,12 @@ namespace TaskTracker_Application
         {
 
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            adminForm newForm = new adminForm();
+            newForm.Show();
+            this.Hide();
+        }
     }
 }

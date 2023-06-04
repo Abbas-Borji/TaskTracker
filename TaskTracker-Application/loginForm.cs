@@ -44,6 +44,7 @@ namespace TaskTracker_Application
                 {
                     role = matchedUser.role;
                     login();
+                    startSession();
                     return; // Exit the method after successful login
                 }
                 else
@@ -102,9 +103,10 @@ namespace TaskTracker_Application
             this.Hide();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void startSession()
         {
-
+            Session.userName = textUsername.Text;
+            Session.userID = users.FirstOrDefault(user => user.username == textUsername.Text).userID;
         }
     }
 }

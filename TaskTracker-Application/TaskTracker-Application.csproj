@@ -73,6 +73,12 @@
     <Compile Include="checklist.cs">
       <DependentUpon>PMIS.tt</DependentUpon>
     </Compile>
+    <Compile Include="createChecklist.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="createChecklist.Designer.cs">
+      <DependentUpon>createChecklist.cs</DependentUpon>
+    </Compile>
     <Compile Include="employeeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +120,7 @@
     <Compile Include="question.cs">
       <DependentUpon>PMIS.tt</DependentUpon>
     </Compile>
+    <Compile Include="Session.cs" />
     <Compile Include="signupForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -143,6 +150,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="adminForm.resx">
       <DependentUpon>adminForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="createChecklist.resx">
+      <DependentUpon>createChecklist.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="employeeForm.resx">
       <DependentUpon>employeeForm.cs</DependentUpon>
