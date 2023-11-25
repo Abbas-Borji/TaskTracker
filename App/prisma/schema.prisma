@@ -69,6 +69,19 @@ model Option {
     submissions Submission[]
 }
 
+model Assignment {
+    id                 Int         @id @default(autoincrement())
+    employeeId         Int
+    employee           User        @relation(fields: [employeeId], references: [id])
+    checklistId        Int
+    checklist          Checklist   @relation(fields: [checklistId], references: [id])
+    archivedByEmployee Boolean     @default(false)
+    dueDate            DateTime
+    submission         Submission?
+    feedback           feedback?
+    createdAt          DateTime    @default(now())
+}
+
 model Submission {
     id                Int        @id @default(autoincrement())
     userId            Int
@@ -85,19 +98,6 @@ enum Status {
     PENDING
     OPENED
     REVIEWED
-}
-
-model Assignment {
-    id                 Int         @id @default(autoincrement())
-    employeeId         Int
-    employee           User        @relation(fields: [employeeId], references: [id])
-    checklistId        Int
-    checklist          Checklist   @relation(fields: [checklistId], references: [id])
-    archivedByEmployee Boolean     @default(false)
-    dueDate            DateTime
-    submission         Submission?
-    feedback           feedback?
-    createdAt          DateTime    @default(now())
 }
 
 model feedback {
