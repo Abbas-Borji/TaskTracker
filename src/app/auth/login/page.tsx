@@ -104,7 +104,7 @@ const Login = () => {
 
               <div className="mt-6">
                 <Link
-                  href="/signup"
+                  href="/auth/signup"
                   className="flex w-full justify-center rounded-md bg-slate-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
                 >
                   Create One
