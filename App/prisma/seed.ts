@@ -34,9 +34,9 @@ async function seedChecklists() {
 async function seedQuestions() {
   await prisma.question.createMany({
     data: [
-      { content: "Question 1", checklistId: 1 },
-      { content: "Question 2", checklistId: 1 },
-      { content: "Question 3", checklistId: 2 },
+      { content: "Question 1?", checklistId: 1 },
+      { content: "Question 2?", checklistId: 1 },
+      { content: "Question 3?", checklistId: 2 },
     ],
   });
 }
@@ -53,22 +53,22 @@ async function seedOptions() {
   });
 }
 
-async function seedSubmissions() {
-  await prisma.submission.createMany({
-    data: [
-      { userId: 1, assignmentId: 1 },
-      { userId: 1, assignmentId: 2 },
-      { userId: 2, assignmentId: 3 },
-    ],
-  });
-}
-
 async function seedAssignments() {
   await prisma.assignment.createMany({
     data: [
       { employeeId: 1, checklistId: 1, dueDate: new Date() },
       { employeeId: 2, checklistId: 2, dueDate: new Date() },
       { employeeId: 2, checklistId: 1, dueDate: new Date() },
+    ],
+  });
+}
+
+async function seedSubmissions() {
+  await prisma.submission.createMany({
+    data: [
+      { userId: 1, assignmentId: 1 },
+      { userId: 1, assignmentId: 2 },
+      { userId: 2, assignmentId: 3 },
     ],
   });
 }
@@ -89,8 +89,8 @@ async function main() {
   await seedChecklists();
   await seedQuestions();
   await seedOptions();
-  await seedSubmissions();
   await seedAssignments();
+  await seedSubmissions();
   await seedFeedbacks();
 }
 
