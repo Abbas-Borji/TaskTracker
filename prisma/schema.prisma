@@ -29,13 +29,14 @@ enum Role {
 }
 
 model Team {
-    id        Int      @id @default(autoincrement())
-    name      String   @unique
-    managerId Int
-    manager   User     @relation("managerOf", fields: [managerId], references: [id])
-    members   User[]   @relation("memberOf")
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id          Int          @id @default(autoincrement())
+    name        String       @unique
+    managerId   Int
+    manager     User         @relation("managerOf", fields: [managerId], references: [id])
+    members     User[]       @relation("memberOf")
+    assignments Assignment[]
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
 }
 
 model Checklist {
@@ -79,6 +80,8 @@ model Assignment {
     dueDate            DateTime
     submission         Submission?
     feedback           feedback?
+    Team               Team?       @relation(fields: [teamId], references: [id])
+    teamId             Int?
     createdAt          DateTime    @default(now())
 }
 

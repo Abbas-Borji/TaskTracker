@@ -56,9 +56,9 @@ async function seedOptions() {
 async function seedAssignments() {
   await prisma.assignment.createMany({
     data: [
-      { employeeId: 1, checklistId: 1, dueDate: new Date() },
-      { employeeId: 2, checklistId: 2, dueDate: new Date() },
-      { employeeId: 2, checklistId: 1, dueDate: new Date() },
+      { employeeId: 1, checklistId: 1, teamId: 1, dueDate: new Date() },
+      { employeeId: 2, checklistId: 2, teamId: 2, dueDate: new Date() },
+      { employeeId: 2, checklistId: 1, teamId: 1, dueDate: new Date() },
     ],
   });
 }
