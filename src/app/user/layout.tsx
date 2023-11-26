@@ -43,7 +43,7 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
-            className="relative z-50 lg:hidden"
+            className="relative z-50 xl:hidden"
             onClose={setSidebarOpen}
           >
             <Transition.Child
@@ -105,7 +105,7 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
-                            Your teams
+                            Your Teams
                           </div>
                           <ul role="list" className="-mx-2 mt-2 space-y-1">
                             {teams.map((team) => (
@@ -157,7 +157,7 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden xl:fixed xl:inset-y-0 xl:z-50 xl:flex xl:w-72 xl:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
             <div className="flex h-16 shrink-0 items-end">
@@ -167,7 +167,7 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400">
-                    Your teams
+                    Your Teams
                   </div>
                   <ul role="list" className="-mx-2 mt-2 space-y-1">
                     {teams.map((team) => (
@@ -214,12 +214,12 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
 
-        <div className="lg:pl-72">
-          <div className="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8">
-            <div className="flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none">
+        <div className="xl:pl-72">
+          <div className="sticky top-0 z-40 xl:mx-auto xl:max-w-7xl xl:px-8">
+            <div className="flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 xl:px-0 xl:shadow-none">
               <button
                 type="button"
-                className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+                className="-m-2.5 p-2.5 text-gray-700 xl:hidden"
                 onClick={() => setSidebarOpen(true)}
               >
                 <span className="sr-only">Open sidebar</span>
@@ -228,11 +228,11 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
 
               {/* Separator */}
               <div
-                className="h-6 w-px bg-gray-200 lg:hidden"
+                className="h-6 w-px bg-gray-200 xl:hidden"
                 aria-hidden="true"
               />
 
-              <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+              <div className="flex flex-1 gap-x-4 self-stretch xl:gap-x-6">
                 <form className="relative flex flex-1" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
                     Search
@@ -249,7 +249,7 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
                     name="search"
                   />
                 </form>
-                <div className="flex items-center gap-x-4 lg:gap-x-6">
+                <div className="flex items-center gap-x-4 xl:gap-x-6">
                   <button
                     type="button"
                     className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
@@ -260,7 +260,7 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
 
                   {/* Separator */}
                   <div
-                    className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200"
+                    className="hidden xl:block xl:h-6 xl:w-px xl:bg-gray-200"
                     aria-hidden="true"
                   />
 
@@ -273,7 +273,7 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
                         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                         alt=""
                       />
-                      <span className="hidden lg:flex lg:items-center">
+                      <span className="hidden xl:flex xl:items-center">
                         <span
                           className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                           aria-hidden="true"
@@ -320,7 +320,7 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           <main className="py-10">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 xl:px-8">
               {children}
             </div>
           </main>
