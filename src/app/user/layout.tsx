@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React from "react";
 import { Fragment, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
@@ -18,16 +18,8 @@ import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
-import Logo from 'src/assets/logo.png';
+import Logo from "src/assets/logo.png";
 
-const navigation = [
-  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
-  { name: "Projects", href: "#", icon: FolderIcon, current: false },
-  { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-  { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
-  { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
-];
 const teams = [
   { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
   { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
@@ -38,11 +30,11 @@ const userNavigation = [
   { name: "Sign out", href: "/auth/login" },
 ];
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const UserLayout = () => {
+const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -112,34 +104,6 @@ const UserLayout = () => {
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
                         <li>
-                          <ul role="list" className="-mx-2 space-y-1">
-                            {navigation.map((item) => (
-                              <li key={item.name}>
-                                <a
-                                  href={item.href}
-                                  className={classNames(
-                                    item.current
-                                      ? "bg-gray-50 text-indigo-600"
-                                      : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                                    "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
-                                  )}
-                                >
-                                  <item.icon
-                                    className={classNames(
-                                      item.current
-                                        ? "text-indigo-600"
-                                        : "text-gray-400 group-hover:text-indigo-600",
-                                      "h-6 w-6 shrink-0",
-                                    )}
-                                    aria-hidden="true"
-                                  />
-                                  {item.name}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </li>
-                        <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
                             Your teams
                           </div>
@@ -197,42 +161,10 @@ const UserLayout = () => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
             <div className="flex h-16 shrink-0 items-end">
-              <img
-                className="h-12 w-auto"
-                src={Logo.src}
-                alt="Your Company"
-              />
+              <img className="h-12 w-auto" src={Logo.src} alt="Your Company" />
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
-                <li>
-                  <ul role="list" className="-mx-2 space-y-1">
-                    {navigation.map((item) => (
-                      <li key={item.name}>
-                        <a
-                          href={item.href}
-                          className={classNames(
-                            item.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                            "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
-                          )}
-                        >
-                          <item.icon
-                            className={classNames(
-                              item.current
-                                ? "text-indigo-600"
-                                : "text-gray-400 group-hover:text-indigo-600",
-                              "h-6 w-6 shrink-0",
-                            )}
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400">
                     Your teams
@@ -389,7 +321,7 @@ const UserLayout = () => {
 
           <main className="py-10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              {/* Your content */}
+              {children}
             </div>
           </main>
         </div>
@@ -398,4 +330,4 @@ const UserLayout = () => {
   );
 };
 
-export default UserLayout;
+export default NavigationLayout;
