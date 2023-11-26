@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
   });
 
   const checklistNameWithManagerName = checklists.map(checklist => ({
-    checklist: {
+    info: {
       id: checklist.id,
       name: checklist.name,
     },
