@@ -15,11 +15,11 @@ model User {
     department  String?
     role        Role         @default(USER)
     managerOf   Team[]       @relation("managerOf")
-    teams       Team[]       @relation("memberOf")
     checklists  Checklist[]
     submissions Submission[]
     assignments Assignment[]
     feedbacks   feedback[]
+    MemberOf    MemberOf[]
 }
 
 enum Role {
@@ -33,10 +33,19 @@ model Team {
     name        String       @unique
     managerId   Int
     manager     User         @relation("managerOf", fields: [managerId], references: [id])
-    members     User[]       @relation("memberOf")
     assignments Assignment[]
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
+    MemberOf    MemberOf[]
+}
+
+model MemberOf {
+    userId   Int
+    teamId   Int
+    memberOf User @relation(fields: [userId], references: [id])
+    member   Team @relation(fields: [teamId], references: [id])
+
+    @@id([userId, teamId])
 }
 
 model Checklist {

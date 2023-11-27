@@ -23,6 +23,15 @@ async function seedTeams() {
   });
 }
 
+async function seedMemberOf() {
+  await prisma.memberOf.createMany({
+    data: [
+      { userId: 1, teamId: 1 },
+      { userId: 1, teamId: 2 },
+    ],
+  });
+}
+
 async function seedChecklists() {
   await prisma.checklist.createMany({
     data: [
@@ -91,6 +100,7 @@ async function seedFeedbacks() {
 async function main() {
   await seedUsers();
   await seedTeams();
+  await seedMemberOf();
   await seedChecklists();
   await seedQuestions();
   await seedOptions();

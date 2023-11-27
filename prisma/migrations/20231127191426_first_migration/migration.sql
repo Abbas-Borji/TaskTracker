@@ -24,6 +24,14 @@ CREATE TABLE `Team` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `MemberOf` (
+    `userId` INTEGER NOT NULL,
+    `teamId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`userId`, `teamId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Checklist` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
@@ -95,15 +103,6 @@ CREATE TABLE `feedback` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `_memberOf` (
-    `A` INTEGER NOT NULL,
-    `B` INTEGER NOT NULL,
-
-    UNIQUE INDEX `_memberOf_AB_unique`(`A`, `B`),
-    INDEX `_memberOf_B_index`(`B`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `_OptionToSubmission` (
     `A` INTEGER NOT NULL,
     `B` INTEGER NOT NULL,
@@ -114,6 +113,12 @@ CREATE TABLE `_OptionToSubmission` (
 
 -- AddForeignKey
 ALTER TABLE `Team` ADD CONSTRAINT `Team_managerId_fkey` FOREIGN KEY (`managerId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `MemberOf` ADD CONSTRAINT `MemberOf_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `MemberOf` ADD CONSTRAINT `MemberOf_teamId_fkey` FOREIGN KEY (`teamId`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Checklist` ADD CONSTRAINT `Checklist_managerId_fkey` FOREIGN KEY (`managerId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -144,12 +149,6 @@ ALTER TABLE `feedback` ADD CONSTRAINT `feedback_assignmentId_fkey` FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE `feedback` ADD CONSTRAINT `feedback_managerId_fkey` FOREIGN KEY (`managerId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `_memberOf` ADD CONSTRAINT `_memberOf_A_fkey` FOREIGN KEY (`A`) REFERENCES `Team`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `_memberOf` ADD CONSTRAINT `_memberOf_B_fkey` FOREIGN KEY (`B`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `_OptionToSubmission` ADD CONSTRAINT `_OptionToSubmission_A_fkey` FOREIGN KEY (`A`) REFERENCES `Option`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
