@@ -13,11 +13,6 @@ import {
 } from "@heroicons/react/20/solid";
 import Sidebar from "../components/Sidebar";
 
-const teams = [
-  { id: 1, name: "Team 1", href: "#", initial: "1", current: false },
-  { id: 2, name: "Team 2", href: "#", initial: "2", current: false },
-  { id: 3, name: "Team 3", href: "#", initial: "3", current: false },
-];
 const tabs = [
   {
     name: "My Checklists",
@@ -44,9 +39,9 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
       <div>
         <Sidebar
           tabs={tabs}
-          teams={teams}
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          userId={1}
         />
 
         <div className="xl:pl-72">

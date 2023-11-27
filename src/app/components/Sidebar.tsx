@@ -1,6 +1,6 @@
 "use client";
 import React, { ReactNode } from "react";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import Logo from "src/assets/logo.png";
@@ -8,10 +8,10 @@ import { Team, Tab } from "../types/Sidebar";
 import Divider from "./Divider";
 
 interface SidebarProps {
-  teams?: Team[];
   tabs?: Tab[];
   sidebarOpen: boolean;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userId: number;
 }
 
 // Multiple Classes
@@ -19,7 +19,32 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Sidebar = ({ teams, tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const Sidebar = ({
+  tabs,
+  sidebarOpen,
+  setSidebarOpen,
+  userId,
+}: SidebarProps) => {
+  const [teams, setTeams] = useState<Team[]>([]);
+
+  useEffect(() => {
+    async function fetchTeams() {
+      console.log("Fetching teams for user ID:", userId);
+      try {
+        const response = await fetch(`/api/teams/${userId}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch");
+        }
+        const data = await response.json();
+        setTeams(data);
+      } catch (error) {
+        console.error("Error fetching teams:", error);
+      }
+    }
+
+    fetchTeams();
+  }, [userId]); // Dependency array to ensure the effect runs once or when teamId changes
+
   return (
     <>
       <div>
@@ -76,7 +101,7 @@ const Sidebar = ({ teams, tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => 
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="bg-dark flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4">
+                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-dark px-6 pb-4">
                     <div className="flex h-16 shrink-0 items-end">
                       <img
                         className="h-12 w-auto"
@@ -97,7 +122,7 @@ const Sidebar = ({ teams, tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => 
                                     className={classNames(
                                       item.current
                                         ? "bg-primary text-light"
-                                        : "text-light hover:text-dark hover:bg-gray-300",
+                                        : "text-light hover:bg-gray-300 hover:text-dark",
                                       "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
                                     )}
                                   >
@@ -129,20 +154,20 @@ const Sidebar = ({ teams, tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => 
                                     href={team.href}
                                     className={classNames(
                                       team.current
-                                      ? "bg-primary"
-                                      : "hover:bg-gray-300 hover:text-dark",
-                                      "text-light group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
+                                        ? "bg-primary"
+                                        : "hover:bg-gray-300 hover:text-dark",
+                                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-light",
                                     )}
                                   >
                                     <span
                                       className={classNames(
                                         team.current
-                                        ? "bg-primary"
-                                        : "group-hover:border-dark group-hover:text-dark",
-                                        "border-light text-light flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium",
+                                          ? "bg-primary"
+                                          : "group-hover:border-dark group-hover:text-dark",
+                                        "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-light text-[0.625rem] font-medium text-light",
                                       )}
                                     >
-                                      {team.initial}
+                                      {team.id}
                                     </span>
                                     <span className="truncate">
                                       {team.name}
@@ -164,7 +189,7 @@ const Sidebar = ({ teams, tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => 
 
         {/* Desktop Sidebar */}
         <div className="hidden xl:fixed xl:inset-y-0 xl:z-50 xl:flex xl:w-72 xl:flex-col">
-          <div className="bg-dark flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4">
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-dark px-6 pb-4">
             <div className="flex h-16 shrink-0 items-end">
               <img className="h-12 w-auto" src={Logo.src} alt="Your Company" />
             </div>
@@ -181,7 +206,7 @@ const Sidebar = ({ teams, tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => 
                             className={classNames(
                               item.current
                                 ? "bg-primary text-light"
-                                : "text-light hover:text-dark hover:bg-gray-300",
+                                : "text-light hover:bg-gray-300 hover:text-dark",
                               "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
                             )}
                           >
@@ -215,7 +240,7 @@ const Sidebar = ({ teams, tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => 
                               team.current
                                 ? "bg-primary"
                                 : "hover:bg-gray-300 hover:text-dark",
-                              "text-light group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
+                              "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-light",
                             )}
                           >
                             <span
@@ -223,10 +248,10 @@ const Sidebar = ({ teams, tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => 
                                 team.current
                                   ? "bg-primary"
                                   : "group-hover:border-dark group-hover:text-dark",
-                                "border-light text-light flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium",
+                                "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-light text-[0.625rem] font-medium text-light",
                               )}
                             >
-                              {team.initial}
+                              {team.id}
                             </span>
                             <span className="truncate">{team.name}</span>
                           </a>
