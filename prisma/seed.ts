@@ -3,15 +3,34 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function seedUsers() {
-await prisma.user.createMany({
+  await prisma.user.createMany({
     data: [
-      { fullName: "John Doe", email:"john@tasktracker.io", password:"123123123", role: "USER" },
-      { fullName: "Jane Smith", email:"jane@tasktracker.io", password:"123123123", role: "MANAGER" },
-      { fullName: "Steve Jobs", email:"steve@tasktracker.io", password:"123123123", role: "MANAGER" },
-      { fullName: "Alex Bjorn", email:"alex@tasktracker.io", password:"123123123", role: "ADMIN" },
+      {
+        fullName: "John Doe",
+        email: "john@tasktracker.io",
+        password: "123123123",
+        role: "USER",
+      },
+      {
+        fullName: "Jane Smith",
+        email: "jane@tasktracker.io",
+        password: "123123123",
+        role: "MANAGER",
+      },
+      {
+        fullName: "Steve Jobs",
+        email: "steve@tasktracker.io",
+        password: "123123123",
+        role: "MANAGER",
+      },
+      {
+        fullName: "Alex Bjorn",
+        email: "alex@tasktracker.io",
+        password: "123123123",
+        role: "ADMIN",
+      },
     ],
-    
-});
+  });
 }
 
 async function seedTeams() {
@@ -19,6 +38,8 @@ async function seedTeams() {
     data: [
       { name: "Team A", managerId: 2 },
       { name: "Team B", managerId: 3 },
+      { name: "Team C", managerId: 2 },
+      { name: "Team D", managerId: 3 },
     ],
   });
 }
@@ -28,6 +49,8 @@ async function seedMemberOf() {
     data: [
       { userId: 1, teamId: 1 },
       { userId: 1, teamId: 2 },
+      { userId: 1, teamId: 3 },
+      { userId: 1, teamId: 4 },
     ],
   });
 }
@@ -38,6 +61,7 @@ async function seedChecklists() {
       { name: "Checklist 1", managerId: 2 },
       { name: "Checklist 2", managerId: 3 },
       { name: "Checklist 3", managerId: 4 },
+      { name: "Checklist 4", managerId: 2 },
     ],
   });
 }
@@ -71,7 +95,8 @@ async function seedAssignments() {
       { employeeId: 1, checklistId: 1, teamId: 1, dueDate: new Date() },
       { employeeId: 1, checklistId: 2, teamId: 1, dueDate: new Date() },
       { employeeId: 1, checklistId: 3, teamId: 1, dueDate: new Date() },
-      { employeeId: 2, checklistId: 2, teamId: 2, dueDate: new Date() },
+      { employeeId: 1, checklistId: 4, teamId: 1, dueDate: new Date() },
+      { employeeId: 1, checklistId: 3, teamId: 1, dueDate: new Date() },
       { employeeId: 2, checklistId: 1, teamId: 1, dueDate: new Date() },
     ],
   });
@@ -80,9 +105,10 @@ async function seedAssignments() {
 async function seedSubmissions() {
   await prisma.submission.createMany({
     data: [
-      { userId: 1, assignmentId: 1 },
-      { userId: 1, assignmentId: 2 },
-      { userId: 2, assignmentId: 3 },
+      { userId: 1, assignmentId: 1, status: "PENDING" },
+      { userId: 1, assignmentId: 2, status: "OPENED" },
+      { userId: 1, assignmentId: 3, status: "REVIEWED" },
+      { userId: 1, assignmentId: 4, status: "PENDING" },
     ],
   });
 }

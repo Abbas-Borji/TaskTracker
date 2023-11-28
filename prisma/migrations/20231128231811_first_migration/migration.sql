@@ -70,6 +70,7 @@ CREATE TABLE `Assignment` (
     `employeeId` INTEGER NOT NULL,
     `checklistId` INTEGER NOT NULL,
     `archivedByEmployee` BOOLEAN NOT NULL DEFAULT false,
+    `viewedByEmployee` BOOLEAN NOT NULL DEFAULT false,
     `dueDate` DATETIME(3) NOT NULL,
     `teamId` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
