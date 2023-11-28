@@ -86,6 +86,7 @@ model Assignment {
     checklistId        Int
     checklist          Checklist   @relation(fields: [checklistId], references: [id])
     archivedByEmployee Boolean     @default(false)
+    viewedByEmployee   Boolean     @default(false)
     dueDate            DateTime
     submission         Submission?
     feedback           feedback?
