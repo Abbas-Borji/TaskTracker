@@ -23,6 +23,19 @@ const Sidebar = ({
   userId,
 }: SidebarProps) => {
   const [teams, setTeams] = useState<Team[]>([]);
+  const [currentTab, setCurrentTab] = useState<Tab | null>(null); // State for active tab
+  const [currentTeam, setCurrentTeam] = useState<Team | null>(null); // State for active team
+  const handleTabClick = (tab: Tab) => {
+    setCurrentTab(tab);
+    setCurrentTeam(null); // Clear active team when a tab is clicked
+    setSidebarOpen(false); // Close sidebar on tab click
+  };
+
+  const handleTeamClick = (team: Team) => {
+    setCurrentTeam(team);
+    setCurrentTab(null); // Clear active tab when a team is clicked
+    setSidebarOpen(false); // Close sidebar on team click
+  };
 
   useEffect(() => {
     async function fetchTeams() {
@@ -109,7 +122,7 @@ const Sidebar = ({
                     <Divider />
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
-                        {tabs && (
+                        {tabs && tabs.length > 0 && (
                           <li>
                             <ul role="list" className="-mx-2 space-y-1">
                               {tabs.map((item) => (
@@ -117,15 +130,18 @@ const Sidebar = ({
                                   <Link
                                     href={item.href}
                                     className={classNames(
-                                      item.current
+                                      currentTab &&
+                                        item.name === currentTab.name
                                         ? "bg-primary text-light"
                                         : "text-light hover:bg-gray-300 hover:text-dark",
                                       "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
                                     )}
+                                    onClick={() => handleTabClick(item)}
                                   >
                                     <item.icon
                                       className={classNames(
-                                        item.current
+                                        currentTab &&
+                                          item.name === currentTab.name
                                           ? "text-light"
                                           : "text-light group-hover:text-dark",
                                         "h-6 w-6 shrink-0",
@@ -139,7 +155,7 @@ const Sidebar = ({
                             </ul>
                           </li>
                         )}
-                        {teams && (
+                        {teams && teams.length > 0 && (
                           <li>
                             <div className="text-xs font-semibold leading-6 text-gray-400">
                               Your Teams
@@ -150,15 +166,18 @@ const Sidebar = ({
                                   <Link
                                     href={team.href}
                                     className={classNames(
-                                      team.current
+                                      currentTeam &&
+                                        team.name === currentTeam.name
                                         ? "bg-primary"
                                         : "hover:bg-gray-300 hover:text-dark",
                                       "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-light",
                                     )}
+                                    onClick={() => handleTeamClick(team)}
                                   >
                                     <span
                                       className={classNames(
-                                        team.current
+                                        currentTeam &&
+                                          team.name === currentTeam.name
                                           ? "bg-primary"
                                           : "group-hover:border-dark group-hover:text-dark",
                                         "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-light text-[0.625rem] font-medium text-light",
@@ -193,7 +212,7 @@ const Sidebar = ({
             <Divider />
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
-                {tabs && (
+                {tabs && tabs.length > 0 && (
                   <li>
                     <ul role="list" className="-mx-2 space-y-1">
                       {tabs.map((item) => (
@@ -201,15 +220,16 @@ const Sidebar = ({
                           <Link
                             href={item.href}
                             className={classNames(
-                              item.current
+                              currentTab && item.name === currentTab.name
                                 ? "bg-primary text-light"
                                 : "text-light hover:bg-gray-300 hover:text-dark",
                               "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
                             )}
+                            onClick={() => handleTabClick(item)}
                           >
                             <item.icon
                               className={classNames(
-                                item.current
+                                currentTab && item.name === currentTab.name
                                   ? "text-light"
                                   : "text-light group-hover:text-dark",
                                 "h-6 w-6 shrink-0",
@@ -223,7 +243,7 @@ const Sidebar = ({
                     </ul>
                   </li>
                 )}
-                {teams && (
+                {teams && teams.length > 0 && (
                   <li>
                     <div className="text-xs font-semibold leading-6 text-gray-400">
                       Your Teams
@@ -234,15 +254,16 @@ const Sidebar = ({
                           <Link
                             href={team.href}
                             className={classNames(
-                              team.current
+                              currentTeam && team.name === currentTeam.name
                                 ? "bg-primary"
                                 : "hover:bg-gray-300 hover:text-dark",
                               "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-light",
                             )}
+                            onClick={() => handleTeamClick(team)}
                           >
                             <span
                               className={classNames(
-                                team.current
+                                currentTeam && team.name === currentTeam.name
                                   ? "bg-primary"
                                   : "group-hover:border-dark group-hover:text-dark",
                                 "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-light text-[0.625rem] font-medium text-light",
