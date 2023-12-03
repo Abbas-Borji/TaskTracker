@@ -14,28 +14,18 @@ import {
 import Sidebar from "../common/components/Sidebar";
 import classNames from "../common/functions/ClassNames";
 
-const tabs = [
-  {
-    name: "My Checklists",
-    href: "/manager/mychecklists",
-    icon: DocumentDuplicateIcon,
-    current: true,
-  },
-];
-
 const userNavigation = [
   { name: "Your profile", href: "#" },
   { name: "Sign out", href: "/auth/login" },
 ];
 
-const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
+const UserNavigationLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <>
       <div>
         <Sidebar
-          tabs={tabs}
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
           userId={1}
@@ -157,4 +147,4 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default NavigationLayout;
+export default UserNavigationLayout;
