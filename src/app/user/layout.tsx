@@ -12,11 +12,12 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import Sidebar from "../components/Sidebar";
+import classNames from "../functions/ClassNames";
 
 const tabs = [
   {
     name: "My Checklists",
-    href: "#",
+    href: "/manager/mychecklists",
     icon: DocumentDuplicateIcon,
     current: true,
   },
@@ -26,10 +27,6 @@ const userNavigation = [
   { name: "Your profile", href: "#" },
   { name: "Sign out", href: "/auth/login" },
 ];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
