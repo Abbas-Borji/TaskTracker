@@ -6,17 +6,14 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import Logo from "src/assets/logo.png";
 import { Team, Tab } from "../types/Sidebar";
 import Divider from "./Divider";
+import Link from "next/link";
+import classNames from "../functions/ClassNames";
 
 interface SidebarProps {
   tabs?: Tab[];
   sidebarOpen: boolean;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   userId: number;
-}
-
-// Multiple Classes
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
 }
 
 const Sidebar = ({
@@ -117,7 +114,7 @@ const Sidebar = ({
                             <ul role="list" className="-mx-2 space-y-1">
                               {tabs.map((item) => (
                                 <li key={item.name}>
-                                  <a
+                                  <Link
                                     href={item.href}
                                     className={classNames(
                                       item.current
@@ -136,7 +133,7 @@ const Sidebar = ({
                                       aria-hidden="true"
                                     />
                                     {item.name}
-                                  </a>
+                                  </Link>
                                 </li>
                               ))}
                             </ul>
@@ -150,7 +147,7 @@ const Sidebar = ({
                             <ul role="list" className="-mx-2 mt-2 space-y-1">
                               {teams.map((team) => (
                                 <li key={team.name}>
-                                  <a
+                                  <Link
                                     href={team.href}
                                     className={classNames(
                                       team.current
@@ -172,7 +169,7 @@ const Sidebar = ({
                                     <span className="truncate">
                                       {team.name}
                                     </span>
-                                  </a>
+                                  </Link>
                                 </li>
                               ))}
                             </ul>
@@ -201,7 +198,7 @@ const Sidebar = ({
                     <ul role="list" className="-mx-2 space-y-1">
                       {tabs.map((item) => (
                         <li key={item.name}>
-                          <a
+                          <Link
                             href={item.href}
                             className={classNames(
                               item.current
@@ -220,7 +217,7 @@ const Sidebar = ({
                               aria-hidden="true"
                             />
                             {item.name}
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -234,7 +231,7 @@ const Sidebar = ({
                     <ul role="list" className="-mx-2 mt-2 space-y-1">
                       {teams.map((team) => (
                         <li key={team.name}>
-                          <a
+                          <Link
                             href={team.href}
                             className={classNames(
                               team.current
@@ -254,7 +251,7 @@ const Sidebar = ({
                               {team.id}
                             </span>
                             <span className="truncate">{team.name}</span>
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </ul>
