@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
     const updatedTeams = teams.map((team) => ({
       id: team.id,
       name: team.name,
+      href: `/user/team/${team.id}`,
     }));
 
     return new NextResponse(JSON.stringify(updatedTeams), {
