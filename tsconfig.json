@@ -36,7 +36,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    ".next/types/**/*.ts"
-, "src/app/types"  ],
+    ".next/types/**/*.ts",
+    "src/app/common/types"
+  ],
   "exclude": ["node_modules"]
 }
