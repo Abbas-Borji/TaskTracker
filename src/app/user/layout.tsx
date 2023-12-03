@@ -11,8 +11,8 @@ import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
-import Sidebar from "../components/Sidebar";
-import classNames from "../functions/ClassNames";
+import Sidebar from "../common/components/Sidebar";
+import classNames from "../common/functions/ClassNames";
 
 const tabs = [
   {
