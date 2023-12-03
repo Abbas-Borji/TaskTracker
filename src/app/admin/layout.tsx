@@ -9,9 +9,12 @@ import {
   DocumentCheckIcon,
   ChatBubbleLeftIcon,
   Bars3Icon,
+  ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import Sidebar from "../common/components/Sidebar";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import capitalizeFirstLetter from "../common/functions/CapitalizeFirstLetter";
 
 const tabs = [
   {
@@ -52,7 +55,11 @@ const tabs = [
   },
 ];
 
-const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
+const AdminNavigationLayout = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname();
+  const segments = pathname.split("/");
+  const lastSegment = capitalizeFirstLetter(segments[segments.length - 1]);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -85,7 +92,20 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
 
               {/* Flex container for items on the left */}
               <div className="flex flex-1 items-center gap-x-4 xl:gap-x-6">
-                {/* Other content */}
+                {/* Display last segment and Refresh button */}
+                <div className="flex items-center">
+                  <span className="mr-4 text-lg font-semibold">
+                    {lastSegment}
+                  </span>
+                  {/* Refresh button */}
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="flex items-center justify-center rounded-lg bg-slate-600 p-1.5 text-white hover:bg-dark"
+                  >
+                    <ArrowPathIcon className="h-5 w-5" aria-hidden="true" />
+                    <span className="sr-only">Refresh</span>
+                  </button>
+                </div>
               </div>
 
               {/* Logout Button */}
@@ -109,4 +129,4 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default NavigationLayout;
+export default AdminNavigationLayout;
