@@ -4,12 +4,14 @@ interface ThreeCardContainerProps {
   title: string;
   items: any[];
   renderItem: (item: any) => JSX.Element; // This is the render prop
+  onViewAll?: () => void;
 }
 
 const ThreeCardContainer = ({
   title,
   items,
   renderItem,
+  onViewAll,
 }: ThreeCardContainerProps) => {
   return (
     <div className="w-full rounded-lg border border-gray-300 p-5 shadow-sm transition-shadow hover:shadow-md">
@@ -17,12 +19,12 @@ const ThreeCardContainer = ({
       <div>
         {items.slice(0, 3).map((item) => renderItem(item))}
         <div className="mt-4 text-center">
-          <a
-            href="/path-to-all-assigned-checklists"
+          <button
+            onClick={onViewAll} // Attach the onViewAll function to onClick event
             className="text-blue-600 hover:text-blue-800"
           >
             View all
-          </a>
+          </button>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import { Submission } from "@/app/common/types/Submission";
 import ChecklistCard from "@/app/common/components/ChecklistCard";
 import SubmissionCard from "@/app/common/components/SubmissionCard";
 import CardSkeleton from "@/app/common/components/CardSkeleton";
+import SixCardContainer from "@/app/common/components/SixCardContainer";
 
 interface Team {
   name: string | null;
@@ -21,6 +22,13 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
   const [checklists, setChecklists] = useState<Checklist[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Added loading state
+  const [viewType, setViewType] = useState("default"); // 'default', 'checklists', 'submissions'
+  const handleViewAll = (type: string) => {
+    setViewType(type);
+  };
+  const handleViewDefault = () => {
+    setViewType('default');
+  };
 
   useEffect(() => {
     async function fetchChecklists() {
@@ -46,31 +54,80 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
     fetchChecklists();
   }, [teamId]);
 
-  const skeletonCardsArray = Array.from({ length: 3 }, (_, index) => (
+  const threeSkeletonCardsArray = Array.from({ length: 3 }, (_, index) => (
     <CardSkeleton key={index} />
   ));
+
+  const sixSkeletonCardsArray = Array.from({ length: 6 }, (_, index) => (
+    <CardSkeleton key={index} />
+  ));
+
+  const renderContent = () => {
+    switch (viewType) {
+      case "checklists":
+        return (
+          <SixCardContainer
+            title="Pending Checklists"
+            items={isLoading ? sixSkeletonCardsArray : checklists}
+            renderItem={(item) =>
+              isLoading ? <CardSkeleton /> : <ChecklistCard checklist={item} />
+            }
+            onViewBack={handleViewDefault}
+          />
+        );
+      case "submissions":
+        return (
+          <SixCardContainer
+            title="Submitted Checklists"
+            items={isLoading ? sixSkeletonCardsArray : submissions}
+            renderItem={(item) =>
+              isLoading ? (
+                <CardSkeleton />
+              ) : (
+                <SubmissionCard submission={item} />
+              )
+            }
+            onViewBack={handleViewDefault}
+          />
+        );
+      default:
+        return (
+          <div className="flex w-full flex-col gap-8 lg:flex-row">
+            <ThreeCardContainer
+              title="Pending Checklists"
+              items={isLoading ? threeSkeletonCardsArray : checklists}
+              renderItem={(item) =>
+                isLoading ? (
+                  <CardSkeleton />
+                ) : (
+                  <ChecklistCard checklist={item} />
+                )
+              }
+              onViewAll={() => handleViewAll("checklists")}
+            />
+            <ThreeCardContainer
+              title="Submitted Checklists"
+              items={isLoading ? threeSkeletonCardsArray : submissions}
+              renderItem={(item) =>
+                isLoading ? (
+                  <CardSkeleton />
+                ) : (
+                  <SubmissionCard submission={item} />
+                )
+              }
+              onViewAll={() => handleViewAll("submissions")}
+            />
+          </div>
+        );
+    }
+  };
 
   return (
     <div className="p-2">
       <h1 className="mb-10 text-4xl font-medium">
         | {team.name || "Team ..."}
       </h1>
-      <div className="flex w-full flex-col gap-8 lg:flex-row">
-        <ThreeCardContainer
-          title="Pending Checklists"
-          items={isLoading ? skeletonCardsArray : checklists}
-          renderItem={(item) =>
-            isLoading ? <CardSkeleton /> : <ChecklistCard checklist={item} />
-          }
-        />
-        <ThreeCardContainer
-          title="Submitted Checklists"
-          items={isLoading ? skeletonCardsArray : submissions}
-          renderItem={(item) =>
-            isLoading ? <CardSkeleton /> : <SubmissionCard submission={item} />
-          }
-        />
-      </div>
+      {renderContent()}
     </div>
   );
 };
