@@ -69,8 +69,8 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
           <SixCardContainer
             title="Pending Checklists"
             items={isLoading ? sixSkeletonCardsArray : checklists}
-            renderItem={(item) =>
-              isLoading ? <CardSkeleton /> : <ChecklistCard checklist={item} />
+            renderItem={(item, index) =>
+              isLoading ? <CardSkeleton key={index}/> : <ChecklistCard checklist={item} key={index}/>
             }
             onViewBack={handleViewDefault}
           />
@@ -80,11 +80,11 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
           <SixCardContainer
             title="Submitted Checklists"
             items={isLoading ? sixSkeletonCardsArray : submissions}
-            renderItem={(item) =>
+            renderItem={(item: any, index:number) =>
               isLoading ? (
-                <CardSkeleton />
+                <CardSkeleton key={index}/>
               ) : (
-                <SubmissionCard submission={item} />
+                <SubmissionCard submission={item} key={index}/>
               )
             }
             onViewBack={handleViewDefault}
@@ -96,11 +96,11 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
             <ThreeCardContainer
               title="Pending Checklists"
               items={isLoading ? threeSkeletonCardsArray : checklists}
-              renderItem={(item) =>
+              renderItem={(item, index) =>
                 isLoading ? (
-                  <CardSkeleton />
+                  <CardSkeleton key={index}/>
                 ) : (
-                  <ChecklistCard checklist={item} />
+                  <ChecklistCard checklist={item} key={index}/>
                 )
               }
               onViewAll={() => handleViewAll("checklists")}
@@ -108,11 +108,11 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
             <ThreeCardContainer
               title="Submitted Checklists"
               items={isLoading ? threeSkeletonCardsArray : submissions}
-              renderItem={(item) =>
+              renderItem={(item, index) =>
                 isLoading ? (
-                  <CardSkeleton />
+                  <CardSkeleton key={index}/>
                 ) : (
-                  <SubmissionCard submission={item} />
+                  <SubmissionCard submission={item} key={index}/>
                 )
               }
               onViewAll={() => handleViewAll("submissions")}

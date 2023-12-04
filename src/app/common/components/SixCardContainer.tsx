@@ -4,7 +4,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 interface SixCardContainerProps {
   title: string;
   items: any[];
-  renderItem: (item: any) => JSX.Element;
+  renderItem: (item: any, index:number) => JSX.Element;
   onViewBack?: () => void;
 }
 
@@ -50,7 +50,7 @@ const SixCardContainer = ({
             key={index}
             className="mb-2 w-full lg:mb-0 lg:mr-4 lg:w-[calc(50%-1rem)]"
           >
-            {renderItem(item)}
+            {renderItem(item, index)}
           </div>
         ))}
       </div>
