@@ -62,6 +62,9 @@ async function seedChecklists() {
       { name: "Checklist 2", managerId: 3 },
       { name: "Checklist 3", managerId: 4 },
       { name: "Checklist 4", managerId: 2 },
+      { name: "Checklist 5", managerId: 3 },
+      { name: "Checklist 6", managerId: 4 },
+      { name: "Checklist 7", managerId: 2 },
     ],
   });
 }
@@ -96,7 +99,9 @@ async function seedAssignments() {
       { employeeId: 1, checklistId: 2, teamId: 1, dueDate: new Date() },
       { employeeId: 1, checklistId: 3, teamId: 1, dueDate: new Date() },
       { employeeId: 1, checklistId: 4, teamId: 1, dueDate: new Date() },
-      { employeeId: 1, checklistId: 3, teamId: 1, dueDate: new Date() },
+      { employeeId: 1, checklistId: 5, teamId: 1, dueDate: new Date() },
+      { employeeId: 1, checklistId: 6, teamId: 1, dueDate: new Date() },
+      { employeeId: 1, checklistId: 7, teamId: 1, dueDate: new Date() },
       { employeeId: 2, checklistId: 1, teamId: 1, dueDate: new Date() },
     ],
   });
@@ -109,6 +114,9 @@ async function seedSubmissions() {
       { userId: 1, assignmentId: 2, status: "OPENED" },
       { userId: 1, assignmentId: 3, status: "REVIEWED" },
       { userId: 1, assignmentId: 4, status: "PENDING" },
+      { userId: 1, assignmentId: 5, status: "OPENED" },
+      { userId: 1, assignmentId: 6, status: "REVIEWED" },
+      { userId: 1, assignmentId: 7, status: "PENDING" },
     ],
   });
 }
