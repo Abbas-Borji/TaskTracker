@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
       archivedByManager: assignment.submission?.archivedByManager,
       checklistinfo: {
         name: assignment.checklist.name,
-        managerName: assignment.checklist.manager.fullName,
+        managerName: assignment.checklist.manager.name,
       },
     };
   });
@@ -116,7 +116,7 @@ export async function GET(request: NextRequest) {
     },
     manager: {
       id: checklist.manager.id,
-      name: checklist.manager.fullName,
+      name: checklist.manager.name,
     },
   }));
 
