@@ -18,7 +18,7 @@ import UserAvatar from "@/app/common/components/UserAvatar";
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "/auth/login" },
+  { name: "Sign out", href: "/api/auth/signout" },
 ];
 
 const UserNavigationLayout = ({ children }: { children: React.ReactNode }) => {
