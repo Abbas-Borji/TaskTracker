@@ -6,25 +6,25 @@ async function seedUsers() {
   await prisma.user.createMany({
     data: [
       {
-        fullName: "John Doe",
+        name: "John Doe",
         email: "john@tasktracker.io",
         password: "123123123",
         role: "USER",
       },
       {
-        fullName: "Jane Smith",
+        name: "Jane Smith",
         email: "jane@tasktracker.io",
         password: "123123123",
         role: "MANAGER",
       },
       {
-        fullName: "Steve Jobs",
+        name: "Steve Jobs",
         email: "steve@tasktracker.io",
         password: "123123123",
         role: "MANAGER",
       },
       {
-        fullName: "Alex Bjorn",
+        name: "Alex Bjorn",
         email: "alex@tasktracker.io",
         password: "123123123",
         role: "ADMIN",
