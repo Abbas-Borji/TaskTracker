@@ -11,8 +11,8 @@ const UserAvatar = ({ session }: any) => {
           alt={userName}
         />
       ) : (
-        <div className="h-8 w-8 rounded-full bg-gray-50">
-          {userName?.charAt(0)}
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-dark font-medium text-light">
+          {userName?.charAt(0) || "U"}
         </div>
       )}
     </>
