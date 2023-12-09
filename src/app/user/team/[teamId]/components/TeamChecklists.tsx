@@ -124,7 +124,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
 
   return (
     <div className="p-2">
-      <h1 className="mb-10 text-4xl font-medium">
+      <h1 className="mb-6 text-4xl font-medium">
         | {team.name || "Team ..."}
       </h1>
       {renderContent()}
