@@ -1,7 +1,7 @@
 export { default } from "next-auth/middleware";
 
 export const config = {
-  matcher: ["/user/:path*", "/manager/:path*", "/admin/:path*"],
+  matcher: ["/user/:path*", "/manager/:path*", "/admin/:path*", "/api/:path*"],
 };
 
 // matcher symbols
