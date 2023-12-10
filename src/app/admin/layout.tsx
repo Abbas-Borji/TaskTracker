@@ -110,7 +110,7 @@ const AdminNavigationLayout = ({ children }: { children: React.ReactNode }) => {
 
               {/* Logout Button */}
               <Link
-                href="/auth/login"
+                href="/api/auth/signout"
                 className="flex w-24 justify-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
               >
                 Logout
