@@ -1,8 +1,49 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Logo from "src/assets/logo.png";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 const Login = () => {
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const fetchUserRoleAndRedirect = async () => {
+      if (session) {
+          const userRole = session.user.role;
+          switch (userRole) {
+            case "ADMIN":
+              router.push("/admin/users");
+              break;
+            case "USER":
+              router.push('/api/user/entry');
+              break;
+            case "MANAGER":
+              router.push("/manager/mychecklists");
+              break;
+            default:
+              router.push("/default");
+              break;
+          }
+      }
+    };
+
+    if (session) {
+      fetchUserRoleAndRedirect();
+    }
+  }, [session, router]);
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await signIn("credentials", {
+      redirect: true,
+      email: e.currentTarget.email.value,
+      password: e.currentTarget.password.value,
+    });
+  };
   return (
     <>
       <div className="flex h-full min-h-full flex-1 flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
@@ -12,7 +53,7 @@ const Login = () => {
               <img className="h-16 w-auto" src={Logo.src} alt="Your Company" />
               <h1 className="text-4xl text-gray-700">Log In</h1>
             </div>
-            <form className="space-y-6" action="#" method="POST">
+            <form className="space-y-6" onSubmit={handleLogin}>
               <div>
                 <label
                   htmlFor="email"
@@ -50,41 +91,35 @@ const Login = () => {
                   />
                 </div>
               </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  />
-                  <label
-                    htmlFor="remember-me"
-                    className="ml-3 block text-sm leading-6 text-gray-900"
-                  >
-                    Remember me
-                  </label>
-                </div>
-
-                <div className="text-sm leading-6">
-                  <a
-                    href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
-
               <div>
-                <Link
-                  href="/user/team/1"
+                <button
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Sign In
-                </Link>
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm leading-6">
+                  <Link
+                    href="#"
+                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className=" text-gray-900">
+                  Don't have an account?
+                  <Link
+                    href="/auth/signup"
+                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+                  >
+                    Create One
+                  </Link>
+                </span>
               </div>
             </form>
 
@@ -97,19 +132,44 @@ const Login = () => {
                   <div className="w-full border-t border-gray-200" />
                 </div>
                 <div className="relative flex justify-center text-sm font-medium leading-6">
-                  <span className="bg-white px-6 text-gray-900">
-                    Don't have an account?
-                  </span>
+                  <span className="bg-white px-6 text-gray-900">OR</span>
                 </div>
               </div>
-
               <div className="mt-6">
-                <Link
-                  href="/auth/signup"
-                  className="flex w-full justify-center rounded-md bg-slate-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
+                <button
+                  className="mx-auto flex w-full items-center justify-center rounded-lg border-2 border-stone-300 bg-white py-2.5 text-center text-sm font-medium text-black hover:bg-white/90 focus:outline-none focus:ring-4 focus:ring-white/50"
+                  onClick={() => signIn("google")}
                 >
-                  Create One
-                </Link>
+                  <svg
+                    className="mr-2 h-7 w-7"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="705.6"
+                    height="720"
+                    viewBox="0 0 186.69 190.5"
+                  >
+                    <path
+                      fill="#4285f4"
+                      d="M-1089.333-687.239v36.888h51.262c-2.251 11.863-9.006 21.908-19.137 28.662l30.913 23.986c18.011-16.625 28.402-41.044 28.402-70.052 0-6.754-.606-13.249-1.732-19.483z"
+                      transform="translate(1184.583 765.171)"
+                    ></path>
+                    <path
+                      fill="#34a853"
+                      d="M-1142.714-651.791l-6.972 5.337-24.679 19.223c15.673 31.086 47.796 52.561 85.03 52.561 25.717 0 47.278-8.486 63.038-23.033l-30.913-23.986c-8.486 5.715-19.31 9.179-32.125 9.179-24.765 0-45.806-16.712-53.34-39.226z"
+                      transform="translate(1184.583 765.171)"
+                    ></path>
+                    <path
+                      fill="#fbbc05"
+                      d="M-1174.365-712.61c-6.494 12.815-10.217 27.276-10.217 42.689s3.723 29.874 10.217 42.689c0 .086 31.693-24.592 31.693-24.592-1.905-5.715-3.031-11.776-3.031-18.098s1.126-12.383 3.031-18.098z"
+                      transform="translate(1184.583 765.171)"
+                    ></path>
+                    <path
+                      fill="#ea4335"
+                      d="M-1089.333-727.244c14.028 0 26.497 4.849 36.455 14.201l27.276-27.276c-16.539-15.413-38.013-24.852-63.731-24.852-37.234 0-69.359 21.388-85.032 52.561l31.692 24.592c7.533-22.514 28.575-39.226 53.34-39.226z"
+                      transform="translate(1184.583 765.171)"
+                    ></path>
+                  </svg>
+                  Continue with Google
+                </button>
               </div>
             </div>
           </div>
