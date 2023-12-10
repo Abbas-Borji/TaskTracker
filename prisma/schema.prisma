@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-    id            Int          @id @default(autoincrement())
+    id            String       @id @default(cuid())
     name          String?
     email         String?      @unique
     emailVerified DateTime?
@@ -35,7 +35,7 @@ enum Role {
 model Team {
     id          Int          @id @default(autoincrement())
     name        String       @unique
-    managerId   Int
+    managerId   String
     manager     User         @relation("managerOf", fields: [managerId], references: [id])
     assignments Assignment[]
     createdAt   DateTime     @default(now())
@@ -44,10 +44,10 @@ model Team {
 }
 
 model MemberOf {
-    userId   Int
+    userId   String
     teamId   Int
-    memberOf User @relation(fields: [userId], references: [id])
-    member   Team @relation(fields: [teamId], references: [id])
+    memberOf User   @relation(fields: [userId], references: [id])
+    member   Team   @relation(fields: [teamId], references: [id])
 
     @@id([userId, teamId])
 }
@@ -55,7 +55,7 @@ model MemberOf {
 model Checklist {
     id          Int          @id @default(autoincrement())
     name        String
-    managerId   Int
+    managerId   String
     manager     User         @relation(fields: [managerId], references: [id])
     questions   Question[]
     createdAt   DateTime     @default(now())
@@ -85,7 +85,7 @@ model Option {
 
 model Assignment {
     id                 Int         @id @default(autoincrement())
-    employeeId         Int
+    employeeId         String
     employee           User        @relation(fields: [employeeId], references: [id])
     checklistId        Int
     checklist          Checklist   @relation(fields: [checklistId], references: [id])
@@ -101,7 +101,7 @@ model Assignment {
 
 model Submission {
     id                Int        @id @default(autoincrement())
-    userId            Int
+    userId            String
     user              User       @relation(fields: [userId], references: [id])
     archivedByManager Boolean    @default(false)
     status            Status     @default(PENDING)
@@ -122,7 +122,7 @@ model feedback {
     assignmentId Int        @unique
     assignment   Assignment @relation(fields: [assignmentId], references: [id])
     content      String
-    managerId    Int
+    managerId    String
     manager      User       @relation(fields: [managerId], references: [id])
     createdAt    DateTime   @default(now())
 }
@@ -130,7 +130,7 @@ model feedback {
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
-    userId            Int
+    userId            String
     type              String
     provider          String
     providerAccountId String
@@ -150,7 +150,7 @@ model Account {
 model Session {
     id           String   @id @default(cuid())
     sessionToken String   @unique
-    userId       Int
+    userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
