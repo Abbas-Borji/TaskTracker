@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
   const assignments = await prisma.assignment.findMany({
     where: {
       teamId: Number(teamId),
-      employeeId: 1, // Constant user id for now, will be dynamic later based on Token
+      employeeId: 'clpzqi28o0000ou9jn8c2td22', // Constant user id for now, will be dynamic later based on Token
     },
     include: {
       submission: true,
