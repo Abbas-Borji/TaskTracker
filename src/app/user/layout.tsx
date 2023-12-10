@@ -31,7 +31,6 @@ const UserNavigationLayout = ({ children }: { children: React.ReactNode }) => {
         <Sidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          userId={1}
         />
 
         <div className="xl:pl-72">

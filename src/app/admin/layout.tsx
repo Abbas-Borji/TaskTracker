@@ -58,7 +58,7 @@ const tabs = [
 const AdminNavigationLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const segments = pathname.split("/");
-  const lastSegment = capitalizeFirstLetter(segments[segments.length - 1]);
+  const lastSegment: string = capitalizeFirstLetter(segments[segments.length - 1]);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -69,7 +69,6 @@ const AdminNavigationLayout = ({ children }: { children: React.ReactNode }) => {
           tabs={tabs}
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          userId={2}
         />
 
         <div className="xl:pl-72">

@@ -13,14 +13,12 @@ interface SidebarProps {
   tabs?: Tab[];
   sidebarOpen: boolean;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  userId: number;
 }
 
 const Sidebar = ({
   tabs,
   sidebarOpen,
   setSidebarOpen,
-  userId,
 }: SidebarProps) => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [currentTab, setCurrentTab] = useState<Tab | null>(null); // State for active tab
@@ -39,9 +37,8 @@ const Sidebar = ({
 
   useEffect(() => {
     async function fetchTeams() {
-      console.log("Fetching teams for user ID:", userId);
       try {
-        const response = await fetch(`/api/teams/${userId}`);
+        const response = await fetch('/api/teams');
         if (!response.ok) {
           throw new Error("Failed to fetch");
         }
@@ -53,7 +50,7 @@ const Sidebar = ({
     }
 
     fetchTeams();
-  }, [userId]); // Dependency array to ensure the effect runs once or when teamId changes
+  }, []); // Run once on component mount
 
   return (
     <>

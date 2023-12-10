@@ -25,7 +25,7 @@ const tabs = [
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "/auth/login" },
+  { name: "Sign out", href: "/api/auth/signout" },
 ];
 
 const ManagerNavigationLayout = ({ children }: { children: React.ReactNode }) => {
@@ -38,7 +38,6 @@ const ManagerNavigationLayout = ({ children }: { children: React.ReactNode }) =>
           tabs={tabs}
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          userId={1}
         />
 
         <div className="xl:pl-72">

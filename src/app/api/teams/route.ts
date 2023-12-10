@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
 
 export async function GET(request: NextRequest) {
-  const url = request.nextUrl;
-  console.log("URL:", url.href); // Log the full URL
-  const userId = url.pathname.split("/").pop(); // Extract the last segment of the pathname
+  const session = await getServerSession(authOptions);
+  const userId = session?.user.id;
+  console.log("Returning teams of user with userId", userId);
   const prisma = new PrismaClient();
 
   try {
     const userWithTeams = await prisma.memberOf.findMany({
       where: {
-        userId: Number(userId),
+        userId: userId,
       },
     });
 
