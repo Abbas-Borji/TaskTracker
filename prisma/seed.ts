@@ -1,70 +1,84 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Role, Prisma } from "@prisma/client";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
 async function seedUsers() {
-  await prisma.user.createMany({
-    data: [
-      {
-        name: "John Doe",
-        email: "john@tasktracker.io",
-        password: "123123123",
-        role: "USER",
-      },
-      {
-        name: "Jane Smith",
-        email: "jane@tasktracker.io",
-        password: "123123123",
-        role: "MANAGER",
-      },
-      {
-        name: "Steve Jobs",
-        email: "steve@tasktracker.io",
-        password: "123123123",
-        role: "MANAGER",
-      },
-      {
-        name: "Alex Bjorn",
-        email: "alex@tasktracker.io",
-        password: "123123123",
-        role: "ADMIN",
-      },
-    ],
-  });
+  const users = [
+    {
+      name: "John Doe",
+      email: "john@tasktracker.io",
+      password: await bcrypt.hash("123123123", 10),
+      role: Role.USER,
+    },
+    {
+      name: "Jane Smith",
+      email: "jane@tasktracker.io",
+      password: await bcrypt.hash("123123123", 10),
+      role: Role.MANAGER,
+    },
+    {
+      name: "Steve Jobs",
+      email: "steve@tasktracker.io",
+      password: await bcrypt.hash("123123123", 10),
+      role: Role.MANAGER,
+    },
+    {
+      name: "Alex Bjorn",
+      email: "alex@tasktracker.io",
+      password: await bcrypt.hash("123123123", 10),
+      role: Role.ADMIN,
+    },
+  ];
+  const createdUsers = [];
+  for (const user of users) {
+    const createdUser = await prisma.user.create({
+      data: user,
+    });
+    createdUsers.push(createdUser);
+  }
+
+  return createdUsers;
 }
 
-async function seedTeams() {
+async function seedTeams(
+  createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+) {
   await prisma.team.createMany({
     data: [
-      { name: "Team A", managerId: 2 },
-      { name: "Team B", managerId: 3 },
-      { name: "Team C", managerId: 2 },
-      { name: "Team D", managerId: 3 },
+      { name: "Team A", managerId: createdUsers[1]!.id },
+      { name: "Team B", managerId: createdUsers[2]!.id },
+      { name: "Team C", managerId: createdUsers[1]!.id },
+      { name: "Team D", managerId: createdUsers[2]!.id },
     ],
   });
 }
 
-async function seedMemberOf() {
+async function seedMemberOf(
+  createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+) {
   await prisma.memberOf.createMany({
     data: [
-      { userId: 1, teamId: 1 },
-      { userId: 1, teamId: 2 },
-      { userId: 1, teamId: 3 },
-      { userId: 1, teamId: 4 },
+      { userId: createdUsers[0]!.id, teamId: 1 },
+      { userId: createdUsers[0]!.id, teamId: 2 },
+      { userId: createdUsers[0]!.id, teamId: 3 },
+      { userId: createdUsers[0]!.id, teamId: 4 },
     ],
   });
 }
 
-async function seedChecklists() {
+async function seedChecklists(
+  createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+) {
   await prisma.checklist.createMany({
     data: [
-      { name: "Checklist 1", managerId: 2 },
-      { name: "Checklist 2", managerId: 3 },
-      { name: "Checklist 3", managerId: 4 },
-      { name: "Checklist 4", managerId: 2 },
-      { name: "Checklist 5", managerId: 3 },
-      { name: "Checklist 6", managerId: 4 },
-      { name: "Checklist 7", managerId: 2 },
+      { name: "Checklist 1", managerId: createdUsers[1]!.id },
+      { name: "Checklist 2", managerId: createdUsers[2]!.id },
+      { name: "Checklist 3", managerId: createdUsers[3]!.id },
+      { name: "Checklist 4", managerId: createdUsers[1]!.id },
+      { name: "Checklist 5", managerId: createdUsers[2]!.id },
+      { name: "Checklist 6", managerId: createdUsers[3]!.id },
+      { name: "Checklist 7", managerId: createdUsers[1]!.id },
     ],
   });
 }
@@ -92,55 +106,113 @@ async function seedOptions() {
   });
 }
 
-async function seedAssignments() {
+async function seedAssignments(
+  createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+) {
   await prisma.assignment.createMany({
     data: [
-      { employeeId: 1, checklistId: 1, teamId: 1, dueDate: new Date() },
-      { employeeId: 1, checklistId: 2, teamId: 1, dueDate: new Date() },
-      { employeeId: 1, checklistId: 3, teamId: 1, dueDate: new Date() },
-      { employeeId: 1, checklistId: 4, teamId: 1, dueDate: new Date() },
-      { employeeId: 1, checklistId: 5, teamId: 1, dueDate: new Date() },
-      { employeeId: 1, checklistId: 6, teamId: 1, dueDate: new Date() },
-      { employeeId: 1, checklistId: 7, teamId: 1, dueDate: new Date() },
-      { employeeId: 2, checklistId: 1, teamId: 1, dueDate: new Date() },
+      {
+        employeeId: createdUsers[0]!.id,
+        checklistId: 1,
+        teamId: 1,
+        dueDate: new Date(),
+      },
+      {
+        employeeId: createdUsers[0]!.id,
+        checklistId: 2,
+        teamId: 1,
+        dueDate: new Date(),
+      },
+      {
+        employeeId: createdUsers[0]!.id,
+        checklistId: 3,
+        teamId: 1,
+        dueDate: new Date(),
+      },
+      {
+        employeeId: createdUsers[0]!.id,
+        checklistId: 4,
+        teamId: 1,
+        dueDate: new Date(),
+      },
+      {
+        employeeId: createdUsers[0]!.id,
+        checklistId: 5,
+        teamId: 1,
+        dueDate: new Date(),
+      },
+      {
+        employeeId: createdUsers[0]!.id,
+        checklistId: 6,
+        teamId: 1,
+        dueDate: new Date(),
+      },
+      {
+        employeeId: createdUsers[0]!.id,
+        checklistId: 7,
+        teamId: 1,
+        dueDate: new Date(),
+      },
+      {
+        employeeId: createdUsers[1]!.id,
+        checklistId: 1,
+        teamId: 1,
+        dueDate: new Date(),
+      },
     ],
   });
 }
 
-async function seedSubmissions() {
+async function seedSubmissions(
+  createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+) {
   await prisma.submission.createMany({
     data: [
-      { userId: 1, assignmentId: 1, status: "PENDING" },
-      { userId: 1, assignmentId: 2, status: "OPENED" },
-      { userId: 1, assignmentId: 3, status: "REVIEWED" },
-      { userId: 1, assignmentId: 4, status: "PENDING" },
-      { userId: 1, assignmentId: 5, status: "OPENED" },
-      { userId: 1, assignmentId: 6, status: "REVIEWED" },
-      { userId: 1, assignmentId: 7, status: "PENDING" },
+      { userId: createdUsers[0]!.id, assignmentId: 1, status: "PENDING" },
+      { userId: createdUsers[0]!.id, assignmentId: 2, status: "OPENED" },
+      { userId: createdUsers[0]!.id, assignmentId: 3, status: "REVIEWED" },
+      { userId: createdUsers[0]!.id, assignmentId: 4, status: "PENDING" },
+      { userId: createdUsers[0]!.id, assignmentId: 5, status: "OPENED" },
+      { userId: createdUsers[0]!.id, assignmentId: 6, status: "REVIEWED" },
+      { userId: createdUsers[0]!.id, assignmentId: 7, status: "PENDING" },
     ],
   });
 }
 
-async function seedFeedbacks() {
+async function seedFeedbacks(
+  createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+) {
   await prisma.feedback.createMany({
     data: [
-      { assignmentId: 1, content: "Feedback 1", managerId: 2 },
-      { assignmentId: 2, content: "Feedback 2", managerId: 3 },
-      { assignmentId: 3, content: "Feedback 3", managerId: 4 },
+      {
+        assignmentId: 1,
+        content: "Feedback 1",
+        managerId: createdUsers[1]!.id,
+      },
+      {
+        assignmentId: 2,
+        content: "Feedback 2",
+        managerId: createdUsers[2]!.id,
+      },
+      {
+        assignmentId: 3,
+        content: "Feedback 3",
+        managerId: createdUsers[3]!.id,
+      },
     ],
   });
 }
 
 async function main() {
-  await seedUsers();
-  await seedTeams();
-  await seedMemberOf();
-  await seedChecklists();
+  const createdUsers = await seedUsers();
+  await seedTeams(createdUsers);
+  await seedMemberOf(createdUsers);
+  await seedChecklists(createdUsers);
   await seedQuestions();
   await seedOptions();
-  await seedAssignments();
-  await seedSubmissions();
-  await seedFeedbacks();
+  await seedAssignments(createdUsers);
+  await seedSubmissions(createdUsers);
+  await seedFeedbacks(createdUsers);
 }
 
 main()
