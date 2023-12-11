@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "prisma/client";
 
 export async function GET(request: NextRequest) {
   // Extract the teamId from the URL
   const url = request.nextUrl;
   const teamId = url.pathname.split("/").pop();
-
-  const prisma = new PrismaClient();
 
   // Get the team name
   const teamName = await prisma.team.findUnique({

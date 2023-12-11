@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "prisma/client";
 import { getToken } from "next-auth/jwt";
 
 export async function GET(request: NextRequest) {
@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
   }
   const url = request.nextUrl;
   const email = decodeURIComponent(url.pathname.split("/").pop() ?? ""); // Extract the email from the URL
-  const prisma = new PrismaClient();
 
   try {
     // Query the user based on the email
