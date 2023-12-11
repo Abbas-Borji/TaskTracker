@@ -3,9 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcrypt";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "prisma/client";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -51,14 +49,14 @@ export const authOptions: AuthOptions = {
           name: profile.name,
           email: profile.email,
           image: profile.picture,
-          role: profile.role? profile.role : "USER",
+          role: profile.role ? profile.role : "USER",
         };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      return { ...token, ...user};
+      return { ...token, ...user };
     },
     async session({ session, token }) {
       session.user!.role = token.role;
