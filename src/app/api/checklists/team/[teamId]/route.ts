@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
 
 export async function GET(request: NextRequest) {
+  // Get the userId from the session
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+
   // Extract the teamId from the URL
   const url = request.nextUrl;
   const teamId = url.pathname.split("/").pop();
@@ -20,7 +26,7 @@ export async function GET(request: NextRequest) {
   const assignments = await prisma.assignment.findMany({
     where: {
       teamId: Number(teamId),
-      employeeId: 'clpzqi28o0000ou9jn8c2td22', // Constant user id for now, will be dynamic later based on Token
+      employeeId: userId,
     },
     include: {
       submission: true,
