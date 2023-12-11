@@ -46,10 +46,10 @@ async function seedTeams(
 ) {
   await prisma.team.createMany({
     data: [
-      { name: "Team A", managerId: createdUsers[1]!.id },
-      { name: "Team B", managerId: createdUsers[2]!.id },
-      { name: "Team C", managerId: createdUsers[1]!.id },
-      { name: "Team D", managerId: createdUsers[2]!.id },
+      { name: "General", managerId: createdUsers[1]!.id },
+      { name: "Team A", managerId: createdUsers[2]!.id },
+      { name: "Team B", managerId: createdUsers[1]!.id },
+      { name: "Team C", managerId: createdUsers[2]!.id },
     ],
   });
 }
@@ -63,6 +63,8 @@ async function seedMemberOf(
       { userId: createdUsers[0]!.id, teamId: 2 },
       { userId: createdUsers[0]!.id, teamId: 3 },
       { userId: createdUsers[0]!.id, teamId: 4 },
+      { userId: createdUsers[1]!.id, teamId: 1 },
+      { userId: createdUsers[2]!.id, teamId: 1 },
     ],
   });
 }
