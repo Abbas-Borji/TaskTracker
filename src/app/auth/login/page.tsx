@@ -1,51 +1,22 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import Logo from "src/assets/logo.png";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import Redirect from "@/app/redirect/page";
 import { signIn } from "next-auth/react";
 
 const Login = () => {
-  const router = useRouter();
-  const { data: session } = useSession();
-
-  useEffect(() => {
-    const fetchUserRoleAndRedirect = async () => {
-      if (session) {
-          const userRole = session.user.role;
-          switch (userRole) {
-            case "ADMIN":
-              router.push("/admin/users");
-              break;
-            case "USER":
-              router.push('/api/user/entry');
-              break;
-            case "MANAGER":
-              router.push("/manager/mychecklists");
-              break;
-            default:
-              router.push("/default");
-              break;
-          }
-      }
-    };
-
-    if (session) {
-      fetchUserRoleAndRedirect();
-    }
-  }, [session, router]);
-
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await signIn("credentials", {
-      redirect: true,
+    signIn("credentials", {
+      redirect: false,
       email: e.currentTarget.email.value,
       password: e.currentTarget.password.value,
     });
   };
   return (
     <>
+      <Redirect />
       <div className="flex h-full min-h-full flex-1 flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="bg-white px-6 py-12 text-center shadow sm:rounded-lg sm:px-12">
@@ -138,7 +109,7 @@ const Login = () => {
               <div className="mt-6">
                 <button
                   className="mx-auto flex w-full items-center justify-center rounded-lg border-2 border-stone-300 bg-white py-2.5 text-center text-sm font-medium text-black hover:bg-white/90 focus:outline-none focus:ring-4 focus:ring-white/50"
-                  onClick={() => signIn("google")}
+                  onClick={() => signIn("google", { callbackUrl: "/redirect" })}
                 >
                   <svg
                     className="mr-2 h-7 w-7"
