@@ -1,19 +1,70 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Logo from "src/assets/logo.png";
 import Redirect from "@/app/redirect/page";
 import { signIn } from "next-auth/react";
+import signInSchema from "./schema";
+import { z } from "zod";
+
+interface FormErrors {
+  [key: string]: string | undefined;
+}
 
 const Login = () => {
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const validateFormData = () => {
+    try {
+      signInSchema.parse({
+        email,
+        password,
+      });
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // ... inside your validation function
+        const newErrors: FormErrors = {};
+        error.errors.forEach((err) => {
+          const key = err.path[0];
+          if (typeof key === "string") {
+            newErrors[key] = err.message;
+          }
+        });
+        setErrors(newErrors);
+      }
+      return false;
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const isValid = validateFormData();
+    if (isValid) {
+      handleLogin(); // Proceed with the login if valid
+    } else {
+      console.log("Validation errors:", errors);
+    }
+  };
+
+  const handleLogin = () => {
     signIn("credentials", {
       redirect: false,
-      email: e.currentTarget.email.value,
-      password: e.currentTarget.password.value,
+      email: email,
+      password: password,
     });
   };
+
   return (
     <>
       <Redirect />
@@ -24,14 +75,21 @@ const Login = () => {
               <img className="h-16 w-auto" src={Logo.src} alt="Your Company" />
               <h1 className="text-4xl text-gray-700">Log In</h1>
             </div>
-            <form className="space-y-6" onSubmit={handleLogin}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-left text-sm font-medium leading-6 text-gray-900"
-                >
-                  Email address
-                </label>
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="email"
+                    className="block text-left text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Email address
+                  </label>
+                  {errors.email && (
+                    <p className="text-sm font-medium text-red-500">
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
                 <div className="mt-2">
                   <input
                     id="email"
@@ -39,18 +97,28 @@ const Login = () => {
                     type="email"
                     autoComplete="email"
                     required
+                    value={email} // Connect the input to the email state
+                    onChange={handleEmailChange} // Update state on change
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
 
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-left text-sm font-medium leading-6 text-gray-900"
-                >
-                  Password
-                </label>
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="password"
+                    className="text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Password
+                  </label>
+                  {errors.password && (
+                    <p className="text-sm font-medium text-red-500">
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
+
                 <div className="mt-2">
                   <input
                     id="password"
@@ -58,6 +126,8 @@ const Login = () => {
                     type="password"
                     autoComplete="current-password"
                     required
+                    value={password} // Connect the input to the password state
+                    onChange={handlePasswordChange} // Update state on change
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
@@ -71,19 +141,19 @@ const Login = () => {
                 </button>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="text-sm leading-6">
+              <div className="flex items-center justify-between text-sm">
+                <div className="">
                   <Link
-                    href="#"
+                    href="/auth/forget-password"
                     className="font-semibold text-indigo-600 hover:text-indigo-500"
                   >
                     Forgot password?
                   </Link>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between text-sm">
                 <span className=" text-gray-900">
-                  Don't have an account?
+                  Don't have an account?&nbsp;
                   <Link
                     href="/auth/signup"
                     className="font-semibold text-indigo-600 hover:text-indigo-500"
@@ -103,7 +173,9 @@ const Login = () => {
                   <div className="w-full border-t border-gray-200" />
                 </div>
                 <div className="relative flex justify-center text-sm font-medium leading-6">
-                  <span className="bg-white px-6 text-gray-900">OR</span>
+                  <span className="bg-white px-6 text-sm text-gray-900">
+                    OR
+                  </span>
                 </div>
               </div>
               <div className="mt-6">
