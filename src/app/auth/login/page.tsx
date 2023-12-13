@@ -6,6 +6,9 @@ import Redirect from "@/app/redirect/page";
 import { signIn } from "next-auth/react";
 import signInSchema from "./schema";
 import { z } from "zod";
+import Loading from "@/app/loading";
+import Notification from "@/app/common/components/Notification";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 interface FormErrors {
   [key: string]: string | undefined;
@@ -15,6 +18,9 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
+  const [serverError, setServerError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isNotificationVisible, setNotificationVisible] = useState(false);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -30,10 +36,10 @@ const Login = () => {
         email,
         password,
       });
+      setErrors({});
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        // ... inside your validation function
         const newErrors: FormErrors = {};
         error.errors.forEach((err) => {
           const key = err.path[0];
@@ -48,25 +54,45 @@ const Login = () => {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
     e.preventDefault();
     const isValid = validateFormData();
     if (isValid) {
       handleLogin(); // Proceed with the login if valid
     } else {
+      setIsLoading(false);
       console.log("Validation errors:", errors);
     }
   };
 
-  const handleLogin = () => {
-    signIn("credentials", {
-      redirect: false,
-      email: email,
-      password: password,
-    });
+  const handleLogin = async () => {
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: email,
+        password: password,
+      });
+      if (result?.error) {
+        setServerError(result.error);
+        setNotificationVisible(true);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+    setIsLoading(false);
   };
 
   return (
     <>
+      {isLoading ? <Loading /> : null}
+      {isNotificationVisible ? (
+        <Notification
+          title={serverError}
+          icon={<ExclamationTriangleIcon className="text-red-600" />}
+          show={isNotificationVisible}
+          setShow={setNotificationVisible}
+        />
+      ) : null}
       <Redirect />
       <div className="flex h-full min-h-full flex-1 flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">

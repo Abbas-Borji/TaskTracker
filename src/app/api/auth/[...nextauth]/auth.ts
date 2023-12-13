@@ -22,21 +22,28 @@ export const authOptions: AuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        if (!credentials?.email || !credentials.password) return null;
+        if (!credentials?.email || !credentials.password) {
+          throw new Error("Missing credentials");
+        }
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
-        if (!user) return null;
+
+        if (!user) {
+          throw new Error("User not found");
+        }
 
         const passwordsMatch = await bcrypt.compare(
           credentials.password,
           user.password!,
         );
 
-        if (passwordsMatch) {
-          return { ...user, id: user.id.toString() };
+        if (!passwordsMatch) {
+          throw new Error("Incorrect password");
         }
-        return null;
+
+        return { ...user, id: user.id.toString() };
       },
     }),
 
