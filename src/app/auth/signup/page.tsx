@@ -8,6 +8,7 @@ import { z } from "zod";
 import Loading from "@/app/loading";
 import Notification from "@/app/common/components/Notification";
 import Redirect from "@/app/redirect/page";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
 interface FormErrors {
   [key: string]: string | undefined;
@@ -112,6 +113,9 @@ const Signup = () => {
         <Notification
           title="Welcome to TaskTracker!"
           body="You have successfully registered an account."
+          icon={<CheckCircleIcon className="text-green-400" />}
+          show={isNotificationVisible}
+          setShow={setNotificationVisible}
         />
       ) : null}
       <Redirect to="/auth/signup" />
