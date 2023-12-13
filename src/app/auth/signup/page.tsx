@@ -9,6 +9,7 @@ import Loading from "@/app/loading";
 import Notification from "@/app/common/components/Notification";
 import Redirect from "@/app/redirect/page";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 interface FormErrors {
   [key: string]: string | undefined;
@@ -19,6 +20,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
+  const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isNotificationVisible, setNotificationVisible] = useState(false);
 
@@ -41,6 +43,7 @@ const Signup = () => {
         email,
         password,
       });
+      setErrors({});
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -84,22 +87,25 @@ const Signup = () => {
       });
       setIsLoading(false);
 
-      if (!response.ok) {
+      if (response.status === 400) {
         // Handle error
         const errorData = await response.json();
-        setErrors(errorData);
+        console.error("Error:", errorData.message);
+        setServerError(errorData.message);
+        setNotificationVisible(true);
         return;
       }
 
-      setNotificationVisible(true);
-      const createdUser = await response.json();
-      // Handle success
-      console.log("User:", createdUser);
-      signIn("credentials", {
-        redirect: false,
-        email: email,
-        password: password,
-      });
+      if (response.status === 201) {
+        // Handle success
+        setServerError("");
+        setNotificationVisible(true);
+        signIn("credentials", {
+          redirect: false,
+          email: email,
+          password: password,
+        });
+      }
     } catch (error) {
       setIsLoading(false);
       console.error("Error:", error);
@@ -110,13 +116,23 @@ const Signup = () => {
     <>
       {isLoading ? <Loading /> : null}
       {isNotificationVisible ? (
-        <Notification
-          title="Welcome to TaskTracker!"
-          body="You have successfully registered an account."
-          icon={<CheckCircleIcon className="text-green-400" />}
-          show={isNotificationVisible}
-          setShow={setNotificationVisible}
-        />
+        serverError ? (
+          <Notification
+            title={serverError}
+            body="There was an error processing your request."
+            icon={<ExclamationTriangleIcon className="text-red-600" />}
+            show={isNotificationVisible}
+            setShow={setNotificationVisible}
+          />
+        ) : (
+          <Notification
+            title="Welcome to TaskTracker!"
+            body="You have successfully registered an account."
+            icon={<CheckCircleIcon className="text-green-400" />}
+            show={isNotificationVisible}
+            setShow={setNotificationVisible}
+          />
+        )
       ) : null}
       <Redirect to="/auth/signup" />
       <div className="flex h-full min-h-full flex-1 flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">

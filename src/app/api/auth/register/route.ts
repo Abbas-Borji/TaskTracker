@@ -26,10 +26,15 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       // If a user with the same email already exists, return a response with a status code of 400 and an error message
-      return NextResponse.json({
-        status: 400,
-        body: "A user with this email already exists.",
-      });
+      return new NextResponse(
+        JSON.stringify({ message: "A user with this email already exists." }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
     }
 
     // Hash the password
@@ -44,11 +49,24 @@ export async function POST(request: NextRequest) {
     });
 
     // Return the created user
-    return NextResponse.json({status:201, body: createdUser});
+    return new NextResponse(JSON.stringify(createdUser), {
+      status: 201,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       // If the error is a ZodError, return a response with a status code of 400 and the error messages
-      return NextResponse.json({ status: 400, body: error.errors.map((err) => err.message) });
+      return new NextResponse(
+        JSON.stringify({ body: error.errors.map((err) => err.message) }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
     } else {
       // If the error is not a ZodError, rethrow it
       throw error;
