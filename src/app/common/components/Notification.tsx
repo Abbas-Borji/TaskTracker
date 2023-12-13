@@ -1,16 +1,22 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { Transition } from "@headlessui/react";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 
 interface NotificationProps {
   title?: string;
   body?: string;
+  icon?: React.ReactNode;
+  show: boolean;
+  setShow: (show: boolean) => void;
 }
 
-const Notification = ({ title, body }: NotificationProps) => {
-  const [show, setShow] = useState(true);
-
+const Notification = ({
+  title,
+  body,
+  icon,
+  show,
+  setShow,
+}: NotificationProps) => {
   return (
     <>
       {/* Global notification live region, render this permanently at the end of the document */}
@@ -34,18 +40,11 @@ const Notification = ({ title, body }: NotificationProps) => {
               <div className="p-4">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
-                    <CheckCircleIcon
-                      className="h-6 w-6 text-green-400"
-                      aria-hidden="true"
-                    />
+                    <div className="h-6 w-6">{icon}</div>
                   </div>
                   <div className="ml-3 w-0 flex-1 pt-0.5">
-                    <p className="text-sm font-medium text-gray-900">
-                      {title}
-                    </p>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {body}
-                    </p>
+                    <p className="text-sm font-medium text-gray-900">{title}</p>
+                    <p className="mt-1 text-sm text-gray-500">{body}</p>
                   </div>
                   <div className="ml-4 flex flex-shrink-0">
                     <button
