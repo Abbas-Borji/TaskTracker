@@ -7,6 +7,12 @@ export async function GET(request: NextRequest) {
   // Get the userId from the session
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
+  const userRole = session?.user?.role;
+
+   // Permission check to ensure only users can access this route
+   if (userRole === 'ADMIN' || userRole === 'MANAGER') {
+    return new NextResponse('Permission denied.', {status: 400});
+  }
 
   // Extract the teamId from the URL
   const url = request.nextUrl;
