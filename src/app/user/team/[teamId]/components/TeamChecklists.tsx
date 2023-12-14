@@ -35,7 +35,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
       setIsLoading(true); // Start loading
       console.log("Fetching checklists for team ID:", teamId);
       try {
-        const response = await fetch(`/api/checklists/team/${teamId}`);
+        const response = await fetch(`/api/user/checklists/team/${teamId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch");
         }
