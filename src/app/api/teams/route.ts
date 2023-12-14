@@ -6,6 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
   const userId = session?.user.id;
+  const userRole = session?.user.role;
   console.log("Returning teams of user with userId", userId);
 
   try {
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
     const updatedTeams = teams.map((team) => ({
       id: team.id,
       name: team.name,
-      href: `/user/team/${team.id}`,
+      href: userRole === 'MANAGER' ? `/manager/team/${team.id}` : `/user/team/${team.id}`,
     }));
 
     return new NextResponse(JSON.stringify(updatedTeams), {
