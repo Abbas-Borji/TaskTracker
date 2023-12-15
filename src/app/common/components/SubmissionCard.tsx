@@ -35,14 +35,14 @@ const SubmissionCard = ({submission}: SubmissionCardProps) => {
                   {submission.status}
                 </span>
               </div>
-              <div className="mt-2 text-sm text-gray-600">
+              <div className="mt-2 text-sm text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap">
                 Assigned by: {submission.checklistinfo.managerName}
               </div>
             </div>
           </div>
         )}
         {/* Date at the bottom */}
-        <div className="mt-2 text-sm italic text-gray-600">
+        <div className="mt-2 text-sm italic text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap">
           Submitted at {submission.submittedAt}
         </div>
       </div>

@@ -15,7 +15,7 @@ const ChecklistCard = ({ checklist }: ChecklistCardProps) => {
         <div className="flex items-start justify-between">
           <div>
             <div className="text-lg font-bold">{checklist.info.name}</div>
-            <div className="mt-2 text-sm text-gray-600">
+            <div className="mt-2 text-sm text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap">
               Assigned by: {checklist.manager.name}
             </div>
           </div>
@@ -28,7 +28,7 @@ const ChecklistCard = ({ checklist }: ChecklistCardProps) => {
           </button>
         </div>
         {/* Date at the bottom */}
-        <div className="mt-2 text-sm italic text-gray-600">
+        <div className="mt-2 text-sm italic text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap">
           Due {checklist.info.dueDate}
         </div>
       </div>
