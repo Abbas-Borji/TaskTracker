@@ -8,6 +8,7 @@ import { Team, Tab } from "../types/Sidebar";
 import Divider from "./Divider";
 import Link from "next/link";
 import classNames from "../functions/ClassNames";
+import { useSession } from "next-auth/react";
 
 interface SidebarProps {
   tabs?: Tab[];
@@ -20,6 +21,8 @@ const Sidebar = ({
   sidebarOpen,
   setSidebarOpen,
 }: SidebarProps) => {
+  const session = useSession();
+  const userRole = session.data?.user?.role;
   const [teams, setTeams] = useState<Team[]>([]);
   const [currentTab, setCurrentTab] = useState<Tab | null>(null); // State for active tab
   const [currentTeam, setCurrentTeam] = useState<Team | null>(null); // State for active team
@@ -152,7 +155,7 @@ const Sidebar = ({
                             </ul>
                           </li>
                         )}
-                        {teams && teams.length > 0 && (
+                        {userRole != 'ADMIN' && teams && teams.length > 0 && (
                           <li>
                             <div className="text-xs font-semibold leading-6 text-gray-400">
                               Your Teams
@@ -240,7 +243,7 @@ const Sidebar = ({
                     </ul>
                   </li>
                 )}
-                {teams && teams.length > 0 && (
+                {userRole != 'ADMIN' && teams && teams.length > 0 && (
                   <li>
                     <div className="text-xs font-semibold leading-6 text-gray-400">
                       Your Teams
