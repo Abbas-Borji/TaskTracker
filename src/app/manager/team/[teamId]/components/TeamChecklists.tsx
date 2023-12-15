@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import ThreeCardContainer from "@/app/common/components/ThreeCardContainer";
 import { Checklist } from "@/app/common/types/Checklist";
 import { Submission } from "@/app/common/types/Submission";
-import ChecklistCard from "@/app/common/components/ChecklistCard";
-import SubmissionCard from "@/app/common/components/SubmissionCard";
+import ManagerChecklistCard from "./ManagerChecklistCard";
+import ManagerSubmissionCard from "./ManagerSubmissionCard";
 import CardSkeleton from "@/app/common/components/CardSkeleton";
 import SixCardContainer from "@/app/common/components/SixCardContainer";
+import Button from "@/app/common/components/Button";
 
 interface Team {
   name: string | null;
@@ -27,7 +28,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
     setViewType(type);
   };
   const handleViewDefault = () => {
-    setViewType('default');
+    setViewType("default");
   };
 
   useEffect(() => {
@@ -70,7 +71,11 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
             title="Checklists"
             items={isLoading ? sixSkeletonCardsArray : checklists}
             renderItem={(item, index) =>
-              isLoading ? <CardSkeleton key={index}/> : <ChecklistCard checklist={item} key={index}/>
+              isLoading ? (
+                <CardSkeleton key={index} />
+              ) : (
+                <ManagerChecklistCard checklist={item} key={index} />
+              )
             }
             onViewBack={handleViewDefault}
           />
@@ -80,11 +85,11 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
           <SixCardContainer
             title="Responses"
             items={isLoading ? sixSkeletonCardsArray : submissions}
-            renderItem={(item: any, index:number) =>
+            renderItem={(item: any, index: number) =>
               isLoading ? (
-                <CardSkeleton key={index}/>
+                <CardSkeleton key={index} />
               ) : (
-                <SubmissionCard submission={item} key={index}/>
+                <ManagerSubmissionCard submission={item} key={index} />
               )
             }
             onViewBack={handleViewDefault}
@@ -98,21 +103,27 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
               items={isLoading ? threeSkeletonCardsArray : checklists}
               renderItem={(item, index) =>
                 isLoading ? (
-                  <CardSkeleton key={index}/>
+                  <CardSkeleton key={index} />
                 ) : (
-                  <ChecklistCard checklist={item} key={index}/>
+                  <ManagerChecklistCard checklist={item} key={index} />
                 )
               }
               onViewAll={() => handleViewAll("checklists")}
+              actionButton={
+                <Button
+                  text="Create"
+                  onClick={() => console.log("Created checklist")}
+                />
+              }
             />
             <ThreeCardContainer
               title="Responses"
               items={isLoading ? threeSkeletonCardsArray : submissions}
               renderItem={(item, index) =>
                 isLoading ? (
-                  <CardSkeleton key={index}/>
+                  <CardSkeleton key={index} />
                 ) : (
-                  <SubmissionCard submission={item} key={index}/>
+                  <ManagerSubmissionCard submission={item} key={index} />
                 )
               }
               onViewAll={() => handleViewAll("submissions")}
@@ -124,9 +135,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
 
   return (
     <div className="p-2">
-      <h1 className="mb-5 text-4xl font-medium">
-        | {team.name || "Team ..."}
-      </h1>
+      <h1 className="mb-5 text-4xl font-medium">| {team.name || "Team ..."}</h1>
       {renderContent()}
     </div>
   );
