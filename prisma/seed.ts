@@ -74,13 +74,13 @@ async function seedChecklists(
 ) {
   await prisma.checklist.createMany({
     data: [
-      { name: "Checklist 1", managerId: createdUsers[1]!.id },
-      { name: "Checklist 2", managerId: createdUsers[2]!.id },
-      { name: "Checklist 3", managerId: createdUsers[3]!.id },
-      { name: "Checklist 4", managerId: createdUsers[1]!.id },
-      { name: "Checklist 5", managerId: createdUsers[2]!.id },
-      { name: "Checklist 6", managerId: createdUsers[3]!.id },
-      { name: "Checklist 7", managerId: createdUsers[1]!.id },
+      { name: "Checklist 1", managerId: createdUsers[1]!.id, teamId: 1 },
+      { name: "Checklist 2", managerId: createdUsers[2]!.id, teamId: 1 },
+      { name: "Checklist 3", managerId: createdUsers[3]!.id, teamId: 1 },
+      { name: "Checklist 4", managerId: createdUsers[1]!.id, teamId: 1 },
+      { name: "Checklist 5", managerId: createdUsers[2]!.id, teamId: 1 },
+      { name: "Checklist 6", managerId: createdUsers[3]!.id, teamId: 1 },
+      { name: "Checklist 7", managerId: createdUsers[1]!.id, teamId: 1 },
     ],
   });
 }

@@ -41,6 +41,7 @@ model Team {
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
     MemberOf    MemberOf[]
+    Checklist   Checklist[]
 }
 
 model MemberOf {
@@ -57,6 +58,8 @@ model Checklist {
     name        String
     managerId   String
     manager     User         @relation(fields: [managerId], references: [id])
+    teamId      Int?
+    team        Team?        @relation(fields: [teamId], references: [id])
     questions   Question[]
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
