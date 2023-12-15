@@ -5,6 +5,7 @@ interface ThreeCardContainerProps {
   items: any[];
   renderItem: (item: any, index: number) => JSX.Element; // This is the render prop
   onViewAll?: () => void;
+  actionButton?: JSX.Element;
 }
 
 const ThreeCardContainer = ({
@@ -12,10 +13,14 @@ const ThreeCardContainer = ({
   items,
   renderItem,
   onViewAll,
+  actionButton,
 }: ThreeCardContainerProps) => {
   return (
     <div className="w-full rounded-lg border border-gray-300 p-5 shadow-sm transition-shadow hover:shadow-md">
-      <h3 className="mb-5 text-xl font-medium">{title}</h3>
+      <div className="flex justify-between">
+        <h3 className="mb-5 text-xl font-medium">{title}</h3>
+        {actionButton}
+      </div>
       {items.length > 0 ? (
         <div>
           {items.slice(0, 3).map((item, index) => renderItem(item, index))}
