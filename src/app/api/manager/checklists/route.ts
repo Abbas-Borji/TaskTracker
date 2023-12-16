@@ -19,6 +19,9 @@ export async function GET(request: NextRequest) {
     where: {
       managerId: userId,
     },
+    include: {
+      team: true,
+    },
   });
 
   // Get Checklists Created At Dates
@@ -41,6 +44,7 @@ export async function GET(request: NextRequest) {
       id: checklist.id,
       name: checklist.name,
       createdAt: createdAtDates[index],
+      teamName: checklist.team?.name,
     },
   }));
 
