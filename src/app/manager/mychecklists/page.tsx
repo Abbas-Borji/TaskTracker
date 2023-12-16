@@ -5,8 +5,10 @@ import CardSkeleton from "@/app/common/components/CardSkeleton";
 import ManagerChecklistCard from "../team/[teamId]/components/ManagerChecklistCard";
 import { ManagerChecklist } from "@/app/common/types/ManagerChecklist";
 import Button from "@/app/common/components/Button";
+import AllowOnlyManager from "@/app/common/functions/AllowOnlyManager";
 
 const MyChecklists = () => {
+  AllowOnlyManager();
   const [checklists, setChecklists] = useState<ManagerChecklist[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Added loading state
 

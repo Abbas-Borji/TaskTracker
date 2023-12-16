@@ -1,16 +1,10 @@
 "use client";
 import { useParams } from "next/navigation";
 import TeamChecklists from "./components/TeamChecklists";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import AllowOnlyManager from "@/app/common/functions/AllowOnlyManager";
 
 const TeamPage = () => {
-  const session = useSession();
-  const userRole = session.data?.user?.role;
-  const router = useRouter();
-  if (userRole === "ADMIN" || userRole === "USER") {
-    router.replace("/redirect");
-  }
+  AllowOnlyManager();
   const params = useParams();
   const teamId = Array.isArray(params.teamId)
     ? params.teamId[0]
