@@ -3,5 +3,6 @@ export interface ManagerChecklist {
     id: number;
     name: string;
     createdAt: string;
+    teamName: string;
   };
 }
