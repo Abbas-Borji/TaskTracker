@@ -6,6 +6,22 @@ interface ManagerChecklistCardProps {
 }
 
 const ManagerChecklistCard = ({ checklist }: ManagerChecklistCardProps) => {
+  const colorOptions = [
+    { bg: "bg-gray-50", text: "text-gray-600", ring: "ring-gray-500/10" },
+    { bg: "bg-red-50", text: "text-red-700", ring: "ring-red-600/10" },
+    { bg: "bg-yellow-50", text: "text-yellow-800", ring: "ring-yellow-600/20" },
+    { bg: "bg-green-50", text: "text-green-700", ring: "ring-green-600/20" },
+    { bg: "bg-blue-50", text: "text-blue-700", ring: "ring-blue-700/10" },
+    { bg: "bg-indigo-50", text: "text-indigo-700", ring: "ring-indigo-700/10" },
+    { bg: "bg-purple-50", text: "text-purple-700", ring: "ring-purple-700/10" },
+    { bg: "bg-pink-50", text: "text-pink-700", ring: "ring-pink-700/10" },
+  ];
+
+  const getRandomColor = () => {
+    const randomColor =
+      colorOptions[Math.floor(Math.random() * colorOptions.length)];
+    return `${randomColor?.bg} ${randomColor?.text} ${randomColor?.ring}`;
+  };
   return (
     <>
       <div
@@ -15,14 +31,28 @@ const ManagerChecklistCard = ({ checklist }: ManagerChecklistCardProps) => {
         <div className="absolute right-6 top-2 rotate-90 transform cursor-pointer text-2xl text-gray-600 hover:text-gray-800">
           &#8942; {/* HTML entity for horizontal ellipsis */}
         </div>
-        <div className="mb-4 flex items-start justify-between">
+        <div className="mb-2 flex items-start justify-between">
           <div>
             <div className="text-lg font-bold">{checklist.info.name}</div>
           </div>
         </div>
-        {/* Date at the bottom */}
-        <div className="mt-2 text-sm italic text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap">
-          Created at {checklist.info.createdAt}
+        <div className="flex flex-col sm:flex-row">
+          <div className="w-full overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
+            {/* Date at the bottom */}
+            <div className="text-sm italic text-gray-600">
+              Created at {checklist.info.createdAt}
+            </div>
+          </div>
+          {checklist.info.teamName && (
+            <div className="w-full text-right sm:w-24">
+              {/* Team name */}
+              <span
+                className={`mt-4 inline-flex items-center rounded-md px-3 py-1 text-xs font-medium ring-1 ring-inset ${getRandomColor()}`}
+              >
+                {checklist.info.teamName}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </>
