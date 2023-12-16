@@ -1,9 +1,10 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from "react";
 import SixCardContainer from "@/app/common/components/SixCardContainer";
 import CardSkeleton from "@/app/common/components/CardSkeleton";
 import ManagerChecklistCard from "../team/[teamId]/components/ManagerChecklistCard";
 import { ManagerChecklist } from "@/app/common/types/ManagerChecklist";
+import Button from "@/app/common/components/Button";
 
 const MyChecklists = () => {
   const [checklists, setChecklists] = useState<ManagerChecklist[]>([]);
@@ -45,6 +46,12 @@ const MyChecklists = () => {
           ) : (
             <ManagerChecklistCard checklist={item} key={index} />
           )
+        }
+        actionButton={
+          <Button
+            text="Create"
+            onClick={() => console.log("Created checklist")}
+          />
         }
       />
     </div>

@@ -78,6 +78,12 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
               )
             }
             onViewBack={handleViewDefault}
+            actionButton={
+              <Button
+                text="Create"
+                onClick={() => console.log("Created checklist")}
+              />
+            }
           />
         );
       case "submissions":
