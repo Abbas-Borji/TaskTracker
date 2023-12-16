@@ -1,8 +1,10 @@
 "use client";
 import { useParams } from "next/navigation";
 import TeamChecklists from "./components/TeamChecklists";
+import AllowOnlyUser from '@/app/common/functions/ClientAllowOnlyUser'
 
 const TeamPage = () => {
+  AllowOnlyUser();
   const params = useParams();
   const teamId = Array.isArray(params.teamId)
     ? params.teamId[0]

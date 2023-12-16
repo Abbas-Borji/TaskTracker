@@ -1,7 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import TeamChecklists from "./components/TeamChecklists";
-import AllowOnlyManager from "@/app/common/functions/AllowOnlyManager";
+import AllowOnlyManager from "@/app/common/functions/ClientAllowOnlyManager";
 
 const TeamPage = () => {
   AllowOnlyManager();
