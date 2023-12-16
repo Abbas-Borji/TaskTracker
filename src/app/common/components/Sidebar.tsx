@@ -16,11 +16,7 @@ interface SidebarProps {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Sidebar = ({
-  tabs,
-  sidebarOpen,
-  setSidebarOpen,
-}: SidebarProps) => {
+const Sidebar = ({ tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const session = useSession();
   const userRole = session.data?.user?.role;
   const [teams, setTeams] = useState<Team[]>([]);
@@ -41,7 +37,7 @@ const Sidebar = ({
   useEffect(() => {
     async function fetchTeams() {
       try {
-        const response = await fetch('/api/teams');
+        const response = await fetch("/api/teams");
         if (!response.ok) {
           throw new Error("Failed to fetch");
         }
@@ -155,7 +151,7 @@ const Sidebar = ({
                             </ul>
                           </li>
                         )}
-                        {userRole != 'ADMIN' && teams && teams.length > 0 && (
+                        {userRole != "ADMIN" && teams && teams.length > 0 && (
                           <li>
                             <div className="text-xs font-semibold leading-6 text-gray-400">
                               Your Teams
@@ -192,6 +188,17 @@ const Sidebar = ({
                                 </li>
                               ))}
                             </ul>
+                          </li>
+                        )}
+                        {userRole === "ADMIN" && (
+                          <li className="mb-2 mt-auto">
+                            {/* Logout Button */}
+                            <Link
+                              href="/api/auth/signout"
+                              className="flex w-full justify-center rounded-md bg-orange-700 px-3 py-1.5 text-sm font-semibold leading-6 text-light shadow-sm hover:bg-orange-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
+                            >
+                              Logout
+                            </Link>
                           </li>
                         )}
                       </ul>
@@ -243,7 +250,7 @@ const Sidebar = ({
                     </ul>
                   </li>
                 )}
-                {userRole != 'ADMIN' && teams && teams.length > 0 && (
+                {userRole != "ADMIN" && teams && teams.length > 0 && (
                   <li>
                     <div className="text-xs font-semibold leading-6 text-gray-400">
                       Your Teams
@@ -276,6 +283,17 @@ const Sidebar = ({
                         </li>
                       ))}
                     </ul>
+                  </li>
+                )}
+                {userRole === "ADMIN" && (
+                  <li className="mb-2 mt-auto">
+                    {/* Logout Button */}
+                    <Link
+                      href="/api/auth/signout"
+                      className="flex w-full justify-center rounded-md bg-orange-700 px-3 py-1.5 text-sm font-semibold leading-6 text-light shadow-sm hover:bg-orange-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
+                    >
+                      Logout
+                    </Link>
                   </li>
                 )}
               </ul>
