@@ -15,6 +15,7 @@ import Sidebar from "../common/components/Sidebar";
 import classNames from "../common/functions/ClassNames";
 import { useSession } from "next-auth/react";
 import UserAvatar from "@/app/common/components/UserAvatar";
+import Link from "next/link";
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
@@ -114,15 +115,16 @@ const UserNavigationLayout = ({ children }: { children: React.ReactNode }) => {
                         {userNavigation.map((item) => (
                           <Menu.Item key={item.name}>
                             {({ active }) => (
-                              <a
+                              <Link
                                 href={item.href}
+                                type="button"
                                 className={classNames(
                                   active ? "bg-gray-50" : "",
                                   "block px-3 py-1 text-sm leading-6 text-gray-900",
                                 )}
                               >
                                 {item.name}
-                              </a>
+                              </Link>
                             )}
                           </Menu.Item>
                         ))}
