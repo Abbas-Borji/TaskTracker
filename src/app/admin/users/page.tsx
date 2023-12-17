@@ -5,7 +5,7 @@ import Button from "@/app/common/components/Button";
 import ActionButtons from "./components/ActionButtons";
 
 const columns = [
-  { title: "ID", dataKey: "id" },
+  { title: "ID", dataKey: "counter", sortable: true },
   { title: "Name", dataKey: "name", sortable: true },
   { title: "Email", dataKey: "email" },
   { title: "Role", dataKey: "role", sortable: true },
@@ -33,8 +33,13 @@ const UsersTable = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json();
-        setUsers(data);
+        const users: User[] = await response.json();
+        // Add a counter to each user
+        const usersWithCounter = users.map((user, index) => ({
+          ...user,
+          counter: index + 1,
+        }));
+        setUsers(usersWithCounter);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
