@@ -82,7 +82,10 @@ async function seedMemberOf(
       { userId: createdUsers[0]!.id, teamId: 3 },
       { userId: createdUsers[0]!.id, teamId: 4 },
       { userId: createdUsers[1]!.id, teamId: 1 },
+      { userId: createdUsers[1]!.id, teamId: 3 },
       { userId: createdUsers[2]!.id, teamId: 1 },
+      { userId: createdUsers[2]!.id, teamId: 2 },
+      { userId: createdUsers[2]!.id, teamId: 4 },
     ],
   });
 }
