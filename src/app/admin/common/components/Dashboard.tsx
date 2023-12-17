@@ -5,19 +5,7 @@ import DynamicTable from "./DynamicTable";
 import AdminDashboardData from "@/app/common/types/AdminDashboardData";
 import RefreshButton from "./RefreshButton";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  department: string | null;
-}
-
-const Dashboard = ({
-  columns,
-  data,
-  actionButton,
-}: AdminDashboardData<User>) => {
+const Dashboard = ({ columns, data, actionButton }: AdminDashboardData) => {
   const pathname = usePathname();
   const segments = pathname.split("/");
   const lastSegment: string = capitalizeFirstLetter(

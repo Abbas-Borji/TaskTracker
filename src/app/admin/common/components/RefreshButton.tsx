@@ -8,7 +8,7 @@ const RefreshButton = () => {
       onClick={() => window.location.reload()}
       className="flex items-center justify-center rounded-lg bg-slate-600 p-1.5 text-white hover:bg-dark"
     >
-      <ArrowPathIcon className="h-5 w-5" aria-hidden="true" />
+      <ArrowPathIcon className="h-3.5 w-3.5" aria-hidden="true" />
       <span className="sr-only">Refresh</span>
     </button>
   );

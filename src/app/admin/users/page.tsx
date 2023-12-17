@@ -1,14 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Dashboard from "../common/components/Dashboard";
-import AdminDashboardData from "@/app/common/types/AdminDashboardData";
+import Button from "@/app/common/components/Button";
+import ActionButtons from "./components/ActionButtons";
 
-const columns: Array<AdminDashboardData<User>["columns"][number]> = [
+const columns = [
   { title: "ID", dataKey: "id" },
   { title: "Name", dataKey: "name", sortable: true },
   { title: "Email", dataKey: "email" },
   { title: "Role", dataKey: "role", sortable: true },
   { title: "Department", dataKey: "department" },
+  { title: "Actions", dataKey: "actions", render: ActionButtons },
   // Add more columns if needed
 ];
 
@@ -18,6 +20,7 @@ interface User {
   email: string;
   role: string;
   department: string | null;
+  actions: React.ReactNode;
 }
 
 const UsersTable = () => {
@@ -40,14 +43,19 @@ const UsersTable = () => {
     fetchUsers();
   }, []);
 
-  return <Dashboard columns={columns} data={users} />;
+  return (
+    <Dashboard
+      columns={columns}
+      data={users}
+      actionButton={
+        <Button
+          text="Add User"
+          className="ml-auto bg-primary text-white hover:bg-indigo-400 focus-visible:outline-indigo-500"
+          onClick={() => console.log("User created!")}
+        />
+      }
+    />
+  );
 };
 
 export default UsersTable;
-
-// actionButton={
-//   <Button
-//     text="Add User"
-//     className="ml-auto bg-primary text-white hover:bg-indigo-400 focus-visible:outline-indigo-500"
-//     onClick={() => console.log("User created!")}
-//   />}

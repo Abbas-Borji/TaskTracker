@@ -1,15 +1,14 @@
-// Identify the data type for the AdminDashboardData component when using it in other components
-interface AdminDashboardData<T> {
+export default interface AdminDashboardData {
   // An array of column configurations
   columns: {
     title: string;
-    dataKey: keyof T;
+    dataKey: string;
     sortable?: boolean;
     render?: (dataItem: any) => JSX.Element;
   }[];
   // An array of data objects, where each object represents a row in the table
-  data: T[];
+  data: {
+    [key: string]: any;
+  }[];
   actionButton?: JSX.Element;
 }
-
-export default AdminDashboardData;
