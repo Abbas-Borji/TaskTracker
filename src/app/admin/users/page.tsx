@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Dashboard from "../common/components/Dashboard";
+import AdminDashboardData from "@/app/common/types/AdminDashboardData";
 
-const columns = [
+const columns: Array<AdminDashboardData<User>["columns"][number]> = [
   { title: "ID", dataKey: "id" },
   { title: "Name", dataKey: "name", sortable: true },
   { title: "Email", dataKey: "email" },
@@ -25,7 +26,7 @@ const UsersTable = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`/api/admin/users`, { cache: "no-store" });
+        const response = await fetch(`/api/admin/users`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

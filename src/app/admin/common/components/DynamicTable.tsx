@@ -12,7 +12,15 @@ interface SortConfig {
   direction: SortDirection;
 }
 
-const DynamicTable = ({ columns, data }: AdminDashboardData) => {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  department: string | null;
+}
+
+const DynamicTable = ({ columns, data }: AdminDashboardData<User>) => {
   // Find the first sortable column
   const firstSortableColumn = columns.find((column) => column.sortable);
 

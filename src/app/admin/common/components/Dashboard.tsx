@@ -1,10 +1,23 @@
+"use client";
 import { usePathname } from "next/navigation";
 import capitalizeFirstLetter from "@/app/common/functions/CapitalizeFirstLetter";
 import DynamicTable from "./DynamicTable";
 import AdminDashboardData from "@/app/common/types/AdminDashboardData";
 import RefreshButton from "./RefreshButton";
 
-const Dashboard = ({ columns, data, actionButton }: AdminDashboardData) => {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  department: string | null;
+}
+
+const Dashboard = ({
+  columns,
+  data,
+  actionButton,
+}: AdminDashboardData<User>) => {
   const pathname = usePathname();
   const segments = pathname.split("/");
   const lastSegment: string = capitalizeFirstLetter(
@@ -23,8 +36,8 @@ const Dashboard = ({ columns, data, actionButton }: AdminDashboardData) => {
             {actionButton}
           </div>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the users in your account including their name, title,
-            email and role.
+            A list of all the users in your account including their name, email,
+            role, and department.
           </p>
         </div>
       </div>
