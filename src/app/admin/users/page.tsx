@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Dashboard from "../common/components/Dashboard";
 import Button from "@/app/common/components/Button";
 import ActionButtons from "./components/ActionButtons";
+import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
 
 const columns = [
   { title: "ID", dataKey: "counter", sortable: true },
@@ -20,10 +21,10 @@ interface User {
   email: string;
   role: string;
   department: string | null;
-  actions: React.ReactNode;
 }
 
 const UsersTable = () => {
+  AllowOnlyAdmin();
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
