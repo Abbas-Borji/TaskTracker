@@ -1,3 +1,4 @@
+"use client";
 import { useState, useMemo } from "react";
 import { sort } from "fast-sort";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
