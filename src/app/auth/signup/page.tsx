@@ -7,7 +7,7 @@ import signUpSchema from "./schema";
 import { z } from "zod";
 import Loading from "@/app/loading";
 import Notification from "@/app/common/components/Notification";
-import Redirect from "@/app/redirect/page";
+import SignupRedirect from "@/app/redirect/SignupRedirect";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
@@ -134,7 +134,7 @@ const Signup = () => {
           />
         )
       ) : null}
-      <Redirect to="/auth/signup" />
+      <SignupRedirect />
       <div className="flex h-full min-h-full flex-1 flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="bg-white px-6 py-12 text-center shadow sm:rounded-lg sm:px-12">

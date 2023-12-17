@@ -17,7 +17,7 @@ const SubmissionCard = ({ submission }: SubmissionCardProps) => {
           &#8942; {/* HTML entity for horizontal ellipsis */}
         </div>
         {submission.checklistinfo && (
-          <div className="mb-4 flex items-start justify-between">
+          <div className="mb-2 flex items-start justify-between">
             <div>
               <div className="flex items-center text-lg font-bold">
                 {submission.checklistinfo.name}

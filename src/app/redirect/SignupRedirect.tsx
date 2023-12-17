@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import Loading from "../loading";
 
 // The Redirect component is responsible for redirecting users based on their roles
-const Redirect = () => {
+const SignupRedirect = () => {
   const router = useRouter();
   const { data: session } = useSession();
   // isLoading state is used to show the Loading component until the redirection is complete
@@ -41,7 +41,7 @@ const Redirect = () => {
     // If the session does not exist after 100ms, redirect to the login page
     const timeoutId = setTimeout(() => {
       if (!session) {
-        router.replace("/auth/login");
+        router.replace("/auth/signup");
       }
       setIsLoading(false);
     }, 100);
@@ -60,4 +60,4 @@ const Redirect = () => {
   return <></>;
 };
 
-export default Redirect;
+export default SignupRedirect;
