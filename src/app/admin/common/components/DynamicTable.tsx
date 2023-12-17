@@ -95,7 +95,7 @@ const DynamicTable = ({ columns, data }: AdminDashboardData) => {
                     {columns.map(({ dataKey, render }) => (
                       <td
                         key={dataKey}
-                        className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6"
+                        className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6 overflow-hidden overflow-ellipsis max-w-[300px]"
                       >
                         {render ? render(item) : item[dataKey]}
                       </td>
