@@ -5,7 +5,12 @@ import DynamicTable from "./DynamicTable";
 import AdminDashboardData from "@/app/common/types/AdminDashboardData";
 import RefreshButton from "./RefreshButton";
 
-const Dashboard = ({ columns, data, actionButton }: AdminDashboardData) => {
+const Dashboard = ({
+  description,
+  columns,
+  data,
+  actionButton,
+}: AdminDashboardData) => {
   const pathname = usePathname();
   const segments = pathname.split("/");
   const lastSegment: string = capitalizeFirstLetter(
@@ -23,10 +28,7 @@ const Dashboard = ({ columns, data, actionButton }: AdminDashboardData) => {
             <RefreshButton />
             {actionButton}
           </div>
-          <p className="mt-2 text-sm text-gray-700">
-            A list of all the users in your account including their name, email,
-            role, and department.
-          </p>
+          <p className="mt-2 text-sm text-gray-700">{description}</p>
         </div>
       </div>
       <DynamicTable columns={columns} data={data} />

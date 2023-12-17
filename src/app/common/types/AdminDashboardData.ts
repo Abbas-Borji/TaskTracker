@@ -1,4 +1,5 @@
 export default interface AdminDashboardData {
+  description?: string;
   // An array of column configurations
   columns: {
     title: string;

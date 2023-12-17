@@ -50,6 +50,7 @@ const UsersTable = () => {
 
   return (
     <Dashboard
+      description="A list of all the users including their name, email, role, and department."
       columns={columns}
       data={users}
       actionButton={
