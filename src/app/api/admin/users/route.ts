@@ -6,9 +6,14 @@ import prisma from "prisma/client";
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   const userRole = session?.user?.role;
+
   if (userRole != "ADMIN") {
-    return new NextResponse("Permission denied.", { status: 400 });
+    return new NextResponse(JSON.stringify({ message: "Permission denied." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
+
   try {
     const users = await prisma.user.findMany({
       select: {
@@ -25,6 +30,14 @@ export async function GET(req: NextRequest) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    throw error;
+    let errorMessage = "Unknown error occurred";
+    if (typeof error === "object" && error !== null && "message" in error) {
+      errorMessage = (error as { message: string }).message;
+    }
+
+    return new NextResponse(JSON.stringify({ error: errorMessage }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
