@@ -21,7 +21,7 @@ const Dashboard = ({
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <div className="mb-6 flex items-center">
-            <h1 className="mr-4 text-base font-semibold leading-6 text-gray-900">
+            <h1 className="mr-4 text-3xl font-semibold leading-6 text-gray-900">
               {lastSegment}
             </h1>
             {/* Refresh button */}
