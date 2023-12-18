@@ -4,7 +4,7 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 
 const ActionButtons = () => {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex">
       <Link href={"#"} className="mr-4 px-2">
         Edit Checklist
       </Link>
