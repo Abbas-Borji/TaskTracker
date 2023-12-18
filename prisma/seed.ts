@@ -177,7 +177,7 @@ async function seedAssignments(
         dueDate: new Date(),
       },
       {
-        employeeId: createdUsers[1]!.id,
+        employeeId: createdUsers[4]!.id,
         checklistId: 1,
         teamId: 1,
         dueDate: new Date(),
