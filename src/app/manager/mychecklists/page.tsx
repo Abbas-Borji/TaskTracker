@@ -6,9 +6,11 @@ import ManagerChecklistCard from "../team/[teamId]/components/ManagerChecklistCa
 import { ManagerChecklist } from "@/app/common/types/ManagerChecklist";
 import Button from "@/app/common/components/Button";
 import AllowOnlyManager from "@/app/common/functions/ClientAllowOnlyManager";
+import { useRouter } from "next/navigation";
 
 const MyChecklists = () => {
   AllowOnlyManager();
+  const router = useRouter();
   const [checklists, setChecklists] = useState<ManagerChecklist[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Added loading state
 
@@ -52,7 +54,7 @@ const MyChecklists = () => {
         actionButton={
           <Button
             text="Create"
-            onClick={() => console.log("Created checklist")}
+            onClick={() => router.push("/manager/checklist/create")}
           />
         }
       />
