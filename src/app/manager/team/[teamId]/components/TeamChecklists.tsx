@@ -9,6 +9,7 @@ import ManagerSubmissionCard from "./ManagerSubmissionCard";
 import CardSkeleton from "@/app/common/components/CardSkeleton";
 import SixCardContainer from "@/app/common/components/SixCardContainer";
 import Button from "@/app/common/components/Button";
+import { useRouter } from "next/navigation";
 
 interface Team {
   name: string | null;
@@ -19,6 +20,7 @@ type ChecklistsProps = {
 };
 
 const TeamChecklists = ({ teamId }: ChecklistsProps) => {
+  const router = useRouter();
   const [team, setTeam] = useState<Team>({ name: null });
   const [checklists, setChecklists] = useState<Checklist[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
@@ -81,7 +83,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
             actionButton={
               <Button
                 text="Create"
-                onClick={() => console.log("Created checklist")}
+                onClick={() => router.push("/manager/checklist/create")}
               />
             }
           />
@@ -118,7 +120,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
               actionButton={
                 <Button
                   text="Create"
-                  onClick={() => console.log("Created checklist")}
+                  onClick={() => router.push("/manager/checklist/create")}
                 />
               }
             />
