@@ -27,7 +27,9 @@ export async function POST(request: NextRequest) {
       where: { id: teamId },
     });
     if (!teamExists) {
-      return new NextResponse("Team not found", { status: 404 });
+      return new NextResponse(JSON.stringify({ message: "Team not found." }), {
+        status: 404,
+      });
     }
   }
 
@@ -66,6 +68,9 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ message: "Internal Server Error." }),
+      { status: 500 },
+    );
   }
 }
