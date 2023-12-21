@@ -83,7 +83,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
             actionButton={
               <Button
                 text="Create"
-                onClick={() => router.push("/manager/checklist/create")}
+                onClick={() => router.push(`/manager/checklist/create?teamId=` + teamId)}
               />
             }
           />
@@ -120,7 +120,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
               actionButton={
                 <Button
                   text="Create"
-                  onClick={() => router.push("/manager/checklist/create")}
+                  onClick={() => router.push(`/manager/checklist/create?teamId=` + teamId)}
                 />
               }
             />
