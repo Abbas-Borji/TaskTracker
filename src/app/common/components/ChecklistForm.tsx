@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   XMarkIcon,
@@ -6,11 +7,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
-
-interface Question {
-  body: string;
-  options: string[];
-}
+import { Question } from "../types/CreateChecklist";
+import { useSearchParams } from "next/navigation";
 
 interface HandleQuestionChangeProps {
   value: string;
@@ -25,9 +23,12 @@ interface HandleOptionChangeProps {
 
 const ChecklistForm = () => {
   const router = useRouter();
-  const [questions, setQuestions] = useState<Question[]>([
-    { body: "", options: ["", ""] },
-  ]);
+  const searchParams = useSearchParams();
+  const teamId = Number(searchParams.get("teamId"));
+  const initialQuestions: Question[] = [
+    { content: "", options: [{ content: "" }, { content: "" }] },
+  ];
+  const [questions, setQuestions] = useState<Question[]>(initialQuestions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const exit = () => {
@@ -39,7 +40,7 @@ const ChecklistForm = () => {
     index,
   }: HandleQuestionChangeProps) => {
     const newQuestions = [...questions];
-    newQuestions[index]!.body = value;
+    newQuestions[index]!.content = value;
     setQuestions(newQuestions);
   };
 
@@ -49,13 +50,13 @@ const ChecklistForm = () => {
     value,
   }: HandleOptionChangeProps) => {
     const newQuestions = [...questions];
-    newQuestions[questionIndex]!.options[optionIndex] = value;
+    newQuestions[questionIndex]!.options[optionIndex]!.content = value;
     setQuestions(newQuestions);
   };
 
   const addOption = (questionIndex: number) => {
     const newQuestions = [...questions];
-    newQuestions[questionIndex]!.options.push("");
+    newQuestions[questionIndex]!.options.push({ content: "" });
     setQuestions(newQuestions);
   };
 
@@ -66,7 +67,11 @@ const ChecklistForm = () => {
   };
 
   const addQuestion = () => {
-    const newQuestions = [...questions, { body: "", options: ["", ""] }];
+    const newQuestion: Question = {
+      content: "",
+      options: [{ content: "" }, { content: "" }],
+    };
+    const newQuestions = [...questions, newQuestion];
     setQuestions(newQuestions);
     setCurrentQuestionIndex(newQuestions.length - 1); // Navigate to the new question
   };
@@ -78,9 +83,30 @@ const ChecklistForm = () => {
     setCurrentQuestionIndex(newQuestions.length - 1);
   };
 
-  const saveForm = () => {
-    // Implement save logic
-    console.log("Form data:", questions);
+  const saveForm = async () => {
+    try {
+      const queryParams = teamId ? `?teamId=${teamId}` : ""; // Construct query parameter if teamId exists
+
+      const response = await fetch(
+        `/api/manager/checklists/create${queryParams}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: "Your Checklist Name", questions }),
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        router.back();
+      } else {
+        console.error("Failed to create checklist:");
+      }
+    } catch (error) {
+      console.error("Error creating checklist:", error);
+    }
   };
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -122,7 +148,7 @@ const ChecklistForm = () => {
           </div>
           <input
             type="text"
-            value={currentQuestion!.body}
+            value={currentQuestion!.content}
             onChange={(e) =>
               handleQuestionChange({
                 value: e.target.value,
@@ -136,7 +162,7 @@ const ChecklistForm = () => {
             <div key={index} className="mt-2 flex pr-6 sm:w-1/2 sm:pr-0">
               <input
                 type="text"
-                value={option}
+                value={option.content}
                 onChange={(e) =>
                   handleOptionChange({
                     questionIndex: currentQuestionIndex,
