@@ -12,7 +12,7 @@ import { useSearchParams } from "next/navigation";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import Notification from "@/app/common/components/Notification";
-import ReactLoading from "react-loading";
+import Loading from "@/app/loading";
 
 interface HandleQuestionChangeProps {
   value: string;
@@ -37,7 +37,7 @@ const ChecklistForm = () => {
   const [checklistName, setChecklistName] = useState("");
   const [isNotificationVisible, setNotificationVisible] = useState(false);
   const [serverError, setServerError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const exit = () => {
     router.back();
@@ -93,7 +93,7 @@ const ChecklistForm = () => {
 
   const saveForm = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const queryParams = teamId ? `?teamId=${teamId}` : ""; // Construct query parameter if teamId exists
 
       const response = await fetch(
@@ -110,7 +110,7 @@ const ChecklistForm = () => {
       if (response.ok) {
         setNotificationVisible(true);
         setTimeout(() => {
-          setLoading(false);
+          setIsLoading(false);
           router.back();
         }, 1500);
       } else {
@@ -119,7 +119,7 @@ const ChecklistForm = () => {
           setServerError(errorData.message);
           setNotificationVisible(true);
           setTimeout(() => {
-            setLoading(false);
+            setIsLoading(false);
             router.back();
           }, 1500);
           return;
@@ -127,7 +127,7 @@ const ChecklistForm = () => {
       }
     } catch (error) {
       console.error("Error creating checklist:", error);
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -154,12 +154,8 @@ const ChecklistForm = () => {
           />
         )
       ) : null}
-      {loading ? (
-        <ReactLoading
-          className="mx-auto"
-          type={"spinningBubbles"}
-          color={"#000000"}
-        />
+      {isLoading ? (
+        <Loading />
       ) : (
         <div className="relative w-full rounded-lg border border-gray-300 bg-light">
           <div className="mb-10">
