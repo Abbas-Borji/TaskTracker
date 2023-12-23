@@ -1,4 +1,5 @@
 export interface Checklist {
+  id?: number;
   name: string;
   managerId: string; // This would be provided, e.g., from the authenticated user's session
   teamId?: number | null; // Optional and can be null
@@ -6,12 +7,12 @@ export interface Checklist {
 }
 
 export interface Question {
+  id?: number;
   content: string;
-  checklistId?: number; // This will be set when the question is added to a checklist
   options: Option[];
 }
 
 export interface Option {
+  id?: number;
   content: string;
-  questionId?: number; // Set when the option is linked to a question
 }

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
-import { Checklist } from "@/app/common/types/CreateChecklist";
+import { Checklist } from "@/app/common/types/CreateOrEditChecklist";
 
 export async function POST(request: NextRequest) {
   // Get the userId from the session
