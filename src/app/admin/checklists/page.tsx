@@ -67,13 +67,6 @@ const ChecklistsTable = () => {
       description="A list of all the checklists and related details."
       columns={columns}
       data={checklists}
-      actionButton={
-        <Button
-          text="Create Team"
-          className="ml-auto bg-primary text-white hover:bg-indigo-400 focus-visible:outline-indigo-500"
-          onClick={() => console.log("Checklist created!")}
-        />
-      }
     />
   );
 };

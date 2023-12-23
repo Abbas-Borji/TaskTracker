@@ -54,16 +54,14 @@ const FeedbacksTable = () => {
           throw new Error("Network response was not ok");
         }
         const feedbacks: responseFeedback[] = await response.json();
-        const reshapedFeedbacks: Feedback[] = feedbacks.map(
-          (feedback) => ({
-            id: feedback.id,
-            checklistName: feedback.assignment.checklist.name,
-            checklistId: feedback.assignment.checklist.id,
-            employee: feedback.assignment.employee.name,
-            manager: feedback.assignment.checklist.manager.name,
-            createdAt: feedback.createdAt,
-          }),
-        );
+        const reshapedFeedbacks: Feedback[] = feedbacks.map((feedback) => ({
+          id: feedback.id,
+          checklistName: feedback.assignment.checklist.name,
+          checklistId: feedback.assignment.checklist.id,
+          employee: feedback.assignment.employee.name,
+          manager: feedback.assignment.checklist.manager.name,
+          createdAt: feedback.createdAt,
+        }));
 
         setFeedbacks(reshapedFeedbacks);
       } catch (error) {
@@ -79,13 +77,6 @@ const FeedbacksTable = () => {
       description="A list of all the feedbacks and related details."
       columns={columns}
       data={feedbacks}
-      actionButton={
-        <Button
-          text="Create Team"
-          className="ml-auto bg-primary text-white hover:bg-indigo-400 focus-visible:outline-indigo-500"
-          onClick={() => console.log("Feedback created!")}
-        />
-      }
     />
   );
 };

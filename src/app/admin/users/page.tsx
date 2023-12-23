@@ -54,13 +54,6 @@ const UsersTable = () => {
       description="A list of all the users including their names, emails, roles, and departments."
       columns={columns}
       data={users}
-      actionButton={
-        <Button
-          text="Add User"
-          className="ml-auto bg-primary text-white hover:bg-indigo-400 focus-visible:outline-indigo-500"
-          onClick={() => console.log("User created!")}
-        />
-      }
     />
   );
 };

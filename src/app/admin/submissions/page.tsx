@@ -83,13 +83,6 @@ const SubmissionsTable = () => {
       description="A list of all the submissions and related details."
       columns={columns}
       data={submissions}
-      actionButton={
-        <Button
-          text="Create Team"
-          className="ml-auto bg-primary text-white hover:bg-indigo-400 focus-visible:outline-indigo-500"
-          onClick={() => console.log("Submission created!")}
-        />
-      }
     />
   );
 };
