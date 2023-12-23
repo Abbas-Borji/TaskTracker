@@ -1,15 +1,17 @@
 "use client";
-import React from "react";
-import { useEffect, useState } from "react";
+import Button from "@/app/common/components/Button";
+import CardSkeleton from "@/app/common/components/CardSkeleton";
+import Modal from "@/app/common/components/Modal";
+import Notification from "@/app/common/components/Notification";
+import SixCardContainer from "@/app/common/components/SixCardContainer";
 import ThreeCardContainer from "@/app/common/components/ThreeCardContainer";
 import { Checklist } from "@/app/common/types/Checklist";
 import { Submission } from "@/app/common/types/Submission";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import ManagerChecklistCard from "./ManagerChecklistCard";
 import ManagerSubmissionCard from "./ManagerSubmissionCard";
-import CardSkeleton from "@/app/common/components/CardSkeleton";
-import SixCardContainer from "@/app/common/components/SixCardContainer";
-import Button from "@/app/common/components/Button";
-import { useRouter } from "next/navigation";
 
 interface Team {
   name: string | null;
@@ -26,6 +28,10 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [viewType, setViewType] = useState("default"); // 'default', 'checklists', 'submissions'
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [checklistId, setChecklistId] = useState(0);
+  const [isNotificationVisible, setNotificationVisible] = useState(false);
+
   const handleViewAll = (type: string) => {
     setViewType(type);
   };
@@ -57,25 +63,42 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
     fetchChecklists();
   }, [teamId]);
 
-  const handleDelete = async (id: number) => {
-    setIsLoading(true);
-    const response = await fetch(
-      `/api/manager/checklists/delete?checklistId=${id}`,
-      {
-        method: "DELETE",
-      },
-    );
+  const handleDelete = (id: number) => {
+    setIsModalOpen(true);
+    setChecklistId(id);
+  };
 
-    if (response.ok) {
-      // Remove the deleted checklist from the checklists array
-      const newChecklists = checklists.filter(
-        (checklist) => checklist.info.id !== id,
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const confirmDelete = async () => {
+    closeModal();
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(
+        `/api/manager/checklists/delete?checklistId=${checklistId}`,
+        {
+          method: "DELETE",
+        },
       );
-      // Update the state
-      setChecklists(newChecklists);
-      setIsLoading(false);
-    } else {
-      console.log("Couldn't delete the checklist of ID: " + id);
+
+      if (response.ok) {
+        setNotificationVisible(true);
+        setTimeout(() => setNotificationVisible(false), 1000);
+        // Remove the deleted checklist from the checklists array
+        const newChecklists = checklists.filter(
+          (checklist) => checklist.info.id !== checklistId,
+        );
+        // Update the state
+        setChecklists(newChecklists);
+      } else {
+        console.log("Couldn't delete the checklist of ID: " + checklistId);
+      }
+    } catch (error) {
+      console.log("An error occurred while deleting the checklist: ", error);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -178,8 +201,26 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
 
   return (
     <div className="p-2">
+      {isNotificationVisible ? (
+        <Notification
+          title="Checklist Deleted"
+          body="The checklist was deleted successfully!"
+          icon={<CheckCircleIcon className="text-green-600" />}
+          show={isNotificationVisible}
+          setShow={setNotificationVisible}
+        />
+      ) : null}
       <h1 className="mb-5 text-4xl font-medium">| {team.name || "Team ..."}</h1>
       {renderContent()}
+      <Modal
+        open={isModalOpen}
+        onClose={closeModal}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this checklist?"
+        confirmButtonText="Yes"
+        cancelButtonText="No, keep it"
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };
