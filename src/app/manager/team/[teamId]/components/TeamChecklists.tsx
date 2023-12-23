@@ -57,6 +57,29 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
     fetchChecklists();
   }, [teamId]);
 
+  const handleDelete = async (id: number) => {
+    setIsLoading(true);
+    const response = await fetch(
+      `/api/manager/checklists/delete?checklistId=${id}`,
+      {
+        method: "DELETE",
+      },
+    );
+
+    if (response.ok) {
+      // Remove the deleted checklist from the checklists array
+      const newChecklists = checklists.filter(
+        (checklist) => checklist.info.id !== id,
+      );
+      // Update the state
+      setChecklists(newChecklists);
+      setIsLoading(false);
+    } else {
+      console.log("Couldn't delete the checklist of ID: " + id);
+      setIsLoading(false);
+    }
+  };
+
   const threeSkeletonCardsArray = Array.from({ length: 3 }, (_, index) => (
     <CardSkeleton key={index} />
   ));
@@ -76,14 +99,20 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
               isLoading ? (
                 <CardSkeleton key={index} />
               ) : (
-                <ManagerChecklistCard checklist={item} key={index} />
+                <ManagerChecklistCard
+                  checklist={item}
+                  key={index}
+                  onDelete={handleDelete}
+                />
               )
             }
             onViewBack={handleViewDefault}
             actionButton={
               <Button
                 text="Create"
-                onClick={() => router.push(`/manager/checklist/create?teamId=` + teamId)}
+                onClick={() =>
+                  router.push(`/manager/checklist/create?teamId=` + teamId)
+                }
               />
             }
           />
@@ -113,14 +142,20 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
                 isLoading ? (
                   <CardSkeleton key={index} />
                 ) : (
-                  <ManagerChecklistCard checklist={item} key={index} />
+                  <ManagerChecklistCard
+                    checklist={item}
+                    key={index}
+                    onDelete={handleDelete}
+                  />
                 )
               }
               onViewAll={() => handleViewAll("checklists")}
               actionButton={
                 <Button
                   text="Create"
-                  onClick={() => router.push(`/manager/checklist/create?teamId=` + teamId)}
+                  onClick={() =>
+                    router.push(`/manager/checklist/create?teamId=` + teamId)
+                  }
                 />
               }
             />

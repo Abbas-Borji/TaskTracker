@@ -1,11 +1,16 @@
 import React from "react";
 import { ManagerChecklist } from "@/app/common/types/ManagerChecklist";
+import DropdownMenu from "@/app/common/components/DropdownMenu";
 
 interface ManagerChecklistCardProps {
   checklist: ManagerChecklist;
+  onDelete: (id: number) => void;
 }
 
-const ManagerChecklistCard = ({ checklist }: ManagerChecklistCardProps) => {
+const ManagerChecklistCard = ({
+  checklist,
+  onDelete,
+}: ManagerChecklistCardProps) => {
   const colorOptions = [
     { bg: "bg-gray-50", text: "text-gray-600", ring: "ring-gray-500/10" },
     { bg: "bg-red-50", text: "text-red-700", ring: "ring-red-600/10" },
@@ -22,15 +27,38 @@ const ManagerChecklistCard = ({ checklist }: ManagerChecklistCardProps) => {
       colorOptions[Math.floor(Math.random() * colorOptions.length)];
     return `${randomColor?.bg} ${randomColor?.text} ${randomColor?.ring}`;
   };
+  const handleDelete = () => {
+    onDelete(checklist.info.id);
+  };
   return (
     <>
       <div
         key={checklist.info.id}
         className="relative mb-4 rounded-lg bg-light p-4 shadow-md"
       >
-        <div className="absolute right-6 top-2 rotate-90 transform cursor-pointer text-2xl text-gray-600 hover:text-gray-800">
-          &#8942; {/* HTML entity for horizontal ellipsis */}
+        <div className="absolute right-6 top-4 h-5 w-5">
+          <DropdownMenu
+            items={[
+              {
+                label: "Edit",
+                type: "link",
+                href:
+                  `/manager/checklist/edit?checklistId=` + checklist.info.id,
+              },
+              { label: "Assign to", type: "link", href: "#" },
+              {
+                label: "Delete",
+                type: "button",
+                onClick: handleDelete,
+              },
+              {
+                label: "Cancel",
+                type: "button",
+              },
+            ]}
+          />
         </div>
+
         <div className="mb-2 flex items-start justify-between">
           <div>
             <div className="text-lg font-bold">{checklist.info.name}</div>

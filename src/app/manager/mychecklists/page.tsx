@@ -34,6 +34,29 @@ const MyChecklists = () => {
     fetchChecklists();
   }, []);
 
+  const handleDelete = async (id: number) => {
+    setIsLoading(true);
+    const response = await fetch(
+      `/api/manager/checklists/delete?checklistId=${id}`,
+      {
+        method: "DELETE",
+      },
+    );
+
+    if (response.ok) {
+      // Remove the deleted checklist from the checklists array
+      const newChecklists = checklists.filter(
+        (checklist) => checklist.info.id !== id,
+      );
+      // Update the state
+      setChecklists(newChecklists);
+      setIsLoading(false);
+    } else {
+      console.log("Couldn't delete the checklist of ID: " + id);
+      setIsLoading(false);
+    }
+  };
+
   const sixSkeletonCardsArray = Array.from({ length: 6 }, (_, index) => (
     <CardSkeleton key={index} />
   ));
@@ -48,7 +71,11 @@ const MyChecklists = () => {
           isLoading ? (
             <CardSkeleton key={index} />
           ) : (
-            <ManagerChecklistCard checklist={item} key={index} />
+            <ManagerChecklistCard
+              checklist={item}
+              key={index}
+              onDelete={handleDelete}
+            />
           )
         }
         actionButton={
