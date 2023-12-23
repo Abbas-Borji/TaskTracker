@@ -7,12 +7,16 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
-import { Question } from "../types/CreateChecklist";
+import { Checklist, Question } from "../types/CreateOrEditChecklist";
 import { useSearchParams } from "next/navigation";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import Notification from "@/app/common/components/Notification";
 import Loading from "@/app/loading";
+
+interface ChecklistFormProps {
+  initialChecklist?: Checklist; // include the entire checklist if in edit mode
+}
 
 interface HandleQuestionChangeProps {
   value: string;
@@ -25,17 +29,26 @@ interface HandleOptionChangeProps {
   value: string;
 }
 
-const ChecklistForm = () => {
+const ChecklistForm = ({ initialChecklist }: ChecklistFormProps) => {
+  const isEditMode = initialChecklist != null;
   const router = useRouter();
   const searchParams = useSearchParams();
   const teamId = Number(searchParams.get("teamId"));
   const initialQuestions: Question[] = [
-    { content: "", options: [{ content: "" }, { content: "" }] },
+    {
+      content: "",
+      options: [{ content: "" }, { content: "" }],
+    },
   ];
-  const [questions, setQuestions] = useState<Question[]>(initialQuestions);
+
+  const [questions, setQuestions] = useState<Question[]>(
+    initialChecklist ? initialChecklist.questions : initialQuestions,
+  );
+  const [checklistName, setChecklistName] = useState(
+    initialChecklist ? initialChecklist.name : "",
+  );
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [checklistName, setChecklistName] = useState("");
-  const [isNotificationVisible, setNotificationVisible] = useState(false);
+  const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -75,10 +88,11 @@ const ChecklistForm = () => {
   };
 
   const addQuestion = () => {
-    const newQuestion: Question = {
+    const newQuestion = {
       content: "",
       options: [{ content: "" }, { content: "" }],
     };
+
     const newQuestions = [...questions, newQuestion];
     setQuestions(newQuestions);
     setCurrentQuestionIndex(newQuestions.length - 1); // Navigate to the new question
@@ -91,43 +105,51 @@ const ChecklistForm = () => {
     setCurrentQuestionIndex(newQuestions.length - 1);
   };
 
-  const saveForm = async () => {
+  const submitForm = async () => {
     try {
       setIsLoading(true);
-      const queryParams = teamId ? `?teamId=${teamId}` : ""; // Construct query parameter if teamId exists
 
-      const response = await fetch(
-        `/api/manager/checklists/create${queryParams}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name: checklistName, questions }),
+      // Determine the endpoint and HTTP method based on the mode
+      const endpoint = isEditMode
+        ? `/api/manager/checklists/edit?checklistId=${initialChecklist!.id}`
+        : `/api/manager/checklists/create${teamId ? `?teamId=${teamId}` : ""}`;
+      const method = isEditMode ? "PATCH" : "POST";
+
+      const response = await fetch(endpoint, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({ name: checklistName, questions }),
+      });
 
       if (response.ok) {
-        setNotificationVisible(true);
+        setIsNotificationVisible(true);
         setTimeout(() => {
+          setIsNotificationVisible(false);
           setIsLoading(false);
           router.back();
         }, 1500);
       } else {
-        if (response.status === 404 || response.status === 500) {
-          const errorData = await response.json();
-          setServerError(errorData.message);
-          setNotificationVisible(true);
-          setTimeout(() => {
-            setIsLoading(false);
-            router.back();
-          }, 1500);
-          return;
-        }
+        const errorData = await response.json();
+        setServerError(errorData.message || "An error occurred");
+        setIsNotificationVisible(true);
+        setTimeout(() => {
+          setIsNotificationVisible(false);
+          setIsLoading(false);
+          router.back();
+        }, 1500);
       }
     } catch (error) {
-      console.error("Error creating checklist:", error);
-      setIsLoading(false);
+      console.error("Error saving checklist:", error);
+      setServerError("An unexpected error occurred");
+      setIsNotificationVisible(true);
+      setTimeout(() => {
+        setIsNotificationVisible(false);
+        setIsLoading(false);
+        router.back();
+      }, 1500);
+    } finally {
     }
   };
 
@@ -139,21 +161,30 @@ const ChecklistForm = () => {
         serverError ? (
           <Notification
             title={serverError}
-            body="There was an error creating this checklist."
+            body={
+              isEditMode
+                ? "There was an error updating this checklist."
+                : "There was an error creating this checklist."
+            }
             icon={<ExclamationTriangleIcon className="text-red-600" />}
             show={isNotificationVisible}
-            setShow={setNotificationVisible}
+            setShow={setIsNotificationVisible}
           />
         ) : (
           <Notification
-            title="Checklist Created"
-            body="You have successfully created a checklist."
+            title={isEditMode ? "Checklist Updated" : "Checklist Created"}
+            body={
+              isEditMode
+                ? "You have successfully updated the checklist."
+                : "You have successfully created a checklist."
+            }
             icon={<CheckCircleIcon className="text-green-400" />}
             show={isNotificationVisible}
-            setShow={setNotificationVisible}
+            setShow={setIsNotificationVisible}
           />
         )
       ) : null}
+
       {isLoading ? (
         <Loading />
       ) : (
@@ -287,7 +318,7 @@ const ChecklistForm = () => {
             </div>
 
             <button
-              onClick={saveForm}
+              onClick={submitForm}
               className="rounded bg-indigo-600 px-6 py-2 text-white"
             >
               Submit
