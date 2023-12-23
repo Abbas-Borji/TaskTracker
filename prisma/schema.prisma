@@ -36,7 +36,7 @@ model Team {
     id          Int          @id @default(autoincrement())
     name        String       @unique
     managerId   String
-    manager     User         @relation("managerOf", fields: [managerId], references: [id])
+    manager     User         @relation("managerOf", fields: [managerId], references: [id], onDelete: Cascade)
     assignments Assignment[]
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
@@ -47,8 +47,8 @@ model Team {
 model MemberOf {
     userId   String
     teamId   Int
-    memberOf User   @relation(fields: [userId], references: [id])
-    member   Team   @relation(fields: [teamId], references: [id])
+    memberOf User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    member   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
     @@id([userId, teamId])
 }
@@ -57,9 +57,9 @@ model Checklist {
     id          Int          @id @default(autoincrement())
     name        String
     managerId   String
-    manager     User         @relation(fields: [managerId], references: [id])
+    manager     User         @relation(fields: [managerId], references: [id], onDelete: Cascade)
     teamId      Int?
-    team        Team?        @relation(fields: [teamId], references: [id])
+    team        Team?        @relation(fields: [teamId], references: [id], onDelete: Cascade)
     questions   Question[]
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
@@ -70,7 +70,7 @@ model Question {
     id          Int       @id @default(autoincrement())
     content     String
     checklistId Int
-    questionOf  Checklist @relation(fields: [checklistId], references: [id])
+    questionOf  Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
     options     Option[]
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
@@ -80,7 +80,7 @@ model Option {
     id          Int          @id @default(autoincrement())
     content     String
     questionId  Int
-    optionOf    Question     @relation(fields: [questionId], references: [id])
+    optionOf    Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
     submissions Submission[]
@@ -89,15 +89,15 @@ model Option {
 model Assignment {
     id                 Int         @id @default(autoincrement())
     employeeId         String
-    employee           User        @relation(fields: [employeeId], references: [id])
+    employee           User        @relation(fields: [employeeId], references: [id], onDelete: Cascade)
     checklistId        Int
-    checklist          Checklist   @relation(fields: [checklistId], references: [id])
+    checklist          Checklist   @relation(fields: [checklistId], references: [id], onDelete: Cascade)
     archivedByEmployee Boolean     @default(false)
     viewedByEmployee   Boolean     @default(false)
     dueDate            DateTime
     submission         Submission?
     feedback           feedback?
-    Team               Team?       @relation(fields: [teamId], references: [id])
+    Team               Team?       @relation(fields: [teamId], references: [id], onDelete: Cascade)
     teamId             Int?
     createdAt          DateTime    @default(now())
 }
@@ -105,11 +105,11 @@ model Assignment {
 model Submission {
     id                Int        @id @default(autoincrement())
     userId            String
-    user              User       @relation(fields: [userId], references: [id])
+    user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
     archivedByManager Boolean    @default(false)
     status            Status     @default(PENDING)
     assignmentId      Int        @unique
-    assignment        Assignment @relation(fields: [assignmentId], references: [id])
+    assignment        Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
     options           Option[]
     createdAt         DateTime   @default(now())
 }
@@ -123,10 +123,10 @@ enum Status {
 model feedback {
     id           Int        @id @default(autoincrement())
     assignmentId Int        @unique
-    assignment   Assignment @relation(fields: [assignmentId], references: [id])
+    assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
     content      String
     managerId    String
-    manager      User       @relation(fields: [managerId], references: [id])
+    manager      User       @relation(fields: [managerId], references: [id], onDelete: Cascade)
     createdAt    DateTime   @default(now())
 }
 
