@@ -80,7 +80,7 @@ const SubmissionsTable = () => {
 
   return (
     <Dashboard
-      description="A list of all the users including their name, email, role, and department."
+      description="A list of all the submissions and related details."
       columns={columns}
       data={submissions}
       actionButton={

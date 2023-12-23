@@ -74,7 +74,7 @@ const AssignmentsTable = () => {
 
   return (
     <Dashboard
-      description="A list of all the users including their name, email, role, and department."
+      description="A list of all the assignments and related details."
       columns={columns}
       data={assignments}
       actionButton={

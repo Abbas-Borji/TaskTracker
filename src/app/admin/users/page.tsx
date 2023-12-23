@@ -51,7 +51,7 @@ const UsersTable = () => {
 
   return (
     <Dashboard
-      description="A list of all the users including their name, email, role, and department."
+      description="A list of all the users including their names, emails, roles, and departments."
       columns={columns}
       data={users}
       actionButton={
