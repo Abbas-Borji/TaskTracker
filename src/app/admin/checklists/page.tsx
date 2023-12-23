@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Dashboard from "../common/components/Dashboard";
-import Button from "@/app/common/components/Button";
 import ActionButtons from "./components/ActionButtons";
 import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
 
@@ -10,7 +9,11 @@ const columns = [
   { title: "Name", dataKey: "name", sortable: true },
   { title: "Manager", dataKey: "manager", sortable: true },
   { title: "Total Questions", dataKey: "totalQuestions", sortable: true },
-  { title: "Actions", dataKey: "actions", render: ActionButtons },
+  {
+    title: "Actions",
+    dataKey: "actions",
+    render: (rowData: Checklist) => <ActionButtons checklistId={rowData.id} />,
+  },
   // Add more columns if needed
 ];
 
