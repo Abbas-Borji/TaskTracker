@@ -86,7 +86,10 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
 
       if (response.ok) {
         setNotificationVisible(true);
-        setTimeout(() => setNotificationVisible(false), 1000);
+        setTimeout(() => {
+          setNotificationVisible(false);
+          setIsLoading(false);
+        }, 1000);
         // Remove the deleted checklist from the checklists array
         const newChecklists = checklists.filter(
           (checklist) => checklist.info.id !== checklistId,
@@ -95,10 +98,10 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
         setChecklists(newChecklists);
       } else {
         console.log("Couldn't delete the checklist of ID: " + checklistId);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log("An error occurred while deleting the checklist: ", error);
-    } finally {
       setIsLoading(false);
     }
   };
