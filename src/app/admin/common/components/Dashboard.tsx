@@ -20,13 +20,17 @@ const Dashboard = ({
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <div className="mb-6 flex items-center">
-            <h1 className="mr-4 text-3xl font-semibold leading-6 text-gray-900">
-              {lastSegment}
-            </h1>
-            {/* Refresh button */}
-            <RefreshButton />
-            {actionButton}
+          <div className="mb-6 flex flex-col sm:flex-row justify-between items-start">
+            <div className="items-center flex">
+              <h1 className="mr-4 text-4xl font-semibold leading-6 text-gray-900">
+                {lastSegment}
+              </h1>
+              {/* Refresh button */}
+              <RefreshButton />
+            </div>
+            <div className="mt-6 sm:mt-0">
+              {actionButton}
+            </div>
           </div>
           <p className="mt-2 text-sm text-gray-700">{description}</p>
         </div>
