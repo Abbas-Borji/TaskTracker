@@ -17,7 +17,7 @@ const ChecklistEdit = () => {
     const fetchChecklist = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/admin/checklists/get?checklistId=${checklistId}`);
+        const response = await fetch(`/api/checklist/get?checklistId=${checklistId}`);
         if (response.ok) {
           const data = await response.json();
           setChecklist(data);

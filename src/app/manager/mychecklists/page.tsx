@@ -55,7 +55,7 @@ const MyChecklists = () => {
 
     try {
       const response = await fetch(
-        `/api/manager/checklists/delete?checklistId=${checklistId}`,
+        `/api/checklist/delete?checklistId=${checklistId}`,
         {
           method: "DELETE",
         },

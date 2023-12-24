@@ -111,8 +111,8 @@ const ChecklistForm = ({ initialChecklist }: ChecklistFormProps) => {
 
       // Determine the endpoint and HTTP method based on the mode
       const endpoint = isEditMode
-        ? `/api/manager/checklists/edit?checklistId=${initialChecklist!.id}`
-        : `/api/manager/checklists/create${teamId ? `?teamId=${teamId}` : ""}`;
+        ? `/api/checklist/edit?checklistId=${initialChecklist!.id}`
+        : `/api/checklist/create${teamId ? `?teamId=${teamId}` : ""}`;
       const method = isEditMode ? "PATCH" : "POST";
 
       const response = await fetch(endpoint, {
