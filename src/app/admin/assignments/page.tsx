@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import Dashboard from "../common/components/Dashboard";
-import Button from "@/app/common/components/Button";
-import ActionButtons from "./components/ActionButtons";
 import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
+import { useEffect, useState } from "react";
+import DashboardSkeleton from "../common/components/DashboardSkeleton";
+import Dashboard from "../common/components/Dashboard";
+import ActionButtons from "./components/ActionButtons";
 
 const columns = [
   { title: "ID", dataKey: "id", sortable: true },
@@ -42,13 +42,16 @@ interface Assignment {
 
 const AssignmentsTable = () => {
   AllowOnlyAdmin();
+  const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [assignments, setAssignments] = useState<Assignment[]>([]);
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchChecklists = async () => {
       try {
         const response = await fetch(`/api/admin/assignments`);
         if (!response.ok) {
+          setIsLoading(false);
           throw new Error("Network response was not ok");
         }
         const assignments: responseAssignment[] = await response.json();
@@ -64,7 +67,9 @@ const AssignmentsTable = () => {
         );
 
         setAssignments(reshapedAssignments);
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         console.error("Error fetching assignments:", error);
       }
     };
@@ -73,11 +78,17 @@ const AssignmentsTable = () => {
   }, []);
 
   return (
-    <Dashboard
-      description="A list of all the assignments and related details."
-      columns={columns}
-      data={assignments}
-    />
+    <>
+      {isLoading ? (
+        <DashboardSkeleton />
+      ) : (
+        <Dashboard
+          description="A list of all the assignments and related details."
+          columns={columns}
+          data={assignments}
+        />
+      )}
+    </>
   );
 };
 

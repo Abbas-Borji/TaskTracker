@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Dashboard from "../common/components/Dashboard";
-import Button from "@/app/common/components/Button";
+import DashboardSkeleton from "../common/components/DashboardSkeleton";
 import ActionButtons from "./components/ActionButtons";
 import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
 
@@ -25,13 +25,16 @@ interface User {
 
 const UsersTable = () => {
   AllowOnlyAdmin();
+  const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchUsers = async () => {
       try {
         const response = await fetch(`/api/admin/users`);
         if (!response.ok) {
+          setIsLoading(false);
           throw new Error("Network response was not ok");
         }
         const users: User[] = await response.json();
@@ -41,7 +44,9 @@ const UsersTable = () => {
           counter: index + 1,
         }));
         setUsers(usersWithCounter);
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         console.error("Error fetching users:", error);
       }
     };
@@ -50,11 +55,17 @@ const UsersTable = () => {
   }, []);
 
   return (
-    <Dashboard
-      description="A list of all the users including their names, emails, roles, and departments."
-      columns={columns}
-      data={users}
-    />
+    <>
+      {isLoading ? (
+        <DashboardSkeleton />
+      ) : (
+        <Dashboard
+          description="A list of all the users including their names, emails, roles, and departments."
+          columns={columns}
+          data={users}
+        />
+      )}
+    </>
   );
 };
 

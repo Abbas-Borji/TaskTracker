@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import Dashboard from "../common/components/Dashboard";
-import Button from "@/app/common/components/Button";
-import ActionButtons from "./components/ActionButtons";
 import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
+import { useEffect, useState } from "react";
+import Dashboard from "../common/components/Dashboard";
+import DashboardSkeleton from "../common/components/DashboardSkeleton";
+import ActionButtons from "./components/ActionButtons";
 
 const columns = [
   { title: "ID", dataKey: "id", sortable: true },
@@ -44,13 +44,16 @@ interface Feedback {
 
 const FeedbacksTable = () => {
   AllowOnlyAdmin();
+  const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchChecklists = async () => {
       try {
         const response = await fetch(`/api/admin/feedbacks`);
         if (!response.ok) {
+          setIsLoading(false);
           throw new Error("Network response was not ok");
         }
         const feedbacks: responseFeedback[] = await response.json();
@@ -64,7 +67,9 @@ const FeedbacksTable = () => {
         }));
 
         setFeedbacks(reshapedFeedbacks);
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         console.error("Error fetching feedbacks:", error);
       }
     };
@@ -73,11 +78,17 @@ const FeedbacksTable = () => {
   }, []);
 
   return (
-    <Dashboard
-      description="A list of all the feedbacks and related details."
-      columns={columns}
-      data={feedbacks}
-    />
+    <>
+      {isLoading ? (
+        <DashboardSkeleton />
+      ) : (
+        <Dashboard
+          description="A list of all the feedbacks and related details."
+          columns={columns}
+          data={feedbacks}
+        />
+      )}
+    </>
   );
 };
 

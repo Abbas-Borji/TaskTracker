@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Dashboard from "../common/components/Dashboard";
-import Button from "@/app/common/components/Button";
+import DashboardSkeleton from "../common/components/DashboardSkeleton";
 import ActionButtons from "./components/ActionButtons";
 import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
 
@@ -47,13 +47,16 @@ interface Submission {
 
 const SubmissionsTable = () => {
   AllowOnlyAdmin();
+  const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [submissions, setSubmissions] = useState<Submission[]>([]);
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchChecklists = async () => {
       try {
         const response = await fetch(`/api/admin/submissions`);
         if (!response.ok) {
+          setIsLoading(false);
           throw new Error("Network response was not ok");
         }
         const submissions: responseSubmission[] = await response.json();
@@ -70,7 +73,9 @@ const SubmissionsTable = () => {
         );
 
         setSubmissions(reshapedSubmissions);
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         console.error("Error fetching submissions:", error);
       }
     };
@@ -79,11 +84,17 @@ const SubmissionsTable = () => {
   }, []);
 
   return (
-    <Dashboard
-      description="A list of all the submissions and related details."
-      columns={columns}
-      data={submissions}
-    />
+    <>
+      {isLoading ? (
+        <DashboardSkeleton />
+      ) : (
+        <Dashboard
+          description="A list of all the submissions and related details."
+          columns={columns}
+          data={submissions}
+        />
+      )}
+    </>
   );
 };
 

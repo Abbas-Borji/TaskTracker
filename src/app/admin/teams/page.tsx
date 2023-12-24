@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Dashboard from "../common/components/Dashboard";
+import DashboardSkeleton from "../common/components/DashboardSkeleton";
 import Button from "@/app/common/components/Button";
 import ActionButtons from "./components/ActionButtons";
 import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
@@ -38,13 +39,16 @@ interface Team {
 
 const TeamsTable = () => {
   AllowOnlyAdmin();
+  const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [teams, setTeams] = useState<Team[]>([]);
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchTeams = async () => {
       try {
         const response = await fetch(`/api/admin/teams`);
         if (!response.ok) {
+          setIsLoading(false);
           throw new Error("Network response was not ok");
         }
         const teams: responseTeam[] = await response.json();
@@ -59,7 +63,9 @@ const TeamsTable = () => {
         }));
 
         setTeams(reshapedTeams);
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         console.error("Error fetching teams:", error);
       }
     };
@@ -68,18 +74,24 @@ const TeamsTable = () => {
   }, []);
 
   return (
-    <Dashboard
-      description="A list of all the teams and related details."
-      columns={columns}
-      data={teams}
-      actionButton={
-        <Button
-          text="Create Team"
-          className="ml-auto bg-primary text-white hover:bg-indigo-400 focus-visible:outline-indigo-500"
-          onClick={() => console.log("Team created!")}
+    <>
+      {isLoading ? (
+        <DashboardSkeleton />
+      ) : (
+        <Dashboard
+          description="A list of all the teams and related details."
+          columns={columns}
+          data={teams}
+          actionButton={
+            <Button
+              text="Create Team"
+              className="ml-auto bg-primary text-white hover:bg-indigo-400 focus-visible:outline-indigo-500"
+              onClick={() => console.log("Team created!")}
+            />
+          }
         />
-      }
-    />
+      )}
+    </>
   );
 };
 
