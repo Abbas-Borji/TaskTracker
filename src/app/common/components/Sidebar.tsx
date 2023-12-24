@@ -1,14 +1,14 @@
 "use client";
-import React, { ReactNode } from "react";
-import { Fragment, useState, useEffect } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import Logo from "src/assets/logo.png";
-import { Team, Tab } from "../types/Sidebar";
-import Divider from "./Divider";
-import Link from "next/link";
-import classNames from "../functions/ClassNames";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { Fragment, useEffect, useState } from "react";
+import Logo from "src/assets/logo.png";
+import classNames from "../functions/ClassNames";
+import { Tab, Team } from "../types/Sidebar";
+import Divider from "./Divider";
 
 interface SidebarProps {
   tabs?: Tab[];
@@ -20,19 +20,9 @@ const Sidebar = ({ tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const session = useSession();
   const userRole = session.data?.user?.role;
   const [teams, setTeams] = useState<Team[]>([]);
-  const [currentTab, setCurrentTab] = useState<Tab | null>(null); // State for active tab
-  const [currentTeam, setCurrentTeam] = useState<Team | null>(null); // State for active team
-  const handleTabClick = (tab: Tab) => {
-    setCurrentTab(tab);
-    setCurrentTeam(null); // Clear active team when a tab is clicked
-    setSidebarOpen(false); // Close sidebar on tab click
-  };
-
-  const handleTeamClick = (team: Team) => {
-    setCurrentTeam(team);
-    setCurrentTab(null); // Clear active tab when a team is clicked
-    setSidebarOpen(false); // Close sidebar on team click
-  };
+  const pathname = usePathname(); // Get current path
+  const isActive: (href: string) => boolean = (href: string) =>
+    pathname === href;
 
   useEffect(() => {
     async function fetchTeams() {
@@ -47,9 +37,8 @@ const Sidebar = ({ tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => {
         console.error("Error fetching teams:", error);
       }
     }
-
     fetchTeams();
-  }, []); // Run once on component mount
+  }, [pathname]); // Re-run when the URL changes
 
   return (
     <>
@@ -126,18 +115,16 @@ const Sidebar = ({ tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                   <Link
                                     href={item.href}
                                     className={classNames(
-                                      currentTab &&
-                                        item.name === currentTab.name
+                                      isActive(item.href)
                                         ? "bg-primary text-light"
                                         : "text-light hover:bg-gray-300 hover:text-dark",
                                       "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
                                     )}
-                                    onClick={() => handleTabClick(item)}
+                                    onClick={() => setSidebarOpen(false)}
                                   >
                                     <item.icon
                                       className={classNames(
-                                        currentTab &&
-                                          item.name === currentTab.name
+                                        isActive(item.href)
                                           ? "text-light"
                                           : "text-light group-hover:text-dark",
                                         "h-6 w-6 shrink-0",
@@ -162,18 +149,16 @@ const Sidebar = ({ tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                   <Link
                                     href={team.href}
                                     className={classNames(
-                                      currentTeam &&
-                                        team.name === currentTeam.name
+                                      isActive(team.href)
                                         ? "bg-primary"
                                         : "hover:bg-gray-300 hover:text-dark",
                                       "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-light",
                                     )}
-                                    onClick={() => handleTeamClick(team)}
+                                    onClick={() => setSidebarOpen(false)}
                                   >
                                     <span
                                       className={classNames(
-                                        currentTeam &&
-                                          team.name === currentTeam.name
+                                        isActive(team.href)
                                           ? "bg-primary"
                                           : "group-hover:border-dark group-hover:text-dark",
                                         "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-light text-[0.625rem] font-medium text-light",
@@ -227,16 +212,15 @@ const Sidebar = ({ tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <Link
                             href={item.href}
                             className={classNames(
-                              currentTab && item.name === currentTab.name
+                              isActive(item.href)
                                 ? "bg-primary text-light"
                                 : "text-light hover:bg-gray-300 hover:text-dark",
                               "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
                             )}
-                            onClick={() => handleTabClick(item)}
                           >
                             <item.icon
                               className={classNames(
-                                currentTab && item.name === currentTab.name
+                                isActive(item.href)
                                   ? "text-light"
                                   : "text-light group-hover:text-dark",
                                 "h-6 w-6 shrink-0",
@@ -261,16 +245,15 @@ const Sidebar = ({ tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <Link
                             href={team.href}
                             className={classNames(
-                              currentTeam && team.name === currentTeam.name
+                              isActive(team.href)
                                 ? "bg-primary"
                                 : "hover:bg-gray-300 hover:text-dark",
                               "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-light",
                             )}
-                            onClick={() => handleTeamClick(team)}
                           >
                             <span
                               className={classNames(
-                                currentTeam && team.name === currentTeam.name
+                                isActive(team.href)
                                   ? "bg-primary"
                                   : "group-hover:border-dark group-hover:text-dark",
                                 "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-light text-[0.625rem] font-medium text-light",
