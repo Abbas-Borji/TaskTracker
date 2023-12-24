@@ -8,8 +8,8 @@ export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
   const userRole = session?.user?.role;
 
-  // Permission check to ensure only managers can access this route
-  if (userRole === "ADMIN" || userRole === "USER") {
+  // Permission check to ensure only admins and managers can access this route
+  if (userRole === "USER") {
     return new NextResponse("Permission denied.", { status: 400 });
   }
 

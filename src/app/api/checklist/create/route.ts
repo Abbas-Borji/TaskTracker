@@ -10,27 +10,39 @@ export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
   const userRole = session?.user?.role;
   const userId = session?.user?.id;
+  let teamId;
 
-  // Permission check to ensure only managers can access this route
-  if (userRole === "ADMIN" || userRole === "USER") {
-    return new NextResponse("Permission denied.", { status: 400 });
-  }
+  // Permission check to ensure only admins and managers can access this route
+  switch (userRole) {
+    case "USER":
+      return new NextResponse("Permission denied.", { status: 400 });
+    case "MANAGER":
+      // Extract teamId from the query parameter, if present
+      const url = request.nextUrl;
+      const teamIdQuery = url.searchParams.get("teamId");
+      teamId = teamIdQuery ? Number(teamIdQuery) : null;
 
-  // Extract teamId from the query parameter, if present
-  const url = request.nextUrl;
-  const teamIdQuery = url.searchParams.get("teamId");
-  const teamId = teamIdQuery ? Number(teamIdQuery) : null;
-
-  // Validate the teamId if it exists
-  if (teamId) {
-    const teamExists = await prisma.team.findUnique({
-      where: { id: teamId },
-    });
-    if (!teamExists) {
-      return new NextResponse(JSON.stringify({ message: "Team not found." }), {
-        status: 404,
-      });
-    }
+      // Validate the teamId if it exists
+      if (teamId) {
+        const teamExists = await prisma.team.findUnique({
+          where: { id: teamId },
+        });
+        if (!teamExists) {
+          return new NextResponse(
+            JSON.stringify({ message: "Team not found." }),
+            {
+              status: 404,
+            },
+          );
+        }
+      }
+      break;
+    case "ADMIN":
+      // Set teamId to 1: General Team
+      teamId = 1;
+      break;
+    default:
+      break;
   }
 
   // Parse the request body

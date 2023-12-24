@@ -12,8 +12,8 @@ export async function DELETE(request: NextRequest) {
   const checklistIdQuery = url.searchParams.get("checklistId");
   const checklistId = checklistIdQuery ? Number(checklistIdQuery) : null;
 
-  // Permission check to ensure only managers can access this route
-  if (userRole === "ADMIN" || userRole === "USER") {
+  // Permission check to ensure only admins and managers can access this route
+  if (userRole === "USER") {
     return new NextResponse("Permission denied.", { status: 400 });
   }
 
