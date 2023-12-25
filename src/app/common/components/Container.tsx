@@ -4,10 +4,12 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 
 interface ContainerProps {
+  title: string;
   children?: React.ReactNode;
+  footer: React.ReactNode;
 }
 
-const Container = ({ children }: ContainerProps) => {
+const Container = ({ title, children, footer }: ContainerProps) => {
   const router = useRouter();
   const exit = () => {
     router.back();
@@ -16,6 +18,7 @@ const Container = ({ children }: ContainerProps) => {
     <>
       <div className="relative min-h-[70px] w-full rounded-lg border border-gray-300 bg-light">
         <div className="mb-10">
+          <h1 className="mt-6 text-center text-2xl font-medium">{title}</h1>
           <div className="absolute right-6 top-6">
             <button
               onClick={exit}
@@ -25,7 +28,8 @@ const Container = ({ children }: ContainerProps) => {
             </button>
           </div>
         </div>
-        {children}
+        <div className="p-6 sm:p-16">{children}</div>
+        {footer}
       </div>
     </>
   );
