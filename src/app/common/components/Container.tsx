@@ -1,15 +1,20 @@
+"use client";
 import React from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 
-const Container = () => {
+interface ContainerProps {
+  children?: React.ReactNode;
+}
+
+const Container = ({ children }: ContainerProps) => {
   const router = useRouter();
   const exit = () => {
     router.back();
   };
   return (
     <>
-      <div className="relative w-full rounded-lg border border-gray-300 bg-light">
+      <div className="relative min-h-[70px] w-full rounded-lg border border-gray-300 bg-light">
         <div className="mb-10">
           <div className="absolute right-6 top-6">
             <button
@@ -20,6 +25,7 @@ const Container = () => {
             </button>
           </div>
         </div>
+        {children}
       </div>
     </>
   );
