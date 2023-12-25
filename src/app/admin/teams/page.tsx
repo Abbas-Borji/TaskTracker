@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import Button from "@/app/common/components/Button";
+import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
+import { useEffect, useState } from "react";
 import Dashboard from "../common/components/Dashboard";
 import DashboardSkeleton from "../common/components/DashboardSkeleton";
-import Button from "@/app/common/components/Button";
 import ActionButtons from "./components/ActionButtons";
-import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
 
 const columns = [
   { title: "ID", dataKey: "id", sortable: true },
@@ -38,7 +38,6 @@ interface Team {
 }
 
 const TeamsTable = () => {
-  AllowOnlyAdmin();
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [teams, setTeams] = useState<Team[]>([]);
 
@@ -75,6 +74,7 @@ const TeamsTable = () => {
 
   return (
     <>
+      <AllowOnlyAdmin />
       {isLoading ? (
         <DashboardSkeleton />
       ) : (

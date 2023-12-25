@@ -1,3 +1,4 @@
+"use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -8,6 +9,7 @@ const AllowOnlyUser = () => {
   if (userRole === "ADMIN" || userRole === "MANAGER") {
     router.replace("/redirect");
   }
+  return <></>;
 };
 
 export default AllowOnlyUser;

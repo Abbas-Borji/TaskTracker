@@ -41,7 +41,6 @@ interface Assignment {
 }
 
 const AssignmentsTable = () => {
-  AllowOnlyAdmin();
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [assignments, setAssignments] = useState<Assignment[]>([]);
 
@@ -79,6 +78,7 @@ const AssignmentsTable = () => {
 
   return (
     <>
+      <AllowOnlyAdmin />
       {isLoading ? (
         <DashboardSkeleton />
       ) : (

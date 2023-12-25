@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import ManagerChecklistCard from "../team/[teamId]/components/ManagerChecklistCard";
 
 const MyChecklists = () => {
-  AllowOnlyManager();
   const router = useRouter();
   const [checklists, setChecklists] = useState<ManagerChecklist[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Added loading state
@@ -89,6 +88,7 @@ const MyChecklists = () => {
 
   return (
     <div className="p-2">
+      <AllowOnlyManager />
       {isNotificationVisible ? (
         <Notification
           title="Checklist Deleted"

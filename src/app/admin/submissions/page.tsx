@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
+import { useEffect, useState } from "react";
 import Dashboard from "../common/components/Dashboard";
 import DashboardSkeleton from "../common/components/DashboardSkeleton";
 import ActionButtons from "./components/ActionButtons";
-import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
 
 const columns = [
   { title: "ID", dataKey: "id", sortable: true },
@@ -46,7 +46,6 @@ interface Submission {
 }
 
 const SubmissionsTable = () => {
-  AllowOnlyAdmin();
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [submissions, setSubmissions] = useState<Submission[]>([]);
 
@@ -85,6 +84,7 @@ const SubmissionsTable = () => {
 
   return (
     <>
+      <AllowOnlyAdmin />
       {isLoading ? (
         <DashboardSkeleton />
       ) : (

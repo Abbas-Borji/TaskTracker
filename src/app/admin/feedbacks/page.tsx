@@ -43,7 +43,6 @@ interface Feedback {
 }
 
 const FeedbacksTable = () => {
-  AllowOnlyAdmin();
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
 
@@ -79,6 +78,7 @@ const FeedbacksTable = () => {
 
   return (
     <>
+      <AllowOnlyAdmin />
       {isLoading ? (
         <DashboardSkeleton />
       ) : (

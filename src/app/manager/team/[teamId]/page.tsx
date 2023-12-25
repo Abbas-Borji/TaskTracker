@@ -1,19 +1,13 @@
-"use client";
-import { useParams } from "next/navigation";
-import TeamChecklists from "./components/TeamChecklists";
 import AllowOnlyManager from "@/app/common/functions/ClientAllowOnlyManager";
+import TeamChecklists from "./components/TeamChecklists";
 
-const TeamPage = () => {
-  AllowOnlyManager();
-  const params = useParams();
-  const teamId = Array.isArray(params.teamId)
-    ? params.teamId[0]
-    : params.teamId;
-
+const TeamPage = ({ params }: { params: { teamId: string } }) => {
+  const teamId = params.teamId;
   const teamIdNumber = teamId ? parseInt(teamId, 10) : null;
 
   return (
     <div>
+      <AllowOnlyManager />
       {teamIdNumber ? (
         <TeamChecklists teamId={teamIdNumber} />
       ) : (

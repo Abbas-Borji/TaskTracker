@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
+import { useEffect, useState } from "react";
 import Dashboard from "../common/components/Dashboard";
 import DashboardSkeleton from "../common/components/DashboardSkeleton";
 import ActionButtons from "./components/ActionButtons";
-import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
 
 const columns = [
   { title: "ID", dataKey: "counter", sortable: true },
@@ -24,7 +24,6 @@ interface User {
 }
 
 const UsersTable = () => {
-  AllowOnlyAdmin();
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [users, setUsers] = useState<User[]>([]);
 
@@ -56,6 +55,7 @@ const UsersTable = () => {
 
   return (
     <>
+      <AllowOnlyAdmin />
       {isLoading ? (
         <DashboardSkeleton />
       ) : (

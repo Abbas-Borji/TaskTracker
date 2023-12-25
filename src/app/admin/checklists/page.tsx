@@ -1,14 +1,14 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import Dashboard from "../common/components/Dashboard";
-import ActionButtons from "./components/ActionButtons";
-import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
 import Button from "@/app/common/components/Button";
 import Modal from "@/app/common/components/Modal";
 import Notification from "@/app/common/components/Notification";
-import { useRouter } from "next/navigation";
-import DashboardSkeleton from "../common/components/DashboardSkeleton";
+import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Dashboard from "../common/components/Dashboard";
+import DashboardSkeleton from "../common/components/DashboardSkeleton";
+import ActionButtons from "./components/ActionButtons";
 
 interface User {
   id?: string;
@@ -31,7 +31,6 @@ interface Checklist {
 }
 
 const ChecklistsTable = () => {
-  AllowOnlyAdmin();
   const columns = [
     { title: "ID", dataKey: "id", sortable: true },
     { title: "Name", dataKey: "name", sortable: true },
@@ -126,6 +125,7 @@ const ChecklistsTable = () => {
 
   return (
     <>
+      <AllowOnlyAdmin />
       {isNotificationVisible ? (
         <Notification
           title="Checklist Deleted"
