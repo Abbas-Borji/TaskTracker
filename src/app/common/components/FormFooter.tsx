@@ -6,7 +6,7 @@ interface FormFooterProps {
   questionsLength: number;
   onPrevious: () => void;
   onNext: () => void;
-  onSubmit: () => void;
+  onSubmit: (parameter: any) => void;
 }
 
 const FormFooter: React.FC<FormFooterProps> = ({
