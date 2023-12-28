@@ -77,13 +77,13 @@ model Question {
 }
 
 model Option {
-    id          Int          @id @default(autoincrement())
-    content     String
-    questionId  Int
-    optionOf    Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
-    submissions Submission[]
+    id              Int               @id @default(autoincrement())
+    content         String
+    questionId      Int
+    optionOf        Question          @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    createdAt       DateTime          @default(now())
+    updatedAt       DateTime          @updatedAt
+    SubmittedOption SubmittedOption[]
 }
 
 model Assignment {
@@ -103,15 +103,23 @@ model Assignment {
 }
 
 model Submission {
-    id                Int        @id @default(autoincrement())
+    id                Int               @id @default(autoincrement())
     userId            String
-    user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-    archivedByManager Boolean    @default(false)
-    status            Status     @default(PENDING)
-    assignmentId      Int        @unique
-    assignment        Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
-    options           Option[]
-    createdAt         DateTime   @default(now())
+    user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+    archivedByManager Boolean           @default(false)
+    status            Status            @default(PENDING)
+    assignmentId      Int               @unique
+    assignment        Assignment        @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+    createdAt         DateTime          @default(now())
+    SubmittedOption   SubmittedOption[]
+}
+
+model SubmittedOption {
+    id           Int        @id @default(autoincrement())
+    submissionId Int
+    submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+    optionId     Int
+    option       Option     @relation(fields: [optionId], references: [id], onDelete: Cascade)
 }
 
 enum Status {
