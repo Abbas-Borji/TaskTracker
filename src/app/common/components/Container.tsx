@@ -18,7 +18,7 @@ const Container = ({ title, children, footer }: ContainerProps) => {
     <>
       <div className="relative min-h-[70px] w-full rounded-lg border border-gray-300 bg-light">
         <div className="mb-6">
-          <h1 className="mt-6 text-center text-2xl font-medium">{title}</h1>
+          <h1 className="mt-6 text-center text-2xl font-medium max-w-[210px] sm:max-w-xs md:max-w-lg overflow-hidden overflow-ellipsis text-overflow whitespace-nowrap mx-auto">{title}</h1>
           <div className="absolute right-6 top-6">
             <button
               onClick={exit}
