@@ -14,7 +14,7 @@ export async function GET(
 
   // Permission check to ensure only users can access this route
   if (userRole === "ADMIN" || userRole === "MANAGER") {
-    return new NextResponse("Permission denied.", { status: 400 });
+    return new NextResponse("Permission denied.", { status: 403 });
   }
 
   // Extract the assignmentId from the URL
@@ -59,6 +59,43 @@ export async function GET(
     return new NextResponse(JSON.stringify(structuredAssignment), {
       status: 200,
     });
+  } catch (error) {
+    return new NextResponse("Internal Server Error.", { status: 500 });
+  }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { assignmentId: string } },
+) {
+  // Get the userId from the session
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+  const userRole = session?.user?.role;
+
+  // Permission check to ensure only users can access this route
+  if (userRole === "ADMIN" || userRole === "MANAGER") {
+    return new NextResponse("Permission denied.", { status: 403 });
+  }
+
+  // Extract the assignmentId from the URL
+  const assignmentId = Number(params.assignmentId);
+
+  try {
+    // Update the assignment
+    const assignment = await prisma.assignment.update({
+      where: { id: assignmentId, employeeId: userId },
+      data: {
+        viewedByEmployee: true,
+      },
+    });
+
+    // Check if the process was successful
+    if (!assignment) {
+      return new NextResponse("Assignment not found.", { status: 404 });
+    }
+
+    return new NextResponse(JSON.stringify(assignment), { status: 200 });
   } catch (error) {
     return new NextResponse("Internal Server Error.", { status: 500 });
   }
