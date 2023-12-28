@@ -8,6 +8,7 @@ import ChecklistCard from "@/app/common/components/ChecklistCard";
 import SubmissionCard from "@/app/common/components/SubmissionCard";
 import CardSkeleton from "@/app/common/components/CardSkeleton";
 import SixCardContainer from "@/app/common/components/SixCardContainer";
+import { useRouter } from "next/navigation";
 
 interface Team {
   name: string | null;
@@ -23,11 +24,33 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [viewType, setViewType] = useState("default"); // 'default', 'checklists', 'submissions'
+  const router = useRouter();
+
+  const onClick = async (assignmentId: number) => {
+    // Update assignment viewedByEmployee status to 'true'
+    try {
+      const response = await fetch(`/api/user/assignment/${assignmentId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}), // Empty body
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update assignment");
+      }
+      console.log("Assignment updated successfully");
+    } catch (error) {
+      console.error("Error updating assignment:", error);
+    }
+    router.push(`/user/assignment/${assignmentId}`);
+  };
+
   const handleViewAll = (type: string) => {
     setViewType(type);
   };
   const handleViewDefault = () => {
-    setViewType('default');
+    setViewType("default");
   };
 
   useEffect(() => {
@@ -70,7 +93,15 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
             title="Pending Checklists"
             items={isLoading ? sixSkeletonCardsArray : checklists}
             renderItem={(item, index) =>
-              isLoading ? <CardSkeleton key={index}/> : <ChecklistCard checklist={item} key={index}/>
+              isLoading ? (
+                <CardSkeleton key={index} />
+              ) : (
+                <ChecklistCard
+                  checklist={item}
+                  handleClick={onClick}
+                  key={index}
+                />
+              )
             }
             onViewBack={handleViewDefault}
           />
@@ -80,11 +111,11 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
           <SixCardContainer
             title="Submitted Checklists"
             items={isLoading ? sixSkeletonCardsArray : submissions}
-            renderItem={(item: any, index:number) =>
+            renderItem={(item: any, index: number) =>
               isLoading ? (
-                <CardSkeleton key={index}/>
+                <CardSkeleton key={index} />
               ) : (
-                <SubmissionCard submission={item} key={index}/>
+                <SubmissionCard submission={item} key={index} />
               )
             }
             onViewBack={handleViewDefault}
@@ -98,9 +129,13 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
               items={isLoading ? threeSkeletonCardsArray : checklists}
               renderItem={(item, index) =>
                 isLoading ? (
-                  <CardSkeleton key={index}/>
+                  <CardSkeleton key={index} />
                 ) : (
-                  <ChecklistCard checklist={item} key={index}/>
+                  <ChecklistCard
+                    checklist={item}
+                    handleClick={onClick}
+                    key={index}
+                  />
                 )
               }
               onViewAll={() => handleViewAll("checklists")}
@@ -110,9 +145,9 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
               items={isLoading ? threeSkeletonCardsArray : submissions}
               renderItem={(item, index) =>
                 isLoading ? (
-                  <CardSkeleton key={index}/>
+                  <CardSkeleton key={index} />
                 ) : (
-                  <SubmissionCard submission={item} key={index}/>
+                  <SubmissionCard submission={item} key={index} />
                 )
               }
               onViewAll={() => handleViewAll("submissions")}
@@ -124,9 +159,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
 
   return (
     <div className="p-2">
-      <h1 className="mb-5 text-4xl font-medium">
-        | {team.name || "Team ..."}
-      </h1>
+      <h1 className="mb-5 text-4xl font-medium">| {team.name || "Team ..."}</h1>
       {renderContent()}
     </div>
   );
