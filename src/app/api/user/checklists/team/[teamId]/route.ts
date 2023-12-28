@@ -9,9 +9,9 @@ export async function GET(request: NextRequest) {
   const userId = session?.user?.id;
   const userRole = session?.user?.role;
 
-   // Permission check to ensure only users can access this route
-   if (userRole === 'ADMIN' || userRole === 'MANAGER') {
-    return new NextResponse('Permission denied.', {status: 400});
+  // Permission check to ensure only users can access this route
+  if (userRole === "ADMIN" || userRole === "MANAGER") {
+    return new NextResponse("Permission denied.", { status: 400 });
   }
 
   // Extract the teamId from the URL
@@ -96,13 +96,20 @@ export async function GET(request: NextRequest) {
     });
   });
 
+  // Filter assignments to include only those with no submission
+  const unSubmittedAssignments = assignments.filter(
+    (assignment) => !assignment.submission,
+  );
+
   // Get the viewed status from the assignments
-  const assignmentViews = assignments.map(
+  const assignmentViews = unSubmittedAssignments.map(
     (assignment) => assignment.viewedByEmployee,
   );
 
   // Get the checklist ids from the assignments
-  const checklistIds = assignments.map((assignment) => assignment.checklistId);
+  const checklistIds = unSubmittedAssignments.map(
+    (assignment) => assignment.checklistId,
+  );
 
   // Get the checklists including their managers using the checklist ids
   const checklists = await prisma.checklist.findMany({
@@ -119,7 +126,7 @@ export async function GET(request: NextRequest) {
   // Structure the checklist data to be returned
   const structuredchecklists = checklists.map((checklist, index) => ({
     info: {
-      id: checklist.id,
+      id: unSubmittedAssignments[index]?.id,
       name: checklist.name,
       dueDate: dueDates[index],
       viewed: assignmentViews[index],
