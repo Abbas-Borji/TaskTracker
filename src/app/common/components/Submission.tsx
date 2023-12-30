@@ -1,26 +1,21 @@
 "use client";
-import React, { useState, useEffect } from "react";
 import Container from "@/app/common/components/Container";
 import FormFooter from "@/app/common/components/FormFooter";
-import { Question } from "@/app/common/types/CreateOrEditChecklist";
-import { useRouter } from "next/navigation";
-import Notification from "@/app/common/components/Notification";
 import FormSkeleton from "@/app/common/components/FormSkeleton";
-import {
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-} from "@heroicons/react/24/outline";
-
-interface SubmittedOption {
-  optionId: number;
-}
+import Notification from "@/app/common/components/Notification";
+import { Question } from "@/app/common/types/ViewSubmission";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import Modal from "@/app/common/components/Modal";
 
 interface SubmissionProps {
   submissionId: number;
 }
 
 const Submission = ({ submissionId }: SubmissionProps) => {
-  const router = useRouter();
+  const session = useSession();
+  const userRole = session.data?.user?.role;
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState<Question[]>();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -30,25 +25,88 @@ const Submission = ({ submissionId }: SubmissionProps) => {
   const [selectedOptions, setSelectedOptions] = useState<{
     [questionId: number]: number;
   }>({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasFeedback, setHasFeedback] = useState(false);
 
   useEffect(() => {
-    //fetchQuestions();
-    const fetchQuestions = async () => {
+    const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/submission/${submissionId}`);
+        const response = await fetch(`/api/submission/get/${submissionId}`);
         const data = await response.json();
-        setTitle(data.title);
-        setQuestions(data.questions);
+        setTitle(data.checklistName);
+        setQuestions(data.questionsWithOptions);
+        setHasFeedback(data.hasFeedback);
+        // Map the selectedOptionId from each question to its id
+        const selectedOptionsMap: { [questionId: number]: number } = {};
+        if (data.questionsWithOptions) {
+          data.questionsWithOptions.forEach((question: Question) => {
+            if (question.selectedOptionId !== null) {
+              selectedOptionsMap[question.id] = question.selectedOptionId;
+            }
+          });
+        }
+        setSelectedOptions(selectedOptionsMap);
+        if (!response.ok) {
+          setServerError(data.message);
+          setIsNotificationVisible(true);
+          setTimeout(() => {
+            setIsNotificationVisible(false);
+            setServerError("");
+          }, 1000);
+        }
         setIsLoading(false);
       } catch (error: any) {
         setServerError(error.message);
+        setIsNotificationVisible(true);
         setIsLoading(false);
       }
     };
 
-    fetchQuestions();
+    fetchData();
   }, [submissionId]);
+
+  const giveFeedback = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const confirmDelete = async () => {
+    closeModal();
+    // setIsLoading(true);
+
+    // try {
+    //   const response = await fetch(
+    //     `/api/checklist/delete?checklistId=${checklistId}`,
+    //     {
+    //       method: "DELETE",
+    //     },
+    //   );
+
+    //   if (response.ok) {
+    //     setNotificationVisible(true);
+    //     setTimeout(() => {
+    //       setNotificationVisible(false);
+    //       setIsLoading(false);
+    //     }, 1000);
+    //     // Remove the deleted checklist from the checklists array
+    //     const newChecklists = checklists.filter(
+    //       (checklist) => checklist.info.id !== checklistId,
+    //     );
+    //     // Update the state
+    //     setChecklists(newChecklists);
+    //   } else {
+    //     console.log("Couldn't delete the checklist of ID: " + checklistId);
+    //     setIsLoading(false);
+    //   }
+    // } catch (error) {
+    //   console.log("An error occurred while deleting the checklist: ", error);
+    //   setIsLoading(false);
+    // }
+  };
 
   return (
     <>
@@ -56,70 +114,91 @@ const Submission = ({ submissionId }: SubmissionProps) => {
         serverError ? (
           <Notification
             title={serverError}
-            body={"There was an error submitting this assignment."}
+            body={"There was an error loading this submission."}
             icon={<ExclamationTriangleIcon className="text-red-600" />}
             show={isNotificationVisible}
             setShow={setIsNotificationVisible}
           />
-        ) : (
-          <Notification
-            title="Assignment Submitted"
-            body={"You have successfully submitted this assignment."}
-            icon={<CheckCircleIcon className="text-green-400" />}
-            show={isNotificationVisible}
-            setShow={setIsNotificationVisible}
-          />
-        )
+        ) : null
       ) : null}
       {isLoading ? (
         <FormSkeleton />
       ) : (
-        <Container
-          title={title}
-          footer={
-            <FormFooter
-              currentQuestionIndex={currentQuestionIndex}
-              questionsLength={questions!.length}
-              onPrevious={() =>
-                setCurrentQuestionIndex(currentQuestionIndex - 1)
-              }
-              onNext={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
-              onSubmit={() => {}}
-            />
-          }
-        >
-          <h3 className="mb-8 text-lg font-semibold">
-            Question {currentQuestionIndex + 1} :{" "}
-            <span className="font-normal">
-              {questions![currentQuestionIndex]!.content}
-            </span>
-          </h3>
-          <div className="mb-14">
-            <fieldset className="mt-4">
-              <legend className="sr-only">Question Options</legend>
-              <div className="space-y-6">
-                {questions![currentQuestionIndex]!.options.map((option) => (
-                  <div key={option.id} className="flex items-center">
-                    <input
-                      id={`option-${option.id}`}
-                      name={`question-${questions![currentQuestionIndex]!.id}`}
-                      type="radio"
-                      className="h-4 w-4"
-                      checked={
-                        selectedOptions[
-                          questions![currentQuestionIndex]!.id!
-                        ] === option.id
-                      }
-                    />
-                    <label htmlFor={`option-${option.id}`} className="ml-3">
-                      {option.content}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </fieldset>
-          </div>
-        </Container>
+        <>
+          <Modal
+            open={isModalOpen}
+            onClose={closeModal}
+            title="Give Feedback"
+            message="Create a new modal for giving feedback."
+            confirmButtonText="Yes"
+            cancelButtonText="No, keep it"
+            onConfirm={confirmDelete}
+          />
+          <Container
+            title={title}
+            footer={
+              <FormFooter
+                currentQuestionIndex={currentQuestionIndex}
+                questionsLength={questions ? questions.length : 0}
+                onPrevious={() =>
+                  setCurrentQuestionIndex(currentQuestionIndex - 1)
+                }
+                onNext={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
+                onSubmit={() => {
+                  if (userRole === "USER") {
+                    () => {};
+                  } else if (userRole === "ADMIN" || userRole === "MANAGER") {
+                    giveFeedback();
+                  }
+                }}
+                buttonText={
+                  userRole === "ADMIN" || userRole === "MANAGER"
+                    ? "Give Feedback"
+                    : undefined
+                }
+                disabled={
+                  (userRole === "ADMIN" || userRole === "MANAGER") &&
+                  !hasFeedback
+                    ? false
+                    : true
+                }
+              />
+            }
+          >
+            <h3 className="mb-8 text-lg font-semibold">
+              Question {currentQuestionIndex + 1} :{" "}
+              <span className="font-normal">
+                {questions && questions[currentQuestionIndex]?.content}
+              </span>
+            </h3>
+            <div className="mb-14">
+              <fieldset className="mt-4">
+                <legend className="sr-only">Question Options</legend>
+                <div className="space-y-6">
+                  {questions?.[currentQuestionIndex]?.options?.map((option) => (
+                    <div key={option.id} className="flex items-center">
+                      <input
+                        id={`option-${option.id}`}
+                        name={`question-${questions[currentQuestionIndex]?.id}`}
+                        type="radio"
+                        className="h-4 w-4"
+                        checked={
+                          selectedOptions[
+                            questions[currentQuestionIndex]?.id ?? -1
+                          ] === option.id
+                        }
+                        readOnly
+                      />
+                      <label htmlFor={`option-${option.id}`} className="ml-3">
+                        {option.content}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+            </div>
+          </Container>
+        </>
       )}
     </>
   );
