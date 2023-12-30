@@ -1,5 +1,6 @@
 import React from "react";
 import Submission from "@/app/common/components/Submission";
+import AllowOnlyUser from "@/app/common/functions/ClientAllowOnlyUser";
 
 const UserViewSubmissionPage = ({
   params,
@@ -8,7 +9,12 @@ const UserViewSubmissionPage = ({
 }) => {
   const submissionId = Number(params.submissionId);
   if (!submissionId) return <div>Invalid submission id!</div>;
-  return <Submission submissionId={submissionId} />;
+  return (
+    <>
+      <AllowOnlyUser />
+      <Submission submissionId={submissionId} />
+    </>
+  );
 };
 
 export default UserViewSubmissionPage;
