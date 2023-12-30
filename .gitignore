@@ -43,3 +43,7 @@ yarn-error.log*
 
 # prisma migrations
 /prisma/migrations/*
+
+
+# Contentlayer
+.contentlayer
