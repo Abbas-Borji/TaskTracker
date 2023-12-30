@@ -45,10 +45,10 @@ model Team {
 }
 
 model MemberOf {
-    userId   String
-    teamId   Int
-    memberOf User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    member   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+    userId String
+    teamId Int
+    member User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
     @@id([userId, teamId])
 }
