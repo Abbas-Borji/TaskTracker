@@ -1,5 +1,6 @@
 import React from "react";
 import { ManagerSubmission } from "@/app/common/types/ManagerSubmission";
+import DropdownMenu from "@/app/common/components/DropdownMenu";
 
 interface SubmissionCardProps {
   submission: ManagerSubmission;
@@ -12,9 +13,20 @@ const SubmissionCard = ({ submission }: SubmissionCardProps) => {
         key={submission.id}
         className="relative mb-4 rounded-lg bg-light p-4 shadow-md"
       >
-        {/* Ellipsis Icon */}
-        <div className="absolute right-6 top-2 rotate-90 transform cursor-pointer text-2xl text-gray-600 hover:text-gray-800">
-          &#8942; {/* HTML entity for horizontal ellipsis */}
+        <div className="absolute right-6 top-4 h-5 w-5">
+          <DropdownMenu
+            items={[
+              {
+                label: submission.status === "REVIEWED" ? "Open" : "Review",
+                type: "link",
+                href: `/manager/submission/` + submission.id,
+              },
+              {
+                label: "Cancel",
+                type: "button",
+              },
+            ]}
+          />
         </div>
         {submission.checklistinfo && (
           <div className="mb-2 flex items-start justify-between">
@@ -22,9 +34,7 @@ const SubmissionCard = ({ submission }: SubmissionCardProps) => {
               <div className="flex items-center text-lg font-bold">
                 {submission.checklistinfo.name}
                 {submission.status === "REVIEWED" && (
-                  <span
-                    className='ml-4 rounded px-2 py-1 text-xs bg-green-300'
-                  >
+                  <span className="ml-4 rounded bg-green-300 px-2 py-1 text-xs">
                     {submission.status}
                   </span>
                 )}
@@ -33,7 +43,7 @@ const SubmissionCard = ({ submission }: SubmissionCardProps) => {
           </div>
         )}
         {/* Date at the bottom */}
-        <div className="mt-2 text-sm italic text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap">
+        <div className="mt-2 overflow-hidden overflow-ellipsis whitespace-nowrap text-sm italic text-gray-600">
           Submitted at {submission.submittedAt}
         </div>
       </div>
