@@ -1,6 +1,8 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { ManagerChecklist } from "@/app/common/types/ManagerChecklist";
 import DropdownMenu from "@/app/common/components/DropdownMenu";
+import AssignmentModal from "@/app/common/components/AssignModal";
 
 interface ManagerChecklistCardProps {
   checklist: ManagerChecklist;
@@ -11,6 +13,10 @@ const ManagerChecklistCard = ({
   checklist,
   onDelete,
 }: ManagerChecklistCardProps) => {
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const handleCloseModal = () => {
+    setIsOpenModal(false);
+  };
   const colorOptions = [
     { bg: "bg-gray-50", text: "text-gray-600", ring: "ring-gray-500/10" },
     { bg: "bg-red-50", text: "text-red-700", ring: "ring-red-600/10" },
@@ -32,6 +38,11 @@ const ManagerChecklistCard = ({
   };
   return (
     <>
+      <AssignmentModal
+        open={isOpenModal}
+        onClose={handleCloseModal}
+        checklistId={checklist.info.id}
+      />
       <div
         key={checklist.info.id}
         className="relative mb-4 rounded-lg bg-light p-4 shadow-md"
@@ -45,7 +56,11 @@ const ManagerChecklistCard = ({
                 href:
                   `/manager/checklist/edit?checklistId=` + checklist.info.id,
               },
-              { label: "Assign to", type: "link", href: "#" },
+              {
+                label: "Assign to",
+                type: "button",
+                onClick: () => setIsOpenModal(true),
+              },
               {
                 label: "Delete",
                 type: "button",
