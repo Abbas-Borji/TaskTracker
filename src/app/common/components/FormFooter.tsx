@@ -7,6 +7,8 @@ interface FormFooterProps {
   onPrevious: () => void;
   onNext: () => void;
   onSubmit: (parameter: any) => void;
+  buttonText?: string;
+  disabled?: boolean;
 }
 
 const FormFooter: React.FC<FormFooterProps> = ({
@@ -15,6 +17,8 @@ const FormFooter: React.FC<FormFooterProps> = ({
   onPrevious,
   onNext,
   onSubmit,
+  buttonText,
+  disabled = false,
 }) => {
   return (
     <div className="flex w-full items-center justify-between rounded-lg border-t border-gray-300 bg-dark p-4">
@@ -55,9 +59,14 @@ const FormFooter: React.FC<FormFooterProps> = ({
 
       <button
         onClick={onSubmit}
-        className="rounded bg-indigo-600 px-6 py-2 text-white"
+        disabled={disabled}
+        className={`rounded px-3 py-2 text-sm sm:px-6 sm:text-base ${
+          disabled
+            ? "cursor-not-allowed bg-gray-400 text-dark"
+            : "bg-indigo-600 text-white"
+        }`}
       >
-        Submit
+        {buttonText ? buttonText : "Submit"}
       </button>
     </div>
   );
