@@ -107,7 +107,7 @@ const FillChecklistForm = ({
 
     try {
       const response = await fetch(
-        `/api/user/submission/create/${assignmentId}`,
+        `/api/submission/create/${assignmentId}`,
         {
           method: "POST",
           headers: {
