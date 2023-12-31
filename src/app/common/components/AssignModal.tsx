@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { ChangeEvent, Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import ComboBox from "./ComboBox";
 import Badge from "./Badge";
@@ -46,7 +46,7 @@ const AssignmentModal = ({
   const [selectedEmployees, setSelectedEmployees] = useState<ComboBoxItem[]>(
     [],
   );
-  const [dueDate, setDueDate] = useState(new Date(2024, 0, 1).toISOString());
+  const [dueDate, setDueDate] = useState(new Date());
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -178,6 +178,11 @@ const AssignmentModal = ({
     }
   };
 
+  // Handle Datepicker change
+  const handleDateChange = (newDate: Date) => {
+    setDueDate(newDate);
+  };
+
   const handleClose = () => {
     // Resetting all the state variables to their initial states
     setChecklistName("");
@@ -185,7 +190,7 @@ const AssignmentModal = ({
     setSelectedTeam(null);
     setEmployees([]);
     setSelectedEmployees([]);
-    setDueDate("");
+    setDueDate(new Date());
     setServerError("");
     setIsNotificationVisible(false);
     setIsLoading(false);
@@ -245,15 +250,19 @@ const AssignmentModal = ({
                 >
                   <Dialog.Panel className="relative overflow-y-auto rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                     <Dialog.Title className="mb-6 text-lg font-medium leading-6 text-gray-900">
-                      Assign Checklist: {checklistName}
+                      <span className="font-bold">Assign:&nbsp;&nbsp;</span>{" "}
+                      {checklistName}
                     </Dialog.Title>
-                    {/* <div className="relative max-w-sm">
+                    <div className="block text-sm font-medium leading-6 text-gray-900">
+                      Specify a Deadline
+                    </div>
+                    <div className="relative mb-6 mt-2">
                       <Datepicker
-                        value={dueDate}
-                        onChange={(newDate) => setDueDate(newDate)}
-                        // Add additional configurations here
+                        defaultDate={dueDate}
+                        onSelectedDateChanged={handleDateChange}
+                        // Additional configurations
                       />
-                    </div> */}
+                    </div>
 
                     <ComboBox
                       items={teams}
