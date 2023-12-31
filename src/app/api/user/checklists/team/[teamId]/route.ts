@@ -85,8 +85,13 @@ export async function GET(request: NextRequest) {
     };
   });
 
+  // Filter assignments to include only those with no submission
+  const unSubmittedAssignments = assignments.filter(
+    (assignment) => !assignment.submission,
+  );
+
   // Get the due dates from the assignments
-  const dueDates = assignments.map((assignment) => {
+  const dueDates = unSubmittedAssignments.map((assignment) => {
     const date = new Date(assignment.dueDate);
     return date.toLocaleDateString("en-US", {
       weekday: "long",
@@ -95,11 +100,6 @@ export async function GET(request: NextRequest) {
       day: "numeric",
     });
   });
-
-  // Filter assignments to include only those with no submission
-  const unSubmittedAssignments = assignments.filter(
-    (assignment) => !assignment.submission,
-  );
 
   // Get the viewed status from the assignments
   const assignmentViews = unSubmittedAssignments.map(
@@ -144,6 +144,7 @@ export async function GET(request: NextRequest) {
     submissions: structuredSubmissions,
   };
 
+  console.log(dueDates);
   // Return the final response
   return new NextResponse(JSON.stringify(finalResponse), {
     status: 200,
