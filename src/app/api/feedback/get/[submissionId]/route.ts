@@ -92,6 +92,16 @@ export async function GET(
     const checklistName = submission.assignment.checklist.name;
     const feedbackContent = submission.assignment.feedback?.content;
     const feedbackCreatedAt = submission.assignment.feedback?.createdAt;
+    // Reformat date
+    const feedbackFormattedDate = feedbackCreatedAt?.toLocaleDateString(
+      "en-US",
+      {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      },
+    );
     const managerName = submission.assignment.checklist.manager?.name;
     const managerImage = submission.assignment.checklist.manager?.image;
 
@@ -99,7 +109,7 @@ export async function GET(
       JSON.stringify({
         checklistName,
         feedbackContent,
-        feedbackCreatedAt,
+        feedbackFormattedDate,
         managerName,
         managerImage,
       }),
