@@ -7,7 +7,7 @@ import Link from "next/link";
 // Replace This Dropdown Menu with Material UI Dropdown Menu
 
 // Define a type for menu item
-interface MenuItem {
+export interface MenuItem {
   label: string;
   href?: string;
   onClick?: () => void;
