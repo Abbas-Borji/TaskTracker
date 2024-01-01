@@ -1,5 +1,7 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Link from "next/link";
+import AssignmentModal from "@/app/common/components/AssignModal";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
 interface ActionButtonsProps {
@@ -8,27 +10,45 @@ interface ActionButtonsProps {
 }
 
 const ActionButtons = ({ checklistId, onDelete }: ActionButtonsProps) => {
-
+  // Assign Modal
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const handleCloseAssignModal = () => {
+    setIsAssignModalOpen(false);
+  };
   const handleDelete = () => {
     onDelete(checklistId);
   };
+  const handleAssign = () => {
+    setIsAssignModalOpen(true);
+  };
 
   return (
-    <div className="flex">
-      <Link
-        href={`/admin/checklist/edit?checklistId=` + checklistId}
-        className="mr-4 px-2 font-medium text-primary"
-      >
-        Edit
-      </Link>
-      <Link href={"#"} className="mr-4 px-2 font-medium text-primary">
-        Assign
-      </Link>
+    <>
+      <AssignmentModal
+        open={isAssignModalOpen}
+        onClose={handleCloseAssignModal}
+        checklistId={checklistId}
+      />
+      <div className="flex">
+        <Link
+          href={`/admin/checklist/edit?checklistId=` + checklistId}
+          className="mr-4 px-2 font-medium text-primary"
+        >
+          Edit
+        </Link>
 
-      <button onClick={() => handleDelete()}>
-        <TrashIcon className="h-5 w-5 text-red-600" />
-      </button>
-    </div>
+        <button
+          className="mr-4 px-2 font-medium text-primary"
+          onClick={handleAssign}
+        >
+          Assign
+        </button>
+
+        <button onClick={() => handleDelete()}>
+          <TrashIcon className="h-5 w-5 text-red-600" />
+        </button>
+      </div>
+    </>
   );
 };
 

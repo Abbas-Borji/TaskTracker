@@ -40,7 +40,10 @@ const ChecklistsTable = () => {
       title: "Actions",
       dataKey: "actions",
       render: (rowData: Checklist) => (
-        <ActionButtons checklistId={rowData.id} onDelete={handleDelete} />
+        <ActionButtons
+          checklistId={rowData.id}
+          onDelete={handleDelete}
+        />
       ),
     },
     // Add more columns if needed

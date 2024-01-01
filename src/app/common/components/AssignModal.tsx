@@ -1,19 +1,15 @@
-import React, { ChangeEvent, Fragment, useEffect, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import ComboBox from "./ComboBox";
-import Badge from "./Badge";
-import ExpectedResponse, {
-  Employee,
-} from "@/app/common/types/AssignmentTeamsEmployees";
-import Notification from "./Notification";
-import {
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/24/outline";
+import ExpectedResponse from "@/app/common/types/AssignmentTeamsEmployees";
 import Loading from "@/app/loading";
+import { Dialog, Transition } from "@headlessui/react";
+import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 import { Datepicker } from "flowbite-react";
-
-// Still have to fix the date picker, add skeleton loader, and optimize the code
+import React, { Fragment, useEffect, useState } from "react";
+import Badge from "./Badge";
+import ComboBox from "./ComboBox";
+import Notification from "./Notification";
 
 interface AssignmentData {
   checklistId: number;
@@ -248,7 +244,7 @@ const AssignmentModal = ({
                   leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                   leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
-                  <Dialog.Panel className="relative overflow-y-auto rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                  <Dialog.Panel className="relative w-full overflow-y-auto rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:max-w-lg sm:p-6">
                     <Dialog.Title className="mb-6 text-lg font-medium leading-6 text-gray-900">
                       <span className="font-bold">Assign:&nbsp;&nbsp;</span>{" "}
                       {checklistName}
