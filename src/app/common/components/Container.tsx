@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 interface ContainerProps {
   title: string;
   children?: React.ReactNode;
-  footer: React.ReactNode;
+  footer?: React.ReactNode;
 }
 
 const Container = ({ title, children, footer }: ContainerProps) => {
