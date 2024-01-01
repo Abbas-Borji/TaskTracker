@@ -109,9 +109,35 @@ async function seedChecklists(
 async function seedQuestions() {
   await prisma.question.createMany({
     data: [
-      { content: "Question 1?", checklistId: 1 },
-      { content: "Question 2?", checklistId: 2 },
-      { content: "Question 3?", checklistId: 3 },
+      {
+        content: "How do you rate your overall performance this quarter?",
+        checklistId: 1,
+      },
+      {
+        content: "How effectively do you feel you communicate with your team?",
+        checklistId: 2,
+      },
+      {
+        content:
+          "Can you give an example of how you've contributed to team success?",
+        checklistId: 3,
+      },
+      {
+        content: "How do you manage and prioritize your workload?",
+        checklistId: 4,
+      },
+      {
+        content: "How do you adapt to new challenges and changes at work?",
+        checklistId: 5,
+      },
+      {
+        content: "Can you describe a situation where you showed leadership?",
+        checklistId: 6,
+      },
+      {
+        content: "How do you ensure the quality of your work?",
+        checklistId: 7,
+      },
     ],
   });
 }
@@ -119,12 +145,116 @@ async function seedQuestions() {
 async function seedOptions() {
   await prisma.option.createMany({
     data: [
-      { content: "Option 1", questionId: 1 },
-      { content: "Option 2", questionId: 1 },
-      { content: "Option 3", questionId: 2 },
-      { content: "Option 4", questionId: 2 },
-      { content: "Option 5", questionId: 3 },
-      { content: "Option 6", questionId: 3 },
+      // Options for "How do you rate your overall performance this quarter?"
+      {
+        content: "Outstanding: Exceeded all goals and expectations",
+        questionId: 1,
+      },
+      {
+        content: "Satisfactory: Met most goals and expectations",
+        questionId: 1,
+      },
+      {
+        content:
+          "Needs Improvement: Did not meet several key goals and expectations",
+        questionId: 1,
+      },
+
+      // Options for "How effectively do you feel you communicate with your team?"
+      {
+        content: "Very Effectively: Clear, concise, and always understood",
+        questionId: 2,
+      },
+      {
+        content: "Effectively: Generally clear but some areas for improvement",
+        questionId: 2,
+      },
+      {
+        content: "Ineffectively: Often misunderstood or unclear",
+        questionId: 2,
+      },
+
+      // Options for "Can you give an example of how you've contributed to team success?"
+      {
+        content: "Leadership Role: Led projects or initiatives successfully",
+        questionId: 3,
+      },
+      {
+        content: "Support Role: Provided significant support to team members",
+        questionId: 3,
+      },
+      {
+        content:
+          "Learning and Development: Focused on personal development to better contribute to the team",
+        questionId: 3,
+      },
+
+      // Options for "How do you manage and prioritize your workload?"
+      {
+        content:
+          "Very Efficiently: Always prioritize effectively and meet deadlines",
+        questionId: 4,
+      },
+      {
+        content:
+          "Adequately: Usually prioritize well but sometimes miss deadlines",
+        questionId: 4,
+      },
+      {
+        content:
+          "Needs Improvement: Struggle with prioritization and frequently miss deadlines",
+        questionId: 4,
+      },
+
+      // Options for "How do you adapt to new challenges and changes at work?"
+      {
+        content: "Highly Adaptable: Quickly and effectively adapt to changes",
+        questionId: 5,
+      },
+      {
+        content:
+          "Moderately Adaptable: Adapt with some hesitation or difficulty",
+        questionId: 5,
+      },
+      {
+        content:
+          "Resistant to Change: Struggle to adapt and prefer consistency",
+        questionId: 5,
+      },
+
+      // Options for "Can you describe a situation where you showed leadership?"
+      {
+        content:
+          "Influential Leadership: Influenced significant positive changes or outcomes",
+        questionId: 6,
+      },
+      {
+        content:
+          "Team Coordination: Coordinated and guided team members effectively",
+        questionId: 6,
+      },
+      {
+        content:
+          "Problem-Solving Leadership: Led by solving critical challenges",
+        questionId: 6,
+      },
+
+      // Options for "How do you ensure the quality of your work?"
+      {
+        content:
+          "Strict Adherence to Standards: Consistently follow all guidelines and standards",
+        questionId: 7,
+      },
+      {
+        content:
+          "Regular Reviews and Adjustments: Frequently review and improve work",
+        questionId: 7,
+      },
+      {
+        content:
+          "Learning and Applying Feedback: Focus on learning from feedback and mistakes",
+        questionId: 7,
+      },
     ],
   });
 }
@@ -191,13 +321,21 @@ async function seedSubmissions(
 ) {
   await prisma.submission.createMany({
     data: [
-      { userId: createdUsers[0]!.id, assignmentId: 1, status: "PENDING" },
-      { userId: createdUsers[0]!.id, assignmentId: 2, status: "OPENED" },
-      { userId: createdUsers[0]!.id, assignmentId: 3, status: "REVIEWED" },
       { userId: createdUsers[0]!.id, assignmentId: 4, status: "PENDING" },
       { userId: createdUsers[0]!.id, assignmentId: 5, status: "OPENED" },
       { userId: createdUsers[0]!.id, assignmentId: 6, status: "REVIEWED" },
       { userId: createdUsers[0]!.id, assignmentId: 7, status: "PENDING" },
+    ],
+  });
+}
+
+async function seedSubmittedOptions() {
+  await prisma.submittedOption.createMany({
+    data: [
+      { submissionId: 1, optionId: 12 },
+      { submissionId: 2, optionId: 15 },
+      { submissionId: 3, optionId: 18 },
+      { submissionId: 4, optionId: 21 },
     ],
   });
 }
@@ -235,6 +373,7 @@ async function main() {
   await seedOptions();
   await seedAssignments(createdUsers);
   await seedSubmissions(createdUsers);
+  seedSubmittedOptions();
   await seedFeedbacks(createdUsers);
 }
 
