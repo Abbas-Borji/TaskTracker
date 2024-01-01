@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
         },
         MemberOf: {
           select: {
-            memberOf: {
+            member: {
               select: {
                 id: true,
                 name: true,
