@@ -346,19 +346,10 @@ async function seedFeedbacks(
   await prisma.feedback.createMany({
     data: [
       {
-        assignmentId: 1,
-        content: "Feedback 1",
+        assignmentId: 6,
+        content:
+          "Thank you for sharing that example. It's great to hear about your problem-solving leadership skills. Can you elaborate a bit more on this? Specifically, it would be helpful to understand the context of the challenges you faced, the specific actions you took to address them, and the outcomes of your efforts. ",
         managerId: createdUsers[1]!.id,
-      },
-      {
-        assignmentId: 2,
-        content: "Feedback 2",
-        managerId: createdUsers[2]!.id,
-      },
-      {
-        assignmentId: 3,
-        content: "Feedback 3",
-        managerId: createdUsers[3]!.id,
       },
     ],
   });
