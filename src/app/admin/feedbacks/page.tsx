@@ -11,8 +11,13 @@ const columns = [
   { title: "Employee", dataKey: "employee", sortable: true },
   { title: "Manager", dataKey: "manager", sortable: true },
   { title: "Date", dataKey: "createdAt", sortable: true },
-  { title: "Actions", dataKey: "actions", render: ActionButtons },
-  // Add more columns if needed
+  {
+    title: "Actions",
+    dataKey: "actions",
+    render: (rowData: Feedback) => (
+      <ActionButtons submissionId={rowData.submissionId} />
+    ),
+  },
 ];
 
 interface User {
@@ -25,6 +30,9 @@ interface responseFeedback {
   createdAt: string;
   assignment: {
     employee: User;
+    submission: {
+      id: number;
+    };
     checklist: {
       id: number;
       name: string;
@@ -37,6 +45,7 @@ interface Feedback {
   id: number;
   checklistName: string;
   checklistId: number;
+  submissionId: number;
   employee: string;
   manager: string;
   createdAt: string;
@@ -60,6 +69,7 @@ const FeedbacksTable = () => {
           id: feedback.id,
           checklistName: feedback.assignment.checklist.name,
           checklistId: feedback.assignment.checklist.id,
+          submissionId: feedback.assignment.submission.id,
           employee: feedback.assignment.employee.name,
           manager: feedback.assignment.checklist.manager.name,
           createdAt: feedback.createdAt,

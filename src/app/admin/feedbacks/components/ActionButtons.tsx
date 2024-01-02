@@ -2,10 +2,17 @@ import React from "react";
 import Link from "next/link";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
-const ActionButtons = () => {
+interface ActionButtonsProps {
+  submissionId: number;
+}
+
+const ActionButtons = ({ submissionId }: ActionButtonsProps) => {
   return (
     <div className="flex">
-      <Link href={"#"} className="mr-4 px-2 text-primary font-medium">
+      <Link
+        href={`/admin/feedback/` + submissionId}
+        className="mr-4 px-2 font-medium text-primary"
+      >
         View
       </Link>
 
