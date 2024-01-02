@@ -1,12 +1,39 @@
 import React from "react";
 import { ManagerSubmission } from "@/app/common/types/ManagerSubmission";
-import DropdownMenu from "@/app/common/components/DropdownMenu";
+import DropdownMenu, { MenuItem } from "@/app/common/components/DropdownMenu";
 
 interface SubmissionCardProps {
   submission: ManagerSubmission;
 }
 
 const SubmissionCard = ({ submission }: SubmissionCardProps) => {
+  const items: MenuItem[] = [
+    {
+      label: "Review",
+      type: "link",
+      href: `/manager/submission/` + submission.id,
+    },
+    {
+      label: "Cancel",
+      type: "button",
+    },
+  ];
+  const reviewedItems: MenuItem[] = [
+    {
+      label: "Open",
+      type: "link",
+      href: `/manager/submission/` + submission.id,
+    },
+    {
+      label: "View Feedback",
+      type: "link",
+      href: `/manager/feedback/` + submission.id,
+    },
+    {
+      label: "Cancel",
+      type: "button",
+    },
+  ];
   return (
     <>
       <div
@@ -15,17 +42,7 @@ const SubmissionCard = ({ submission }: SubmissionCardProps) => {
       >
         <div className="absolute right-6 top-4 h-5 w-5">
           <DropdownMenu
-            items={[
-              {
-                label: submission.status === "REVIEWED" ? "Open" : "Review",
-                type: "link",
-                href: `/manager/submission/` + submission.id,
-              },
-              {
-                label: "Cancel",
-                type: "button",
-              },
-            ]}
+            items={submission.status === "REVIEWED" ? reviewedItems : items}
           />
         </div>
         {submission.checklistinfo && (
