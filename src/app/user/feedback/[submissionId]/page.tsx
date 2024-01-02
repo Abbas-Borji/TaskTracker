@@ -1,8 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
 import Feedback from "@/app/common/components/Feedback";
+import FeedbackSkeleton from "@/app/common/components/FeedbackSkeleton";
 import Notification from "@/app/common/components/Notification";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
 
 interface ResponseData {
   checklistName: string;
@@ -12,8 +13,6 @@ interface ResponseData {
   managerImage?: string;
   message?: string;
 }
-
-// Still have to add the skeleton loader and optimize design
 
 const UserViewFeedbackPage = ({
   params,
@@ -32,6 +31,7 @@ const UserViewFeedbackPage = ({
   const submissionId = params.submissionId ? Number(params.submissionId) : null;
   useEffect(() => {
     if (submissionId) {
+      setIsLoading(true);
       try {
         const fetchData = async () => {
           const response = await fetch("/api/feedback/get/" + submissionId);
@@ -50,9 +50,8 @@ const UserViewFeedbackPage = ({
               setServerError("");
             }, 1000);
           }
+          setIsLoading(false);
         };
-
-        setIsLoading(false);
         fetchData();
       } catch (error: any) {
         setServerError(error.message);
@@ -75,13 +74,17 @@ const UserViewFeedbackPage = ({
           />
         ) : null
       ) : null}
-      <Feedback
-        checklistName={checklistName}
-        managerName={managerName}
-        feedbackContent={feedbackContent}
-        feedbackFormattedDate={feedbackFormattedDate}
-        managerImage={managerImage}
-      />
+      {isLoading ? (
+        <FeedbackSkeleton />
+      ) : (
+        <Feedback
+          checklistName={checklistName}
+          managerName={managerName}
+          feedbackContent={feedbackContent}
+          feedbackFormattedDate={feedbackFormattedDate}
+          managerImage={managerImage}
+        />
+      )}
     </>
   );
 };
