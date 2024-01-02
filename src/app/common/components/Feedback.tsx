@@ -1,4 +1,3 @@
-import React from "react";
 import Container from "./Container";
 
 interface FeedbackProps {
@@ -17,17 +16,17 @@ const Feedback = ({
   managerImage,
 }: FeedbackProps) => {
   return (
-    <Container title={"Feedback for " + checklistName}>
-      <div className="space-y-6 md:px-20 lg:px-48">
+    <Container title={checklistName}>
+      <div className="space-y-6 md:px-20 lg:px-40">
         <div className="flex flex-col sm:flex-row">
-          <div className="order-2 mt-6 sm:ml-16 sm:mt-0">
+          <div className="order-2 mt-6 sm:ml-2 sm:mt-0">
             <div
-              className="mt-3 space-y-6 text-base sm:text-lg text-gray-600"
+              className="mt-3 space-y-6 text-base text-gray-600"
               dangerouslySetInnerHTML={{ __html: feedbackContent }}
             />
           </div>
 
-          <div className="order-1 flex items-center sm:flex-col sm:items-start">
+          <div className="order-1 flex w-fit items-center sm:flex-col sm:items-start">
             {managerImage ? (
               <img
                 src={managerImage}
@@ -41,9 +40,9 @@ const Feedback = ({
             )}
 
             <div className="ml-4 sm:ml-0 sm:mt-4">
-              <p className="text-sm font-medium text-gray-900">{managerName}</p>
-              <div className="mt-2 flex items-center">
-                <span className="text-sm text-gray-500">
+              <p className="text-lg font-medium text-gray-900">{managerName}</p>
+              <div className="mt-1 flex items-center sm:mt-2">
+                <span className="w-48 text-xs italic text-gray-500">
                   {feedbackFormattedDate}
                 </span>
               </div>
