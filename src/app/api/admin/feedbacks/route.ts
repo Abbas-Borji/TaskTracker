@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
                 name: true,
               },
             },
+            submission: { select: { id: true } },
             checklist: {
               select: {
                 id: true,
