@@ -31,12 +31,12 @@ export async function GET(
           include: {
             assignment: {
               include: {
-                checklist: {
+                checklist: true,
+                feedback: {
                   include: {
                     manager: true,
                   },
                 },
-                feedback: true,
               },
             },
           },
@@ -48,12 +48,12 @@ export async function GET(
           include: {
             assignment: {
               include: {
-                checklist: {
+                checklist: true,
+                feedback: {
                   include: {
                     manager: true,
                   },
                 },
-                feedback: true,
               },
             },
           },
@@ -70,7 +70,11 @@ export async function GET(
                     manager: true,
                   },
                 },
-                feedback: true,
+                feedback: {
+                  include: {
+                    manager: true,
+                  },
+                },
               },
             },
           },
@@ -102,8 +106,8 @@ export async function GET(
         day: "numeric",
       },
     );
-    const managerName = submission.assignment.checklist.manager?.name;
-    const managerImage = submission.assignment.checklist.manager?.image;
+    const managerName = submission.assignment.feedback?.manager?.name;
+    const managerImage = submission.assignment.feedback?.manager?.image;
 
     return new NextResponse(
       JSON.stringify({
