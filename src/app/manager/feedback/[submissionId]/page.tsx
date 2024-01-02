@@ -4,7 +4,7 @@ import FeedbackSkeleton from "@/app/common/components/FeedbackSkeleton";
 import Notification from "@/app/common/components/Notification";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import AllowOnlyUser from "@/app/common/functions/ClientAllowOnlyUser";
+import AllowOnlyManager from "@/app/common/functions/ClientAllowOnlyManager";
 
 interface ResponseData {
   checklistName: string;
@@ -15,7 +15,7 @@ interface ResponseData {
   message?: string;
 }
 
-const UserViewFeedbackPage = ({
+const ManagerViewFeedbackPage = ({
   params,
 }: {
   params: { submissionId: string };
@@ -64,7 +64,7 @@ const UserViewFeedbackPage = ({
 
   return (
     <>
-      <AllowOnlyUser />
+      <AllowOnlyManager />
       {isNotificationVisible ? (
         serverError ? (
           <Notification
@@ -91,4 +91,4 @@ const UserViewFeedbackPage = ({
   );
 };
 
-export default UserViewFeedbackPage;
+export default ManagerViewFeedbackPage;
