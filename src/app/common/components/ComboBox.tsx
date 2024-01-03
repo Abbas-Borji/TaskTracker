@@ -3,6 +3,7 @@ import { Combobox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import classNames from "../functions/ClassNames";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface ComboBoxItem {
   id: number | string;
@@ -16,6 +17,7 @@ interface ComboBoxProps {
   onChange: (item: ComboBoxItem) => void;
   value?: ComboBoxItem | null; // Add this line
   disabled?: boolean; // Also ensure to include 'disabled' if not already present
+  loading?: boolean;
 }
 
 const ComboBox = ({
@@ -25,9 +27,12 @@ const ComboBox = ({
   onChange,
   value,
   disabled,
+  loading = false,
 }: ComboBoxProps) => {
   const [query, setQuery] = useState("");
-  const [selectedItem, setSelectedItem] = useState<ComboBoxItem | null | undefined>(null);
+  const [selectedItem, setSelectedItem] = useState<
+    ComboBoxItem | null | undefined
+  >(null);
 
   useEffect(() => {
     setSelectedItem(value);
@@ -64,12 +69,18 @@ const ComboBox = ({
           displayValue={(item: ComboBoxItem) => item?.name}
           placeholder={placeholder}
         />
-        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-          <ChevronUpDownIcon
-            className="h-5 w-5 text-gray-400"
-            aria-hidden="true"
-          />
-        </Combobox.Button>
+        {loading ? (
+          <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+            <CircularProgress size={24} />
+          </div>
+        ) : (
+          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+            <ChevronUpDownIcon
+              className="h-5 w-5 text-gray-400"
+              aria-hidden="true"
+            />
+          </Combobox.Button>
+        )}
 
         {filteredItems?.length > 0 && (
           <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
