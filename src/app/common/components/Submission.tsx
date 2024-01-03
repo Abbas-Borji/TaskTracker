@@ -7,7 +7,7 @@ import { Question } from "@/app/common/types/ViewSubmission";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import Modal from "@/app/common/components/Modal";
+import GiveFeedbackModal from "./GiveFeedbackModal";
 
 interface SubmissionProps {
   submissionId: number;
@@ -27,6 +27,12 @@ const Submission = ({ submissionId }: SubmissionProps) => {
   }>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasFeedback, setHasFeedback] = useState(false);
+
+  useEffect(() => {
+    if (userRole === "MANAGER" || userRole === "ADMIN") {
+      updateStatus();
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,38 +80,19 @@ const Submission = ({ submissionId }: SubmissionProps) => {
     setIsModalOpen(false);
   };
 
-  const confirmDelete = async () => {
-    closeModal();
-    // setIsLoading(true);
+  const updateStatus = async () => {
+    try {
+      const response = await fetch(`/api/submission/update/${submissionId}`, {
+        method: "PATCH",
+      });
+      const data = await response.json();
 
-    // try {
-    //   const response = await fetch(
-    //     `/api/checklist/delete?checklistId=${checklistId}`,
-    //     {
-    //       method: "DELETE",
-    //     },
-    //   );
-
-    //   if (response.ok) {
-    //     setNotificationVisible(true);
-    //     setTimeout(() => {
-    //       setNotificationVisible(false);
-    //       setIsLoading(false);
-    //     }, 1000);
-    //     // Remove the deleted checklist from the checklists array
-    //     const newChecklists = checklists.filter(
-    //       (checklist) => checklist.info.id !== checklistId,
-    //     );
-    //     // Update the state
-    //     setChecklists(newChecklists);
-    //   } else {
-    //     console.log("Couldn't delete the checklist of ID: " + checklistId);
-    //     setIsLoading(false);
-    //   }
-    // } catch (error) {
-    //   console.log("An error occurred while deleting the checklist: ", error);
-    //   setIsLoading(false);
-    // }
+      if (!response.ok) {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -125,14 +112,11 @@ const Submission = ({ submissionId }: SubmissionProps) => {
         <FormSkeleton />
       ) : (
         <>
-          <Modal
+          <GiveFeedbackModal
             open={isModalOpen}
             onClose={closeModal}
-            title="Give Feedback"
-            message="Create a new modal for giving feedback."
-            confirmButtonText="Yes"
-            cancelButtonText="No, keep it"
-            onConfirm={confirmDelete}
+            submissionId={submissionId}
+            checklistName={title}
           />
           <Container
             title={title}
