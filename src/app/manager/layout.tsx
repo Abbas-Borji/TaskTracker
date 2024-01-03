@@ -80,6 +80,7 @@ const ManagerNavigationLayout = ({
                     placeholder="Search..."
                     type="search"
                     name="search"
+                    disabled={true}
                   />
                 </form>
                 <div className="flex items-center gap-x-4 xl:gap-x-6">
