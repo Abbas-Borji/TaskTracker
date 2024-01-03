@@ -49,6 +49,7 @@ const AssignmentModal = ({
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isEmployeeLoading, setIsEmployeeLoading] = useState(false);
 
   // Handle Datepicker change
   const handleDateChange = (newDate: Dayjs | null) => {
@@ -105,7 +106,7 @@ const AssignmentModal = ({
   const handleTeamSelect = (team: ComboBoxItem) => {
     setSelectedTeam(team);
     const fetchEmployees = async () => {
-      setIsLoading(true);
+      setIsEmployeeLoading(true);
       try {
         const response = await fetch(`/api/assignment/get/members/${team.id}`);
         const data = await response.json();
@@ -118,11 +119,11 @@ const AssignmentModal = ({
             setServerError("");
           }, 1000);
         }
-        setIsLoading(false);
+        setIsEmployeeLoading(false);
       } catch (error: any) {
         setServerError(error.message);
         setIsNotificationVisible(true);
-        setIsLoading(false);
+        setIsEmployeeLoading(false);
       }
     };
     fetchEmployees();
@@ -142,6 +143,7 @@ const AssignmentModal = ({
 
   // Handle assignment
   const handleAssign = async () => {
+    setIsLoading(true);
     if (!selectedTeam || selectedEmployees.length === 0) {
       setServerError("Please select a team and at least one employee.");
       setIsNotificationVisible(true);
@@ -149,6 +151,7 @@ const AssignmentModal = ({
         setIsNotificationVisible(false);
         setServerError("");
       }, 1000);
+      setIsLoading(false);
       return;
     }
 
@@ -176,6 +179,7 @@ const AssignmentModal = ({
           setIsNotificationVisible(false);
           setServerError("");
         }, 1000);
+        setIsLoading(false);
         throw new Error(data.message || "Failed to create assignments");
       }
 
@@ -184,10 +188,12 @@ const AssignmentModal = ({
       setTimeout(() => {
         setIsNotificationVisible(false);
       }, 1000);
+      setIsLoading(false);
       onClose(); // You might want to show a success message before closing
     } catch (error: any) {
       setServerError(error.message);
       setIsNotificationVisible(true);
+      setIsLoading(false);
     }
   };
 
@@ -307,6 +313,7 @@ const AssignmentModal = ({
                           label="Select Employee"
                           placeholder="Choose an employee"
                           onChange={handleEmployeeSelect}
+                          loading={isEmployeeLoading}
                         />
                         <div>
                           {selectedEmployees.map((emp) => (
