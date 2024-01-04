@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Dashboard from "../common/components/Dashboard";
 import DashboardSkeleton from "../common/components/DashboardSkeleton";
 import ActionButtons from "./components/ActionButtons";
+import TeamModal from "@/app/common/components/TeamModal";
 
 const columns = [
   { title: "ID", dataKey: "id", sortable: true },
@@ -26,7 +27,7 @@ interface responseTeam {
   name: string;
   manager: User;
   totalMembers: number;
-  MemberOf: { memberOf: User }[];
+  MemberOf: { member: User }[];
 }
 
 interface Team {
@@ -40,6 +41,11 @@ interface Team {
 const TeamsTable = () => {
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [teams, setTeams] = useState<Team[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -56,7 +62,7 @@ const TeamsTable = () => {
           name: team.name,
           manager: team.manager.name,
           totalMembers: team.totalMembers,
-          members: team.MemberOf.map((member) => member.memberOf.name).join(
+          members: team.MemberOf.map((member) => member.member.name).join(
             " | ",
           ),
         }));
@@ -86,11 +92,12 @@ const TeamsTable = () => {
             <Button
               text="Create Team"
               className="ml-auto bg-primary text-white hover:bg-indigo-400 focus-visible:outline-indigo-500"
-              onClick={() => console.log("Team created!")}
+              onClick={() => setIsModalOpen(true)}
             />
           }
         />
       )}
+      <TeamModal open={isModalOpen} onClose={closeModal} />
     </>
   );
 };
