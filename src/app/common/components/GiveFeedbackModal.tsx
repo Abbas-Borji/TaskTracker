@@ -5,9 +5,9 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import React, { Fragment, useEffect, useState } from "react";
-import Notification from "./Notification";
 import TextField from "@mui/material/TextField";
+import React, { Fragment, useState } from "react";
+import Notification from "./Notification";
 
 interface FeedbackData {
   submissionId: number;
