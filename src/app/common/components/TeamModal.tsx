@@ -22,7 +22,7 @@ interface TeamData {
   members: ComboBoxItem[];
 }
 
-interface ComboBoxItem {
+export interface ComboBoxItem {
   id: number | string;
   name: string;
 }
@@ -45,6 +45,7 @@ const TeamModal = ({ open, onClose, teamId }: TeamModalProps) => {
   const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isEmployeeLoading, setIsEmployeeLoading] = useState(false);
+  const isTeamProvided = teamId ? true : false;
 
   useEffect(() => {
     // Fetch all employees
@@ -66,8 +67,36 @@ const TeamModal = ({ open, onClose, teamId }: TeamModalProps) => {
         setIsEmployeeLoading(false);
       }
     };
-    fetchEmployees();
+    if (!isTeamProvided) {
+      fetchEmployees();
+    }
   }, []);
+
+  useEffect(() => {
+    // Fetch team details if teamId is provided
+    const fetchTeamDetails = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`/api/team/get/${teamId}`);
+        const data: TeamData = await response.json();
+        setTeamName(data.name);
+        setSelectedManager(data.manager);
+        setSelectedMembers(data.members);
+        setIsLoading(false);
+      } catch (error: any) {
+        setServerError(error.message);
+        setIsNotificationVisible(true);
+        setTimeout(() => {
+          setIsNotificationVisible(false);
+          setServerError("");
+        }, 1000);
+        setIsLoading(false);
+      }
+    };
+    if (teamId) {
+      fetchTeamDetails();
+    }
+  }, [teamId]);
 
   // Handle manager selection
   const handleSelectManager = (item: ComboBoxItem) => {
@@ -139,16 +168,80 @@ const TeamModal = ({ open, onClose, teamId }: TeamModalProps) => {
     }
   };
 
+  // Handle team update
+  const handleUpdate = async () => {
+    setIsLoading(true);
+
+    if (
+      !isTeamProvided ||
+      teamName === "" ||
+      !selectedManager ||
+      selectedMembers.length === 0
+    ) {
+      setServerError("Please type a name and select the manager and members.");
+      setIsNotificationVisible(true);
+      setTimeout(() => {
+        setIsNotificationVisible(false);
+        setServerError("");
+      }, 1000);
+      setIsLoading(false);
+      return;
+    }
+
+    const teamData: TeamData = {
+      name: teamName,
+      manager: selectedManager!,
+      members: selectedMembers,
+    };
+
+    try {
+      console.log(teamId);
+      const response = await fetch("/api/team/update/" + teamId, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(teamData),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setServerError(data.message);
+        setIsNotificationVisible(true);
+        setTimeout(() => {
+          setIsNotificationVisible(false);
+          setServerError("");
+        }, 1000);
+        setIsLoading(false);
+        throw new Error(data.message || "Failed to update team.");
+      }
+
+      // Handle success
+      setIsNotificationVisible(true);
+      setTimeout(() => {
+        setIsNotificationVisible(false);
+      }, 1000);
+      setIsLoading(false);
+      onClose();
+    } catch (error: any) {
+      setServerError(error.message);
+      setIsNotificationVisible(true);
+      setIsLoading(false);
+    }
+  };
+
   const handleClose = () => {
-    // Resetting all the state variables to their initial states
-    setTeamName("");
-    setSelectedManager(null);
-    setSelectedMembers([]);
-    setServerError("");
-    setIsNotificationVisible(false);
-    setIsLoading(false);
     // Call the original onClose prop to close the modal
     onClose();
+    // Resetting all the state variables to their initial states
+    setTimeout(() => {
+      setTeamName("");
+      setSelectedManager(null);
+      setSelectedMembers([]);
+      setServerError("");
+      setIsNotificationVisible(false);
+      setIsLoading(false);
+    }, 500);
   };
 
   return (
@@ -164,8 +257,12 @@ const TeamModal = ({ open, onClose, teamId }: TeamModalProps) => {
           />
         ) : (
           <Notification
-            title="Team Created"
-            body={"You have successfully created a team."}
+            title={isTeamProvided ? "Team Updated" : "Team Created"}
+            body={
+              isTeamProvided
+                ? "You have successfully updated the team."
+                : "You have successfully created a team."
+            }
             icon={<CheckCircleIcon className="text-green-400" />}
             show={isNotificationVisible}
             setShow={setIsNotificationVisible}
@@ -202,7 +299,9 @@ const TeamModal = ({ open, onClose, teamId }: TeamModalProps) => {
                 >
                   <Dialog.Panel className="relative w-full overflow-y-auto rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:max-w-lg sm:p-6">
                     <Dialog.Title className="mb-6 p-2 text-center text-3xl leading-6 text-gray-900">
-                      <span className="font-medium">Create Team</span>
+                      <span className="font-medium">
+                        {isTeamProvided ? "Update Team" : "Create Team"}
+                      </span>
                     </Dialog.Title>
 
                     <div className="block text-sm font-medium leading-6 text-gray-900">
@@ -251,9 +350,9 @@ const TeamModal = ({ open, onClose, teamId }: TeamModalProps) => {
                       <button
                         type="button"
                         className="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-dark sm:ml-3 sm:w-auto"
-                        onClick={handleCreate}
+                        onClick={isTeamProvided ? handleUpdate : handleCreate}
                       >
-                        Create
+                        {isTeamProvided ? "Update" : "Create"}
                       </button>
                       <button
                         type="button"
@@ -275,39 +374,3 @@ const TeamModal = ({ open, onClose, teamId }: TeamModalProps) => {
 };
 
 export default TeamModal;
-
-// useEffect(() => {
-//     const fetchData = async () => {
-//       setIsLoading(true);
-//       try {
-//         const response = await fetch(`/api/assignment/get/${checklistId}`);
-//         const data: ExpectedResponse = await response.json();
-//         setChecklistName(data.checklistName);
-
-//         // Set teams if the checklist does not have a team
-//         if (!data.hasTeam) {
-//           setTeams(data.restructuredTeams);
-//         } else {
-//           // If the checklist has a team, set the selected team and fetch its members
-//           setSelectedTeam(data.team);
-//           setEmployees(data.restructuredEmployees);
-//         }
-
-//         if (!response.ok) {
-//           setServerError(data.message!);
-//           setIsNotificationVisible(true);
-//           setTimeout(() => {
-//             setIsNotificationVisible(false);
-//             setServerError("");
-//           }, 1000);
-//         }
-//         setIsLoading(false);
-//       } catch (error: any) {
-//         setServerError(error.message);
-//         setIsNotificationVisible(true);
-//         setIsLoading(false);
-//       }
-//     };
-
-//     fetchData();
-//   }, [open, checklistId]);
