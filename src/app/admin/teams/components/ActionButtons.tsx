@@ -1,15 +1,33 @@
-import React from "react";
-import Link from "next/link";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
-const ActionButtons = () => {
+interface ActionButtonsProps {
+  teamId: number;
+  onDelete: (id: number) => void;
+  onEdit: (id: number) => void;
+}
+
+const ActionButtons = ({ teamId, onDelete, onEdit }: ActionButtonsProps) => {
+  const handleDelete = () => {
+    onDelete(teamId);
+  };
+  const handleEdit = () => {
+    console.log("edit " + teamId);
+    onEdit(teamId);
+  };
   return (
     <div className="flex">
-      <Link href={"#"} className="mr-4 px-2 text-primary font-medium">Edit</Link>
+      <button
+        onClick={() => {
+          handleEdit();
+        }}
+        className="mr-4 px-2 font-medium text-primary"
+      >
+        Edit
+      </button>
 
-      <Link href={"#"}>
+      <button onClick={() => handleDelete()}>
         <TrashIcon className="h-5 w-5 text-red-600" />
-      </Link>
+      </button>
     </div>
   );
 };
