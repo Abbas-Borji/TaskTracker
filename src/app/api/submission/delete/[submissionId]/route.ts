@@ -37,12 +37,19 @@ export async function DELETE(
         where: { id: submissionId },
       });
 
-      return new NextResponse(JSON.stringify(submission), {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const feedbackOfSubmission = await prisma.feedback.delete({
+        where: { assignmentId: submission.assignmentId },
       });
+
+      return new NextResponse(
+        JSON.stringify({ submission, feedbackOfSubmission }),
+        {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
     } catch (error) {
       return new NextResponse(
         JSON.stringify({ message: "Internal Server Error." }),
