@@ -25,11 +25,6 @@ const tabs = [
   },
 ];
 
-const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "/api/auth/signout" },
-];
-
 const ManagerNavigationLayout = ({
   children,
 }: {
@@ -37,6 +32,10 @@ const ManagerNavigationLayout = ({
 }) => {
   const { status, data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const userNavigation = [
+    { name: "Your profile", href: "/manager/profile/" + session?.user?.id },
+    { name: "Sign out", href: "/api/auth/signout" },
+  ];
 
   return (
     <>
