@@ -17,22 +17,18 @@ import { useSession } from "next-auth/react";
 import UserAvatar from "@/app/common/components/UserAvatar";
 import Link from "next/link";
 
-const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "/api/auth/signout" },
-];
-
 const UserNavigationLayout = ({ children }: { children: React.ReactNode }) => {
   const { status, data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const userNavigation = [
+    { name: "Your profile", href: "/user/profile/" + session?.user?.id },
+    { name: "Sign out", href: "/api/auth/signout" },
+  ];
 
   return (
     <>
       <div>
-        <Sidebar
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <div className="xl:pl-72">
           <div className="sticky top-0 z-40 xl:mx-auto xl:max-w-7xl xl:px-8">
