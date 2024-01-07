@@ -1,20 +1,17 @@
 "use client";
-import React from "react";
-import { Fragment, useState } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
+import Search from "@/app/common/components/Search";
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import {
   Bars3Icon,
   BellIcon,
   DocumentDuplicateIcon,
 } from "@heroicons/react/24/outline";
-import {
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/20/solid";
-import Sidebar from "../common/components/Sidebar";
-import classNames from "../common/functions/ClassNames";
 import { useSession } from "next-auth/react";
+import React, { Fragment, useState, useEffect } from "react";
+import Sidebar from "../common/components/Sidebar";
 import UserAvatar from "../common/components/UserAvatar";
+import classNames from "../common/functions/ClassNames";
 
 const tabs = [
   {
@@ -24,6 +21,12 @@ const tabs = [
     current: true,
   },
 ];
+
+interface SearchResult {
+  id: number;
+  name: string;
+  link: string;
+}
 
 const ManagerNavigationLayout = ({
   children,
@@ -36,6 +39,29 @@ const ManagerNavigationLayout = ({
     { name: "Your profile", href: "/manager/profile/" + session?.user?.id },
     { name: "Sign out", href: "/api/auth/signout" },
   ];
+
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/search");
+        if (!response.ok) {
+          throw new Error(
+            "Network response was not ok while getting search results.",
+          );
+        }
+        const data: SearchResult[] = await response.json();
+        setSearchResults(data);
+      } catch (error) {
+        console.error(
+          "There was a problem with the fetch operation of search results:",
+          error,
+        );
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -65,23 +91,7 @@ const ManagerNavigationLayout = ({
               />
 
               <div className="flex flex-1 gap-x-4 self-stretch xl:gap-x-6">
-                <form className="relative flex flex-1" action="#" method="GET">
-                  <label htmlFor="search-field" className="sr-only">
-                    Search
-                  </label>
-                  <MagnifyingGlassIcon
-                    className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  <input
-                    id="search-field"
-                    className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
-                    placeholder="Search..."
-                    type="search"
-                    name="search"
-                    disabled={true}
-                  />
-                </form>
+                <Search searchResults={searchResults} />
                 <div className="flex items-center gap-x-4 xl:gap-x-6">
                   <button
                     type="button"
