@@ -4,16 +4,9 @@ import { useEffect, useState } from "react";
 import Dashboard from "../common/components/Dashboard";
 import DashboardSkeleton from "../common/components/DashboardSkeleton";
 import ActionButtons from "./components/ActionButtons";
-
-const columns = [
-  { title: "ID", dataKey: "counter", sortable: true },
-  { title: "Name", dataKey: "name", sortable: true },
-  { title: "Email", dataKey: "email" },
-  { title: "Role", dataKey: "role", sortable: true },
-  { title: "Department", dataKey: "department" },
-  { title: "Actions", dataKey: "actions", render: ActionButtons },
-  // Add more columns if needed
-];
+import Notification from "@/app/common/components/Notification";
+import Modal from "@/app/common/components/Modal";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
 interface User {
   id: string;
@@ -24,8 +17,64 @@ interface User {
 }
 
 const UsersTable = () => {
+  const columns = [
+    { title: "ID", dataKey: "counter", sortable: true },
+    { title: "Name", dataKey: "name", sortable: true },
+    { title: "Email", dataKey: "email" },
+    { title: "Role", dataKey: "role", sortable: true },
+    { title: "Department", dataKey: "department" },
+    {
+      title: "Actions",
+      dataKey: "actions",
+      render: (rowData: User) => (
+        <ActionButtons userId={rowData.id} onDelete={handleDelete} />
+      ),
+    },
+  ];
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [users, setUsers] = useState<User[]>([]);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [isNotificationVisible, setNotificationVisible] = useState(false);
+
+  // Delete Modal Functions
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDelete = (id: string) => {
+    setIsDeleteModalOpen(true);
+    setUserId(id);
+  };
+
+  const confirmDeleteModal = async () => {
+    closeDeleteModal();
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/profile/delete/${userId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setNotificationVisible(true);
+        setTimeout(() => {
+          setNotificationVisible(false);
+          setIsLoading(false);
+        }, 1000);
+        // Remove the deleted user from the users array
+        const newUsers = users.filter((user) => user.id !== userId);
+        // Update the state
+        setUsers(newUsers);
+      } else {
+        console.log("Couldn't delete the user of ID: " + userId);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log("An error occurred while deleting the user: ", error);
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -56,6 +105,15 @@ const UsersTable = () => {
   return (
     <>
       <AllowOnlyAdmin />
+      {isNotificationVisible ? (
+        <Notification
+          title="User Deleted"
+          body="The user was deleted successfully!"
+          icon={<CheckCircleIcon className="text-green-600" />}
+          show={isNotificationVisible}
+          setShow={setNotificationVisible}
+        />
+      ) : null}
       {isLoading ? (
         <DashboardSkeleton />
       ) : (
@@ -65,6 +123,15 @@ const UsersTable = () => {
           data={users}
         />
       )}
+      <Modal
+        open={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this user?"
+        confirmButtonText="Yes"
+        cancelButtonText="No, keep it"
+        onConfirm={confirmDeleteModal}
+      />
     </>
   );
 };

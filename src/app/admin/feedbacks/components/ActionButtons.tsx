@@ -3,10 +3,19 @@ import Link from "next/link";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
 interface ActionButtonsProps {
+  feedbackId: number;
   submissionId: number;
+  onDelete: (id: number) => void;
 }
 
-const ActionButtons = ({ submissionId }: ActionButtonsProps) => {
+const ActionButtons = ({
+  feedbackId,
+  submissionId,
+  onDelete,
+}: ActionButtonsProps) => {
+  const handleDelete = () => {
+    onDelete(feedbackId);
+  };
   return (
     <div className="flex">
       <Link
@@ -16,9 +25,9 @@ const ActionButtons = ({ submissionId }: ActionButtonsProps) => {
         View
       </Link>
 
-      <Link href={"#"}>
+      <button onClick={() => handleDelete()}>
         <TrashIcon className="h-5 w-5 text-red-600" />
-      </Link>
+      </button>
     </div>
   );
 };

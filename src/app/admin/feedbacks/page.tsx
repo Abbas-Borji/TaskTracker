@@ -1,24 +1,12 @@
 "use client";
+import Modal from "@/app/common/components/Modal";
+import Notification from "@/app/common/components/Notification";
 import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import Dashboard from "../common/components/Dashboard";
 import DashboardSkeleton from "../common/components/DashboardSkeleton";
 import ActionButtons from "./components/ActionButtons";
-
-const columns = [
-  { title: "ID", dataKey: "id", sortable: true },
-  { title: "Checklist", dataKey: "checklistName", sortable: true },
-  { title: "Employee", dataKey: "employee", sortable: true },
-  { title: "Manager", dataKey: "manager", sortable: true },
-  { title: "Date", dataKey: "createdAt", sortable: true },
-  {
-    title: "Actions",
-    dataKey: "actions",
-    render: (rowData: Feedback) => (
-      <ActionButtons submissionId={rowData.submissionId} />
-    ),
-  },
-];
 
 interface User {
   id?: string;
@@ -52,8 +40,67 @@ interface Feedback {
 }
 
 const FeedbacksTable = () => {
+  const columns = [
+    { title: "ID", dataKey: "id", sortable: true },
+    { title: "Checklist", dataKey: "checklistName", sortable: true },
+    { title: "Employee", dataKey: "employee", sortable: true },
+    { title: "Manager", dataKey: "manager", sortable: true },
+    { title: "Date", dataKey: "createdAt", sortable: true },
+    {
+      title: "Actions",
+      dataKey: "actions",
+      render: (rowData: Feedback) => (
+        <ActionButtons
+          feedbackId={rowData.id}
+          submissionId={rowData.submissionId}
+          onDelete={handleDelete}
+        />
+      ),
+    },
+  ];
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const [isNotificationVisible, setNotificationVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [feedbackId, setFeedbackId] = useState(0);
+
+  const handleDelete = (id: number) => {
+    setIsModalOpen(true);
+    setFeedbackId(id);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const confirmDelete = async () => {
+    closeModal();
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/feedback/delete/${feedbackId}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setNotificationVisible(true);
+        setTimeout(() => {
+          setNotificationVisible(false);
+          setIsLoading(false);
+        }, 1000);
+        // Remove the deleted feedback from the feedbacks array
+        const newFeedbacks = feedbacks.filter(
+          (feedback) => feedback.id !== feedbackId,
+        );
+        // Update the state
+        setFeedbacks(newFeedbacks);
+      } else {
+        console.log("Couldn't delete the feedback of ID: " + feedbackId);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log("An error occurred while deleting the feedback: ", error);
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -89,6 +136,15 @@ const FeedbacksTable = () => {
   return (
     <>
       <AllowOnlyAdmin />
+      {isNotificationVisible ? (
+        <Notification
+          title="Feedback Deleted"
+          body="The feedback was deleted successfully!"
+          icon={<CheckCircleIcon className="text-green-600" />}
+          show={isNotificationVisible}
+          setShow={setNotificationVisible}
+        />
+      ) : null}
       {isLoading ? (
         <DashboardSkeleton />
       ) : (
@@ -98,6 +154,15 @@ const FeedbacksTable = () => {
           data={feedbacks}
         />
       )}
+      <Modal
+        open={isModalOpen}
+        onClose={closeModal}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this feedback?"
+        confirmButtonText="Yes"
+        cancelButtonText="No, keep it"
+        onConfirm={confirmDelete}
+      />
     </>
   );
 };
