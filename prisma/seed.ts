@@ -3,6 +3,25 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
+async function seedDepartments() {
+  const departments = [
+    { name: "Engineering" },
+    { name: "Marketing" },
+    { name: "Sales" },
+    { name: "Human Resources" },
+    { name: "Finance" },
+    { name: "Customer Service" },
+  ];
+
+  for (const department of departments) {
+    await prisma.department.create({
+      data: {
+        name: department.name,
+      },
+    });
+  }
+}
+
 async function seedUsers() {
   const users = [
     {
@@ -10,42 +29,42 @@ async function seedUsers() {
       email: "john@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
       role: Role.USER,
-      department: "Sales",
+      departmentId: 1,
     },
     {
       name: "Jane Smith",
       email: "jane@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
       role: Role.MANAGER,
-      department: "Marketing",
+      departmentId: 2,
     },
     {
       name: "Steve Jobs",
       email: "steve@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
       role: Role.MANAGER,
-      department: "Product",
+      departmentId: 3,
     },
     {
       name: "Alex Bjorn",
       email: "alex@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
       role: Role.ADMIN,
-      department: "IT",
+      departmentId: 4,
     },
     {
       name: "Emma Watson",
       email: "emma@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
       role: Role.USER,
-      department: "HR",
+      departmentId: 5,
     },
     {
       name: "Robert Downey Jr.",
       email: "robert@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
       role: Role.ADMIN,
-      department: "Finance",
+      departmentId: 6,
     },
   ];
   const createdUsers = [];
@@ -356,6 +375,7 @@ async function seedFeedbacks(
 }
 
 async function main() {
+  await seedDepartments();
   const createdUsers = await seedUsers();
   await seedTeams(createdUsers);
   await seedMemberOf(createdUsers);

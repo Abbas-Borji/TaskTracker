@@ -14,7 +14,6 @@ model User {
     emailVerified DateTime?
     image         String?
     password      String?
-    department    String?
     role          Role         @default(USER)
     managerOf     Team[]       @relation("managerOf")
     checklists    Checklist[]
@@ -24,6 +23,8 @@ model User {
     MemberOf      MemberOf[]
     accounts      Account[]
     sessions      Session[]
+    Department    Department?  @relation(fields: [departmentId], references: [id])
+    departmentId  Int?
 }
 
 enum Role {
@@ -172,4 +173,12 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Department {
+    id        Int      @id @default(autoincrement())
+    name      String   @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    users     User[]
 }
