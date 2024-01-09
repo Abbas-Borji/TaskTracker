@@ -8,12 +8,18 @@ import Notification from "@/app/common/components/Notification";
 import Modal from "@/app/common/components/Modal";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
+interface Department {
+  id: number;
+  name: string;
+}
+
 interface User {
   id: string;
   name: string;
   email: string;
   role: string;
-  department: string | null;
+  departmentName: string | null;
+  department: Department | null;
 }
 
 const UsersTable = () => {
@@ -22,7 +28,7 @@ const UsersTable = () => {
     { title: "Name", dataKey: "name", sortable: true },
     { title: "Email", dataKey: "email" },
     { title: "Role", dataKey: "role", sortable: true },
-    { title: "Department", dataKey: "department" },
+    { title: "Department", dataKey: "departmentName" },
     {
       title: "Actions",
       dataKey: "actions",

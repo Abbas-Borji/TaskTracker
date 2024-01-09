@@ -21,23 +21,34 @@ export async function GET(req: NextRequest) {
         name: true,
         email: true,
         role: true,
-        department: true,
+        Department: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
 
-    return new NextResponse(JSON.stringify(users), {
+    const restructuredUsers = users.map((user) => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        departmentName: user.Department?.name,
+        department: user.Department,
+      };
+    });
+
+    return new NextResponse(JSON.stringify(restructuredUsers), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    let errorMessage = "Unknown error occurred";
-    if (typeof error === "object" && error !== null && "message" in error) {
-      errorMessage = (error as { message: string }).message;
-    }
-
-    return new NextResponse(JSON.stringify({ error: errorMessage }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new NextResponse(
+      JSON.stringify({ message: "Internal Server Error." }),
+      { status: 500 },
+    );
   }
 }
