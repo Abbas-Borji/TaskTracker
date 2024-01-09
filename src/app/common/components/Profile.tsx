@@ -1,29 +1,34 @@
 "use client";
 import Loading from "@/app/loading";
-import { CheckCircleIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Notification from "./Notification";
 
+interface Department {
+  name: string;
+}
+
 interface InitialData {
   name: string;
   email: string;
-  department: string;
+  Department: Department;
 }
 
 interface ProfileEditableData {
   fullName: string;
-  department: string;
 }
 
 const Profile = () => {
   const { data: session, update: sessionUpdate } = useSession();
   const userId = session?.user?.id;
   const [isEditingName, setIsEditingName] = useState(false);
-  const [isEditingDepartment, setIsEditingDepartment] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [department, setDepartment] = useState("");
+  const [department, setDepartment] = useState<Department>();
   const [isLoading, setIsLoading] = useState(true);
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [serverError, setServerError] = useState("");
@@ -49,7 +54,7 @@ const Profile = () => {
         const data: InitialData = await response.json();
         setFullName(data.name);
         setEmail(data.email);
-        setDepartment(data.department);
+        setDepartment(data.Department);
         setIsLoading(false);
       } catch (error: any) {
         setServerError(error.message);
@@ -69,7 +74,6 @@ const Profile = () => {
     // Form submission logic
     const profileData: ProfileEditableData = {
       fullName,
-      department,
     };
     console.log(profileData);
     const response = await fetch(`/api/profile/update/${userId}`, {
@@ -100,10 +104,6 @@ const Profile = () => {
 
   const handleNameEditToggle = () => {
     setIsEditingName(!isEditingName);
-  };
-
-  const handleDepartmentEditToggle = () => {
-    setIsEditingDepartment(!isEditingDepartment);
   };
 
   return (
@@ -161,23 +161,7 @@ const Profile = () => {
                       Department
                     </dt>
                     <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                      {isEditingDepartment ? (
-                        <input
-                          type="text"
-                          value={department}
-                          onChange={(e) => setDepartment(e.target.value)}
-                          className="block w-full rounded-md border-0 py-1.5 pl-3 text-sm text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-primary sm:leading-6"
-                        />
-                      ) : (
-                        <div className="text-gray-900">{department}</div>
-                      )}
-                      <button
-                        type="button"
-                        className="font-semibold text-indigo-600 hover:text-indigo-500"
-                        onClick={handleDepartmentEditToggle}
-                      >
-                        {isEditingDepartment ? "Done" : "Edit"}
-                      </button>
+                      <div className="text-gray-900">{department?.name}</div>
                     </dd>
                   </div>
                 </dl>

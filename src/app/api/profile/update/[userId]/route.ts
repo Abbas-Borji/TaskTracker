@@ -5,7 +5,6 @@ import prisma from "prisma/client";
 
 interface ProfileEditableData {
   fullName: string;
-  department: string;
 }
 
 export async function PATCH(
@@ -49,16 +48,6 @@ export async function PATCH(
     });
   }
 
-  // Validate department
-  if (!profileData.department || profileData.department.length < 3) {
-    return new NextResponse(
-      JSON.stringify({ message: "Invalid department." }),
-      {
-        status: 400,
-      },
-    );
-  }
-
   // Update the user
   try {
     // First, update the team's basic information
@@ -66,7 +55,6 @@ export async function PATCH(
       where: { id: userId },
       data: {
         name: profileData.fullName,
-        department: profileData.department,
       },
     });
 
