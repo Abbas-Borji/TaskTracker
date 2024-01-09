@@ -7,6 +7,7 @@ import ActionButtons from "./components/ActionButtons";
 import Notification from "@/app/common/components/Notification";
 import Modal from "@/app/common/components/Modal";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import UserModal from "@/app/common/components/UserModal";
 
 interface Department {
   id: number;
@@ -33,7 +34,11 @@ const UsersTable = () => {
       title: "Actions",
       dataKey: "actions",
       render: (rowData: User) => (
-        <ActionButtons userId={rowData.id} onDelete={handleDelete} />
+        <ActionButtons
+          userId={rowData.id}
+          onEdit={openUserModal}
+          onDelete={handleDelete}
+        />
       ),
     },
   ];
@@ -80,6 +85,20 @@ const UsersTable = () => {
       console.log("An error occurred while deleting the user: ", error);
       setIsLoading(false);
     }
+  };
+
+  // User Modal Functions
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const openUserModal = (userId: string) => {
+    setUserId(userId);
+    setIsUserModalOpen(true);
+  };
+  const closeUserModal = () => {
+    setIsUserModalOpen(false);
+    setTimeout(() => {
+      setUserId("");
+      window.location.reload();
+    }, 1000);
   };
 
   useEffect(() => {
@@ -129,6 +148,11 @@ const UsersTable = () => {
           data={users}
         />
       )}
+      <UserModal
+        {...(userId ? { userId } : {})}
+        open={isUserModalOpen}
+        onClose={closeUserModal}
+      />
       <Modal
         open={isDeleteModalOpen}
         onClose={closeDeleteModal}
