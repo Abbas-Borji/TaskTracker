@@ -6,12 +6,27 @@ import DashboardSkeleton from "../common/components/DashboardSkeleton";
 import ActionButtons from "./components/ActionButtons";
 import Notification from "@/app/common/components/Notification";
 import Modal from "@/app/common/components/Modal";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import UserModal from "@/app/common/components/UserModal";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
+
+interface NotificationData {
+  isVisible: boolean;
+  title: string;
+  body: string;
+  type: "success" | "error"; // Assuming only two types of notifications
+}
 
 interface Department {
   id: number;
   name: string;
+}
+
+interface ProfileData {
+  name: string;
+  email: string;
+  role: "ADMIN" | "USER" | "MANAGER";
+  Department: Department | null;
 }
 
 interface User {
@@ -42,11 +57,43 @@ const UsersTable = () => {
       ),
     },
   ];
-  const [isLoading, setIsLoading] = useState(true); // Added loading state
+  const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [userId, setUserId] = useState("");
-  const [isNotificationVisible, setNotificationVisible] = useState(false);
+  const [notification, setNotification] = useState<NotificationData>({
+    isVisible: false,
+    title: "",
+    body: "",
+    type: "success", // Default value, can be either 'success' or 'error'
+  });
+  const [isUserModalLoading, setIsUserModalLoading] = useState(false);
+
+  // Notification state function
+  const showNotification = (
+    title: string,
+    body: string,
+    type: "success" | "error",
+  ) => {
+    setNotification({ isVisible: true, title, body, type });
+  };
+
+  // Initial state for updatedUserData
+  const emptyUserData: ProfileData = {
+    name: "",
+    email: "",
+    role: "USER",
+    Department: null,
+  };
+
+  // Initial data for the user
+  const [userData, setUserData] = useState<ProfileData>(emptyUserData);
+  // List of departments
+  const [departments, setDepartments] = useState<Department[]>([]);
+  // User Modal state
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+
+  // -----------------------------------------------------------------------------------------------
 
   // Delete Modal Functions
   const closeDeleteModal = () => {
@@ -68,38 +115,165 @@ const UsersTable = () => {
       });
 
       if (response.ok) {
-        setNotificationVisible(true);
-        setTimeout(() => {
-          setNotificationVisible(false);
-          setIsLoading(false);
-        }, 1000);
         // Remove the deleted user from the users array
         const newUsers = users.filter((user) => user.id !== userId);
         // Update the state
         setUsers(newUsers);
+
+        showNotification(
+          "User Deleted",
+          "The user was deleted successfully!",
+          "success",
+        );
       } else {
+        const data = await response.json();
         console.log("Couldn't delete the user of ID: " + userId);
-        setIsLoading(false);
+        showNotification(
+          data.message || "Error Deleting User",
+          "Couldn't delete the user.",
+          "error",
+        );
       }
+    } catch (error: any) {
+      console.error("An error occurred while deleting the user: ", error);
+      showNotification(
+        "Error",
+        error.toString() || "An error occurred while deleting the user.",
+        "error",
+      );
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => {
+        setNotification({ ...notification, isVisible: false });
+      }, 1000);
+    }
+  };
+
+  // -----------------------------------------------------------------------------------------------
+
+  // User Modal Functions
+  const openUserModal = async (userId: string) => {
+    setUserId(userId);
+    setIsUserModalLoading(true);
+    setIsUserModalOpen(true);
+    try {
+      await fetchDepartments();
+      await fetchUserDetails(userId);
     } catch (error) {
-      console.log("An error occurred while deleting the user: ", error);
+      console.error("Error in opening modal:", error);
+    } finally {
+      setIsUserModalLoading(false); // End loading
+    }
+  };
+  const closeUserModal = () => {
+    setIsUserModalOpen(false);
+    setUserId("");
+  };
+  // Fetch user details if userId is provided
+  const fetchUserDetails = async (id: string) => {
+    try {
+      const response = await fetch(`/api/admin/users/get/${id}`);
+      const data: ProfileData = await response.json();
+      setUserData(data);
+    } catch (error: any) {}
+  };
+  // Fetch departments
+  const fetchDepartments = async () => {
+    try {
+      const response = await fetch("/api/admin/departments");
+      const data = await response.json();
+      setDepartments(data);
+    } catch (error) {
+      console.error("Failed to fetch departments:", error);
+    }
+  };
+  // Handle user data update
+  const handleUpdate = async () => {
+    setIsLoading(true);
+    closeUserModal();
+    try {
+      const response = await fetch(`/api/admin/users/update/${userId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        showNotification(
+          data.message || "Error Updating User",
+          "Couldn't update the user.",
+          "error",
+        );
+        setTimeout(() => {
+          setNotification({ ...notification, isVisible: false });
+        }, 1000);
+        setIsLoading(false);
+        throw new Error(data.message || "Failed to update user.");
+      }
+
+      // Update the user in the local state
+      setUsers((prevUsers) => {
+        return prevUsers.map((user) => {
+          if (user.id === userId) {
+            // Assuming userData.Department can be null and you want to map it to departmentName
+            const updatedUserDepartmentName = userData.Department
+              ? userData.Department.name
+              : null;
+
+            return {
+              ...user,
+              ...userData,
+              departmentName: updatedUserDepartmentName,
+              // Ensure all other User properties are appropriately mapped
+            };
+          }
+          return user;
+        });
+      });
+
+      // Handle success
+      showNotification(
+        "User Updated",
+        "The user was updated successfully.",
+        "success",
+      );
+      setTimeout(() => {
+        setNotification({ ...notification, isVisible: false });
+      }, 1000);
+      setIsLoading(false);
+      closeUserModal();
+    } catch (error: any) {
+      showNotification(
+        "Error",
+        error.toString() || "An error occurred while updating the user.",
+        "error",
+      );
+      setTimeout(() => {
+        setNotification({ ...notification, isVisible: false });
+      }, 1000);
       setIsLoading(false);
     }
   };
 
-  // User Modal Functions
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const openUserModal = (userId: string) => {
-    setUserId(userId);
-    setIsUserModalOpen(true);
-  };
-  const closeUserModal = () => {
-    setIsUserModalOpen(false);
+  const handleClose = () => {
+    closeUserModal();
+    // Resetting all the state variables to their initial states
     setTimeout(() => {
-      setUserId("");
-      window.location.reload();
-    }, 1000);
+      setUserData({
+        name: "",
+        email: "",
+        role: "USER",
+        Department: null,
+      });
+      setNotification({ ...notification, isVisible: false });
+      setIsLoading(false);
+    }, 500);
   };
+
+  // -----------------------------------------------------------------------------------------------
 
   useEffect(() => {
     setIsLoading(true);
@@ -130,15 +304,21 @@ const UsersTable = () => {
   return (
     <>
       <AllowOnlyAdmin />
-      {isNotificationVisible ? (
+      {notification.isVisible && (
         <Notification
-          title="User Deleted"
-          body="The user was deleted successfully!"
-          icon={<CheckCircleIcon className="text-green-600" />}
-          show={isNotificationVisible}
-          setShow={setNotificationVisible}
+          title={notification.title}
+          body={notification.body}
+          icon={
+            notification.type === "error" ? (
+              <ExclamationTriangleIcon className="text-red-600" />
+            ) : (
+              <CheckCircleIcon className="text-green-600" />
+            )
+          }
+          show={notification.isVisible}
+          setShow={() => setNotification({ ...notification, isVisible: false })}
         />
-      ) : null}
+      )}
       {isLoading ? (
         <DashboardSkeleton />
       ) : (
@@ -149,9 +329,13 @@ const UsersTable = () => {
         />
       )}
       <UserModal
-        {...(userId ? { userId } : {})}
         open={isUserModalOpen}
-        onClose={closeUserModal}
+        departments={departments}
+        userData={userData}
+        setUserData={setUserData}
+        handleUpdate={handleUpdate}
+        handleClose={handleClose}
+        isUserModalLoading={isUserModalLoading}
       />
       <Modal
         open={isDeleteModalOpen}
