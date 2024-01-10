@@ -2,7 +2,6 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import bcrypt from "bcrypt";
 
 interface Department {
   id: number;
@@ -13,7 +12,7 @@ interface ProfileData {
   name: string;
   email: string;
   role: "ADMIN" | "USER" | "MANAGER";
-  department: Department | null;
+  Department: Department | null;
 }
 
 export async function PATCH(
@@ -99,7 +98,7 @@ export async function PATCH(
         name: profileData.name,
         email: profileData.email,
         role: profileData.role,
-        departmentId: profileData.department?.id,
+        departmentId: profileData.Department ? profileData.Department.id : null,
       },
     });
 
