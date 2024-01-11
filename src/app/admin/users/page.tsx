@@ -180,7 +180,7 @@ const UsersTable = () => {
   // Fetch departments
   const fetchDepartments = async () => {
     try {
-      const response = await fetch("/api/admin/departments");
+      const response = await fetch("/api/admin/getDepartments");
       const data = await response.json();
       setDepartments(data);
     } catch (error) {
