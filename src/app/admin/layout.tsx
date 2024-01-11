@@ -9,6 +9,7 @@ import {
   DocumentCheckIcon,
   ChatBubbleLeftIcon,
   Bars3Icon,
+  BuildingLibraryIcon,
 } from "@heroicons/react/24/outline";
 import Sidebar from "../common/components/Sidebar";
 
@@ -47,6 +48,12 @@ const tabs = [
     name: "Feedbacks",
     href: "/admin/feedbacks",
     icon: ChatBubbleLeftIcon,
+    current: false,
+  },
+  {
+    name: "Departments",
+    href: "/admin/departments",
+    icon: BuildingLibraryIcon,
     current: false,
   },
 ];
