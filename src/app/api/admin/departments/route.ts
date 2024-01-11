@@ -3,6 +3,18 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
 import prisma from "prisma/client";
 
+interface User {
+  id: string;
+  name: string | null;
+}
+
+interface responseDepartment {
+  id: number;
+  name: string;
+  totalMembers: number;
+  users: User[];
+}
+
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   const userRole = session?.user?.role;
@@ -19,13 +31,28 @@ export async function GET(req: NextRequest) {
       select: {
         id: true,
         name: true,
+        users: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
 
-    return new NextResponse(JSON.stringify(departments), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    const departmentsWithTotalNumberOfMembers: responseDepartment[] =
+      departments.map((department) => ({
+        ...department,
+        totalMembers: department.users.length,
+      }));
+
+    return new NextResponse(
+      JSON.stringify(departmentsWithTotalNumberOfMembers),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   } catch (error) {
     return new NextResponse(
       JSON.stringify({ message: "Internal Server Error." }),
