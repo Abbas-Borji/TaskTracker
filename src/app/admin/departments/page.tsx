@@ -1,16 +1,16 @@
 "use client";
 import Button from "@/app/common/components/Button";
-import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
-import { useEffect, useState } from "react";
-import Dashboard from "../common/components/Dashboard";
-import DashboardSkeleton from "../common/components/DashboardSkeleton";
-import ActionButtons from "./components/ActionButtons";
 import DepartmentModal, {
   ComboBoxItem,
 } from "@/app/common/components/DepartmentModal";
 import Modal from "@/app/common/components/Modal";
 import Notification from "@/app/common/components/Notification";
+import AllowOnlyAdmin from "@/app/common/functions/ClientAllowOnlyAdmin";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import Dashboard from "../common/components/Dashboard";
+import DashboardSkeleton from "../common/components/DashboardSkeleton";
+import ActionButtons from "./components/ActionButtons";
 
 interface User {
   id: string;
@@ -53,23 +53,23 @@ const DepartmentsTable = () => {
 
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [departments, setDepartments] = useState<Department[]>([]);
-  // const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
+  const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [departmentId, setDepartmentId] = useState<number>(0);
   const [isNotificationVisible, setNotificationVisible] = useState(false);
 
-  // // Department Modal Functions
-  // const closeDepartmentModal = () => {
-  //   setIsDepartmentModalOpen(false);
-  //   setTimeout(() => {
-  //     setDepartmentId(0);
-  //   }, 1000);
-  // };
+  // Department Modal Functions
+  const closeDepartmentModal = () => {
+    setIsDepartmentModalOpen(false);
+    setTimeout(() => {
+      setDepartmentId(0);
+    }, 1000);
+  };
 
-  // const openDepartmentModal = (departmentId: number) => {
-  //   setDepartmentId(departmentId);
-  //   setIsDepartmentModalOpen(true);
-  // };
+  const openDepartmentModal = (departmentId: number) => {
+    setDepartmentId(departmentId);
+    setIsDepartmentModalOpen(true);
+  };
 
   // Delete Modal Functions
   const closeDeleteModal = () => {
@@ -165,16 +165,16 @@ const DepartmentsTable = () => {
             <Button
               text="Create Department"
               className="ml-auto bg-primary text-white hover:bg-indigo-400 focus-visible:outline-indigo-500"
-              onClick={() => console.log("Create Department")}
+              onClick={() => setIsDepartmentModalOpen(true)}
             />
           }
         />
       )}
-      {/* <DepartmentModal
+      <DepartmentModal
         {...(departmentId ? { departmentId } : {})}
         open={isDepartmentModalOpen}
-        onClose={closeDeleteModal}
-      /> */}
+        onClose={closeDepartmentModal}
+      />
       <Modal
         open={isDeleteModalOpen}
         onClose={closeDeleteModal}

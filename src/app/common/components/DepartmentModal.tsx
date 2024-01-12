@@ -110,11 +110,7 @@ const DepartmentModal = ({
   // Handle department creation
   const handleCreate = async () => {
     setIsLoading(true);
-    if (
-      departmentName === "" ||
-      !selectedManager ||
-      selectedMembers.length === 0
-    ) {
+    if (departmentName === "" || selectedMembers.length === 0) {
       setServerError("Please type a name and select the members.");
       setIsNotificationVisible(true);
       setTimeout(() => {
