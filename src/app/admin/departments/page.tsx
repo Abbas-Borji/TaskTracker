@@ -117,7 +117,7 @@ const DepartmentsTable = () => {
     const fetchEmployees = async () => {
       setIsEmployeeLoading(true);
       try {
-        const response = await fetch("/api/employees/get");
+        const response = await fetch("/api/allEmployees/get");
         const data: EmployeesResponse = await response.json();
         setEmployees(data.employees);
         setIsEmployeeLoading(false);
