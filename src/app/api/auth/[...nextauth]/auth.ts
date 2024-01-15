@@ -1,9 +1,18 @@
-import { AuthOptions } from "next-auth";
+import { AuthOptions, DefaultSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcrypt";
 import prisma from "prisma/client";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      role: "USER" | "MANAGER" | "ADMIN";
+    } & DefaultSession["user"];
+  }
+}
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -62,15 +71,22 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
-      if (trigger === "update") {
-        return { ...token, ...session.user };
-      }
-      return { ...token, ...user };
+    async jwt({ token }) {
+      if (!token.sub) return token;
+      const existingUser = await prisma.user.findUnique({
+        where: { id: token.sub },
+      });
+      if (!existingUser) return token;
+      token.role = existingUser.role;
+      return token;
     },
-    async session({ session, token }) {
-      session.user!.role = token.role;
-      session.user!.id = token.id;
+    async session({ token, session }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+      }
+      if (token.role && session.user) {
+        session.user.role = token.role as "USER" | "MANAGER" | "ADMIN";
+      }
       return session;
     },
   },
