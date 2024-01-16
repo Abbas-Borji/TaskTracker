@@ -19,6 +19,7 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
   const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -36,12 +37,19 @@ const Signup = () => {
     setPassword(event.target.value);
   };
 
+  const handlePasswordConfirmationChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setConfirmPassword(event.target.value);
+  };
+
   const validateFormData = () => {
     try {
       signUpSchema.parse({
         name,
         email,
         password,
+        confirmPassword,
       });
       setErrors({});
       return true;
@@ -226,7 +234,33 @@ const Signup = () => {
                   />
                 </div>
               </div>
-
+              <div>
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Confirm Password
+                  </label>
+                  {errors.confirmPassword && (
+                    <p className="text-sm font-medium text-red-500">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-2">
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    value={confirmPassword}
+                    onChange={handlePasswordConfirmationChange}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
               <div>
                 <button
                   type="submit"
