@@ -9,6 +9,7 @@ import Modal from "@/app/common/components/Modal";
 import UserModal from "@/app/common/components/UserModal";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import ChangePasswordModal from "@/app/common/components/ChangePassword";
 
 interface NotificationData {
   isVisible: boolean;
@@ -52,6 +53,7 @@ const UsersTable = () => {
         <ActionButtons
           userId={rowData.id}
           onEdit={openUserModal}
+          onChangePassword={openChangePasswordModal}
           onDelete={handleDelete}
         />
       ),
@@ -275,6 +277,80 @@ const UsersTable = () => {
 
   // -----------------------------------------------------------------------------------------------
 
+  // Change Password Modal State & Functions
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
+    useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  const openChangePasswordModal = (id: string) => {
+    setUserId(id);
+    setIsChangePasswordModalOpen(true);
+  };
+
+  const closeChangePasswordModal = () => {
+    setIsChangePasswordModalOpen(false);
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setUserId("");
+  };
+
+  // Handle password update
+  const handlePasswordUpdate = async () => {
+    setIsLoading(true);
+    closeChangePasswordModal();
+    try {
+      const response = await fetch(
+        `/api/admin/users/update/password/${userId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newPassword),
+        },
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        showNotification(
+          data.message || "Error Updating Password",
+          "Couldn't update the user.",
+          "error",
+        );
+        setTimeout(() => {
+          setNotification({ ...notification, isVisible: false });
+        }, 1000);
+        setIsLoading(false);
+        throw new Error(data.message || "Failed to update password.");
+      }
+
+      // Handle success
+      showNotification(
+        "Password Updated",
+        "The password was updated successfully.",
+        "success",
+      );
+      setTimeout(() => {
+        setNotification({ ...notification, isVisible: false });
+      }, 1000);
+      setIsLoading(false);
+      closeUserModal();
+    } catch (error: any) {
+      showNotification(
+        "Error",
+        error.toString() || "An error occurred while updating the password.",
+        "error",
+      );
+      setTimeout(() => {
+        setNotification({ ...notification, isVisible: false });
+      }, 1000);
+      setIsLoading(false);
+    }
+  };
+
+  // -----------------------------------------------------------------------------------------------
+
   useEffect(() => {
     setIsLoading(true);
     const fetchUsers = async () => {
@@ -336,6 +412,18 @@ const UsersTable = () => {
         handleUpdate={handleUpdate}
         handleClose={handleClose}
         isUserModalLoading={isUserModalLoading}
+      />
+      <ChangePasswordModal
+        open={isChangePasswordModalOpen}
+        handleUpdate={handlePasswordUpdate}
+        handleClose={closeChangePasswordModal}
+        newPassword={newPassword}
+        setNewPassword={setNewPassword}
+        confirmNewPassword={confirmNewPassword}
+        setConfirmNewPassword={setConfirmNewPassword}
+        notification={notification}
+        setNotification={setNotification}
+        showNotification={showNotification}
       />
       <Modal
         open={isDeleteModalOpen}
