@@ -1,0 +1,156 @@
+User [icon: user, color: black] {
+    id string pk
+    name string
+    email string unique
+    emailVerified string
+    image string
+    password string
+    departmentId int
+}
+
+Organization [icon: building, color: green] {
+    id int pk
+    name string unique
+    createdAt datetime
+    updatedAt datetime
+}
+
+OrganizationMembership [icon: handshake, color: orange] {
+    userId string fk
+    organizationId int fk
+    role enum(USER, MANAGER, ADMIN)
+}
+
+Department [icon: hexagon, color: blueviolet] {
+    id int pk
+    name string unique
+    organizationId int fk
+    createdAt datetime
+    updatedAt datetime
+}
+
+Team [icon: users, color: black] {
+    id int pk
+    name string unique
+    managerId string fk
+    organizationId int fk
+    createdAt datetime
+    updatedAt datetime
+}
+
+MemberOf [icon: link] {
+    userId string fk
+    teamId int fk
+}
+
+Checklist [icon: clipboard, color: black] {
+    id int pk
+    name string
+    managerId string fk
+    teamId int
+    organizationId int fk
+    createdAt datetime
+    updatedAt datetime
+}
+
+Question [icon: help-circle, color: royalblue] {
+    id int pk
+    content string
+    checklistId int fk
+    createdAt datetime
+    updatedAt datetime
+}
+
+Option [icon: circle, color: royalblue] {
+    id int pk
+    content string
+    questionId int fk
+    createdAt datetime
+    updatedAt datetime
+}
+
+Assignment [icon: send, color: royalblue] {
+    id int pk
+    employeeId string fk
+    checklistId int fk
+    archivedByEmployee boolean
+    viewedByEmployee boolean
+    dueDate datetime
+    organizationId int fk
+    createdAt datetime
+}
+
+Submission [icon: check-circle, color: royalblue] {
+    id int pk
+    userId string fk
+    archivedByManager boolean
+    status enum(PENDING, OPENED, REVIEWED)
+    assignmentId int fk unique
+    organizationId int fk
+    createdAt datetime
+}
+
+SubmittedOption [icon: link] {
+    id int pk
+    submissionId int fk
+    optionId int fk
+}
+
+feedback [icon: message-square, color: royalblue] {
+    id int pk
+    content string
+    assignmentId int unique
+    managerId string fk
+    organizationId int fk
+    createdAt datetime
+}
+
+Account [icon: key, color: black] {
+    id string pk
+    userId string fk
+    type string
+    provider string
+    providerAccountId string
+    refresh_token string
+    access_token string
+    expires_at int
+    token_type string
+    scope string
+    id_token string
+    session_state string
+}
+
+User.id < MemberOf.userId
+User.id > Team.managerId
+User.id > Checklist.managerId
+User.id > Assignment.employeeId
+User.id > Submission.userId
+User.id > feedback.managerId
+User.id > Account.userId
+User.id < OrganizationMembership.userId
+
+Organization.id < OrganizationMembership.organizationId
+Organization.id < Team.organizationId
+Organization.id < Department.organizationId
+Organization.id < Checklist.organizationId
+Organization.id < Assignment.organizationId
+Organization.id < Submission.organizationId
+Organization.id < feedback.organizationId
+
+Team.id < MemberOf.teamId
+Team.id < Checklist.teamId
+Team.id < Assignment.teamId
+
+Department.id < User.departmentId
+
+Checklist.id < Question.checklistId
+Checklist.id < Assignment.checklistId
+
+Question.id < Option.questionId
+
+Option.id < SubmittedOption.optionId
+
+Assignment.id - feedback.assignmentId
+Assignment.id - Submission.assignmentId
+
+Submission.id < SubmittedOption.submissionId
