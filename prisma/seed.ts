@@ -3,7 +3,17 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
-async function seedDepartments() {
+async function seedOrganizations() {
+  const organization = await prisma.organization.create({
+    data: {
+      name: "TaskTracker Corp",
+    },
+  });
+
+  return organization;
+}
+
+async function seedDepartments(organizationId: number) {
   const departments = [
     { name: "Engineering" },
     { name: "Marketing" },
@@ -17,60 +27,62 @@ async function seedDepartments() {
     await prisma.department.create({
       data: {
         name: department.name,
+        organizationId,
       },
     });
   }
 }
 
-async function seedUsers() {
+async function seedUsers(organizationId: number) {
   const users = [
     {
       name: "John Doe",
       email: "john@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
-      role: Role.USER,
       departmentId: 1,
     },
     {
       name: "Jane Smith",
       email: "jane@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
-      role: Role.MANAGER,
       departmentId: 2,
     },
     {
       name: "Steve Jobs",
       email: "steve@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
-      role: Role.MANAGER,
       departmentId: 3,
     },
     {
       name: "Alex Bjorn",
       email: "alex@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
-      role: Role.ADMIN,
       departmentId: 4,
     },
     {
       name: "Emma Watson",
       email: "emma@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
-      role: Role.USER,
       departmentId: 5,
     },
     {
       name: "Robert Downey Jr.",
       email: "robert@tasktracker.io",
       password: await bcrypt.hash("zxcasdqwe123", 10),
-      role: Role.ADMIN,
       departmentId: 6,
     },
   ];
   const createdUsers = [];
   for (const user of users) {
     const createdUser = await prisma.user.create({
-      data: user,
+      data: {
+        ...user,
+        OrganizationMembership: {
+          create: {
+            organizationId,
+          },
+        },
+      },
     });
     createdUsers.push(createdUser);
   }
@@ -80,13 +92,30 @@ async function seedUsers() {
 
 async function seedTeams(
   createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+  organizationId: number,
 ) {
   await prisma.team.createMany({
     data: [
-      { name: "General", managerId: createdUsers[1]!.id },
-      { name: "Team A", managerId: createdUsers[2]!.id },
-      { name: "Team B", managerId: createdUsers[1]!.id },
-      { name: "Team C", managerId: createdUsers[2]!.id },
+      {
+        name: "General",
+        managerId: createdUsers[1]!.id,
+        organizationId: organizationId,
+      },
+      {
+        name: "Team A",
+        managerId: createdUsers[2]!.id,
+        organizationId: organizationId,
+      },
+      {
+        name: "Team B",
+        managerId: createdUsers[1]!.id,
+        organizationId: organizationId,
+      },
+      {
+        name: "Team C",
+        managerId: createdUsers[2]!.id,
+        organizationId: organizationId,
+      },
     ],
   });
 }
@@ -111,16 +140,52 @@ async function seedMemberOf(
 
 async function seedChecklists(
   createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+  organizationId: number,
 ) {
   await prisma.checklist.createMany({
     data: [
-      { name: "Checklist 1", managerId: createdUsers[1]!.id, teamId: 1 },
-      { name: "Checklist 2", managerId: createdUsers[2]!.id, teamId: 1 },
-      { name: "Checklist 3", managerId: createdUsers[3]!.id, teamId: 1 },
-      { name: "Checklist 4", managerId: createdUsers[1]!.id, teamId: 1 },
-      { name: "Checklist 5", managerId: createdUsers[2]!.id, teamId: 1 },
-      { name: "Checklist 6", managerId: createdUsers[3]!.id, teamId: 1 },
-      { name: "Checklist 7", managerId: createdUsers[1]!.id, teamId: 1 },
+      {
+        name: "Checklist 1",
+        managerId: createdUsers[1]!.id,
+        teamId: 1,
+        organizationId: organizationId,
+      },
+      {
+        name: "Checklist 2",
+        managerId: createdUsers[2]!.id,
+        teamId: 1,
+        organizationId: organizationId,
+      },
+      {
+        name: "Checklist 3",
+        managerId: createdUsers[3]!.id,
+        teamId: 1,
+        organizationId: organizationId,
+      },
+      {
+        name: "Checklist 4",
+        managerId: createdUsers[1]!.id,
+        teamId: 1,
+        organizationId: organizationId,
+      },
+      {
+        name: "Checklist 5",
+        managerId: createdUsers[2]!.id,
+        teamId: 1,
+        organizationId: organizationId,
+      },
+      {
+        name: "Checklist 6",
+        managerId: createdUsers[3]!.id,
+        teamId: 1,
+        organizationId: organizationId,
+      },
+      {
+        name: "Checklist 7",
+        managerId: createdUsers[1]!.id,
+        teamId: 1,
+        organizationId: organizationId,
+      },
     ],
   });
 }
@@ -280,6 +345,7 @@ async function seedOptions() {
 
 async function seedAssignments(
   createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+  organizationId: number,
 ) {
   await prisma.assignment.createMany({
     data: [
@@ -288,48 +354,56 @@ async function seedAssignments(
         checklistId: 1,
         teamId: 1,
         dueDate: new Date(),
+        organizationId: organizationId,
       },
       {
         employeeId: createdUsers[0]!.id,
         checklistId: 2,
         teamId: 1,
         dueDate: new Date(),
+        organizationId: organizationId,
       },
       {
         employeeId: createdUsers[0]!.id,
         checklistId: 3,
         teamId: 1,
         dueDate: new Date(),
+        organizationId: organizationId,
       },
       {
         employeeId: createdUsers[0]!.id,
         checklistId: 4,
         teamId: 1,
         dueDate: new Date(),
+        organizationId: organizationId,
       },
       {
         employeeId: createdUsers[0]!.id,
         checklistId: 5,
         teamId: 1,
         dueDate: new Date(),
+        organizationId: organizationId,
       },
       {
         employeeId: createdUsers[0]!.id,
         checklistId: 6,
         teamId: 1,
         dueDate: new Date(),
+        organizationId: organizationId,
       },
       {
         employeeId: createdUsers[0]!.id,
         checklistId: 7,
         teamId: 1,
         dueDate: new Date(),
+        organizationId: organizationId,
       },
       {
         employeeId: createdUsers[4]!.id,
         checklistId: 1,
         teamId: 1,
         dueDate: new Date(),
+        organizationId: organizationId,
       },
     ],
   });
@@ -337,13 +411,34 @@ async function seedAssignments(
 
 async function seedSubmissions(
   createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+  organizationId: number,
 ) {
   await prisma.submission.createMany({
     data: [
-      { userId: createdUsers[0]!.id, assignmentId: 4, status: "PENDING" },
-      { userId: createdUsers[0]!.id, assignmentId: 5, status: "OPENED" },
-      { userId: createdUsers[0]!.id, assignmentId: 6, status: "REVIEWED" },
-      { userId: createdUsers[0]!.id, assignmentId: 7, status: "PENDING" },
+      {
+        userId: createdUsers[0]!.id,
+        assignmentId: 4,
+        status: "PENDING",
+        organizationId: organizationId,
+      },
+      {
+        userId: createdUsers[0]!.id,
+        assignmentId: 5,
+        status: "OPENED",
+        organizationId: organizationId,
+      },
+      {
+        userId: createdUsers[0]!.id,
+        assignmentId: 6,
+        status: "REVIEWED",
+        organizationId: organizationId,
+      },
+      {
+        userId: createdUsers[0]!.id,
+        assignmentId: 7,
+        status: "PENDING",
+        organizationId: organizationId,
+      },
     ],
   });
 }
@@ -361,31 +456,35 @@ async function seedSubmittedOptions() {
 
 async function seedFeedbacks(
   createdUsers: Prisma.PromiseReturnType<typeof prisma.user.create>[],
+  organizationId: number,
 ) {
   await prisma.feedback.createMany({
     data: [
       {
         assignmentId: 6,
         content:
-          "Thank you for sharing that example. It's great to hear about your problem-solving leadership skills. Can you elaborate a bit more on this? Specifically, it would be helpful to understand the context of the challenges you faced, the specific actions you took to address them, and the outcomes of your efforts. ",
+          "Thank you for sharing that example. It's great to hear about your problem-solving leadership skills. Can you elaborate a bit more on this? Specifically, it would be helpful to understand the context of the challenges you faced, the specific actions you took to address them, and the outcomes of your efforts.",
         managerId: createdUsers[1]!.id,
+        organizationId: organizationId,
       },
+      // ... Add more feedback entries if needed ...
     ],
   });
 }
 
 async function main() {
-  await seedDepartments();
-  const createdUsers = await seedUsers();
-  await seedTeams(createdUsers);
+  const createdOrganization = await seedOrganizations();
+  await seedDepartments(createdOrganization.id);
+  const createdUsers = await seedUsers(createdOrganization.id);
+  await seedTeams(createdUsers, createdOrganization.id);
   await seedMemberOf(createdUsers);
-  await seedChecklists(createdUsers);
+  await seedChecklists(createdUsers, createdOrganization.id);
   await seedQuestions();
   await seedOptions();
-  await seedAssignments(createdUsers);
-  await seedSubmissions(createdUsers);
-  seedSubmittedOptions();
-  await seedFeedbacks(createdUsers);
+  await seedAssignments(createdUsers, createdOrganization.id);
+  await seedSubmissions(createdUsers, createdOrganization.id);
+  await seedSubmittedOptions();
+  await seedFeedbacks(createdUsers, createdOrganization.id);
 }
 
 main()

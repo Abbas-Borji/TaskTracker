@@ -8,22 +8,47 @@ datasource db {
 }
 
 model User {
-    id            String       @id @default(cuid())
-    name          String?
-    email         String?      @unique
-    emailVerified DateTime?
-    image         String?
-    password      String?
-    role          Role         @default(USER)
-    managerOf     Team[]       @relation("managerOf")
-    checklists    Checklist[]
-    submissions   Submission[]
-    assignments   Assignment[]
-    feedbacks     feedback[]
-    MemberOf      MemberOf[]
-    accounts      Account[]
-    Department    Department?  @relation(fields: [departmentId], references: [id])
-    departmentId  Int?
+    id                     String                   @id @default(cuid())
+    name                   String?
+    email                  String?                  @unique
+    emailVerified          DateTime?
+    image                  String?
+    password               String?
+    managerOf              Team[]                   @relation("managerOf")
+    checklists             Checklist[]
+    submissions            Submission[]
+    assignments            Assignment[]
+    feedbacks              feedback[]
+    MemberOf               MemberOf[]
+    accounts               Account[]
+    Department             Department?              @relation(fields: [departmentId], references: [id])
+    departmentId           Int?
+    OrganizationMembership OrganizationMembership[]
+}
+
+model Organization {
+    id          Int                      @id @default(autoincrement())
+    name        String                   @unique
+    createdAt   DateTime                 @default(now())
+    updatedAt   DateTime                 @updatedAt
+    departments Department[]
+    teams       Team[]
+    checklists  Checklist[]
+    assignments Assignment[]
+    submissions Submission[]
+    feedbacks   feedback[]
+    memberships OrganizationMembership[]
+    invitations Invitation[]
+}
+
+model OrganizationMembership {
+    userId         String
+    organizationId Int
+    role           Role         @default(USER)
+    user           User         @relation(fields: [userId], references: [id])
+    organization   Organization @relation(fields: [organizationId], references: [id])
+
+    @@id([userId, organizationId])
 }
 
 enum Role {
@@ -32,16 +57,34 @@ enum Role {
     ADMIN
 }
 
+model Invitation {
+    id             Int              @id @default(autoincrement())
+    email          String // Email to which the invitation is sent
+    organizationId Int
+    organization   Organization     @relation(fields: [organizationId], references: [id])
+    status         InvitationStatus @default(PENDING)
+    invitedAt      DateTime         @default(now())
+    respondedAt    DateTime? // Date when the user responded to the invitation
+}
+
+enum InvitationStatus {
+    PENDING
+    ACCEPTED
+    REJECTED
+}
+
 model Team {
-    id          Int          @id @default(autoincrement())
-    name        String       @unique
-    managerId   String
-    manager     User         @relation("managerOf", fields: [managerId], references: [id], onDelete: Cascade)
-    assignments Assignment[]
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
-    MemberOf    MemberOf[]
-    Checklist   Checklist[]
+    id             Int           @id @default(autoincrement())
+    name           String        @unique
+    managerId      String
+    manager        User          @relation("managerOf", fields: [managerId], references: [id], onDelete: Cascade)
+    assignments    Assignment[]
+    createdAt      DateTime      @default(now())
+    updatedAt      DateTime      @updatedAt
+    MemberOf       MemberOf[]
+    Checklist      Checklist[]
+    Organization   Organization? @relation(fields: [organizationId], references: [id])
+    organizationId Int?
 }
 
 model MemberOf {
@@ -54,16 +97,18 @@ model MemberOf {
 }
 
 model Checklist {
-    id          Int          @id @default(autoincrement())
-    name        String
-    managerId   String
-    manager     User         @relation(fields: [managerId], references: [id], onDelete: Cascade)
-    teamId      Int?
-    team        Team?        @relation(fields: [teamId], references: [id], onDelete: Cascade)
-    questions   Question[]
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
-    assignments Assignment[]
+    id             Int           @id @default(autoincrement())
+    name           String
+    managerId      String
+    manager        User          @relation(fields: [managerId], references: [id], onDelete: Cascade)
+    teamId         Int?
+    team           Team?         @relation(fields: [teamId], references: [id], onDelete: Cascade)
+    questions      Question[]
+    createdAt      DateTime      @default(now())
+    updatedAt      DateTime      @updatedAt
+    assignments    Assignment[]
+    Organization   Organization? @relation(fields: [organizationId], references: [id])
+    organizationId Int?
 }
 
 model Question {
@@ -87,19 +132,21 @@ model Option {
 }
 
 model Assignment {
-    id                 Int         @id @default(autoincrement())
+    id                 Int           @id @default(autoincrement())
     employeeId         String
-    employee           User        @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+    employee           User          @relation(fields: [employeeId], references: [id], onDelete: Cascade)
     checklistId        Int
-    checklist          Checklist   @relation(fields: [checklistId], references: [id], onDelete: Cascade)
-    archivedByEmployee Boolean     @default(false)
-    viewedByEmployee   Boolean     @default(false)
+    checklist          Checklist     @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+    archivedByEmployee Boolean       @default(false)
+    viewedByEmployee   Boolean       @default(false)
     dueDate            DateTime
     submission         Submission?
     feedback           feedback?
-    Team               Team?       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+    Team               Team?         @relation(fields: [teamId], references: [id], onDelete: Cascade)
     teamId             Int?
-    createdAt          DateTime    @default(now())
+    createdAt          DateTime      @default(now())
+    Organization       Organization? @relation(fields: [organizationId], references: [id])
+    organizationId     Int?
 }
 
 model Submission {
@@ -112,6 +159,8 @@ model Submission {
     assignment        Assignment        @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
     createdAt         DateTime          @default(now())
     SubmittedOptions  SubmittedOption[]
+    Organization      Organization?     @relation(fields: [organizationId], references: [id])
+    organizationId    Int?
 }
 
 model SubmittedOption {
@@ -129,13 +178,15 @@ enum Status {
 }
 
 model feedback {
-    id           Int        @id @default(autoincrement())
-    assignmentId Int        @unique
-    assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
-    content      String
-    managerId    String
-    manager      User       @relation(fields: [managerId], references: [id], onDelete: Cascade)
-    createdAt    DateTime   @default(now())
+    id             Int           @id @default(autoincrement())
+    assignmentId   Int           @unique
+    assignment     Assignment    @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+    content        String
+    managerId      String
+    manager        User          @relation(fields: [managerId], references: [id], onDelete: Cascade)
+    createdAt      DateTime      @default(now())
+    Organization   Organization? @relation(fields: [organizationId], references: [id])
+    organizationId Int?
 }
 
 // Necessary for Next auth
@@ -159,9 +210,11 @@ model Account {
 }
 
 model Department {
-    id        Int      @id @default(autoincrement())
-    name      String   @unique
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    users     User[]
+    id             Int           @id @default(autoincrement())
+    name           String        @unique
+    createdAt      DateTime      @default(now())
+    updatedAt      DateTime      @updatedAt
+    users          User[]
+    Organization   Organization? @relation(fields: [organizationId], references: [id])
+    organizationId Int?
 }
