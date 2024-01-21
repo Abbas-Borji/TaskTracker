@@ -21,6 +21,15 @@ OrganizationMembership [icon: handshake, color: orange] {
     role enum(USER, MANAGER, ADMIN)
 }
 
+Invitation [icon: envelope, color: teal] {
+    id int pk
+    email string
+    organizationId int fk
+    status enum(PENDING, ACCEPTED, REJECTED)
+    invitedAt datetime
+    respondedAt datetime
+}
+
 Department [icon: hexagon, color: blueviolet] {
     id int pk
     name string unique
@@ -136,6 +145,7 @@ Organization.id < Checklist.organizationId
 Organization.id < Assignment.organizationId
 Organization.id < Submission.organizationId
 Organization.id < feedback.organizationId
+Organization.id < Invitation.organizationId
 
 Team.id < MemberOf.teamId
 Team.id < Checklist.teamId
