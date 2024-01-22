@@ -9,7 +9,11 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      role: "USER" | "MANAGER" | "ADMIN";
+      organizations: {
+        id: number;
+        name: string;
+        role: "USER" | "MANAGER" | "ADMIN";
+      }[];
     } & DefaultSession["user"];
   }
 }
@@ -75,17 +79,30 @@ export const authOptions: AuthOptions = {
       if (!token.sub) return token;
       const existingUser = await prisma.user.findUnique({
         where: { id: token.sub },
+        include: {
+          OrganizationMembership: {
+            include: {
+              organization: true,
+            },
+          },
+        },
       });
       if (!existingUser) return token;
-      token.role = existingUser.role;
+      token.organizations = existingUser.OrganizationMembership.map(
+        (membership) => ({
+          id: membership.organizationId,
+          name: membership.organization.name,
+          role: membership.role as "USER" | "MANAGER" | "ADMIN",
+        }),
+      );
       return token;
     },
     async session({ token, session }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
-      if (token.role && session.user) {
-        session.user.role = token.role as "USER" | "MANAGER" | "ADMIN";
+      if (token.organizations && session.user) {
+        session.user.organizations = token.organizations as any;
       }
       return session;
     },
