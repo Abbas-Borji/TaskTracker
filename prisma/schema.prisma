@@ -29,6 +29,7 @@ model User {
 model Organization {
     id          Int                      @id @default(autoincrement())
     name        String                   @unique
+    urlSegment  String                   @unique
     createdAt   DateTime                 @default(now())
     updatedAt   DateTime                 @updatedAt
     departments Department[]

@@ -11,6 +11,7 @@ User [icon: user, color: black] {
 Organization [icon: building, color: green] {
     id int pk
     name string unique
+    urlSegment string unique
     createdAt datetime
     updatedAt datetime
 }
