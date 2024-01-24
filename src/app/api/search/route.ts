@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 interface SearchResult {
   id: number;
@@ -10,9 +9,8 @@ interface SearchResult {
 }
 
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user.id;
-  const userRole = session?.user.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   if (userRole !== "USER" && userRole !== "MANAGER") {
     return new NextResponse("Unauthorized", { status: 401 });
@@ -27,6 +25,7 @@ export async function GET(request: NextRequest) {
         const employeeAssignments = await prisma.assignment.findMany({
           where: {
             employeeId: userId,
+            organizationId: currentOrganization.id,
           },
           include: {
             submission: true,
@@ -39,7 +38,7 @@ export async function GET(request: NextRequest) {
           .filter((assignment) => !assignment.submission)
           .map((assignment) => ({
             id: assignment.id,
-            link: `/user/assignment/${assignment.id}`,
+            link: `/${currentOrganization.urlSegment}/user/assignment/${assignment.id}`,
             name: assignment.checklist.name,
           }));
 
@@ -48,7 +47,7 @@ export async function GET(request: NextRequest) {
           .filter((assignment) => assignment.submission)
           .map((assignment) => ({
             id: assignment.submission!.id,
-            link: `/user/submission/${assignment.submission!.id}`,
+            link: `/${currentOrganization.urlSegment}/user/submission/${assignment.submission!.id}`,
             name: assignment.checklist.name,
           }));
 
@@ -60,6 +59,7 @@ export async function GET(request: NextRequest) {
         const checklists = await prisma.checklist.findMany({
           where: {
             managerId: userId,
+            organizationId: currentOrganization.id,
           },
           select: {
             id: true,
@@ -73,6 +73,7 @@ export async function GET(request: NextRequest) {
             checklistId: {
               in: checklists.map((checklist) => checklist.id),
             },
+            organizationId: currentOrganization.id,
           },
           include: {
             submission: true,
@@ -89,7 +90,7 @@ export async function GET(request: NextRequest) {
           .filter((assignment) => assignment.submission)
           .map((assignment) => ({
             id: assignment.submission!.id,
-            link: `/manager/submission/${assignment.submission!.id}`,
+            link: `/${currentOrganization.urlSegment}/manager/submission/${assignment.submission!.id}`,
             name: assignment.checklist.name,
           }));
 
@@ -98,7 +99,7 @@ export async function GET(request: NextRequest) {
           ...checklists.map((checklist) => ({
             id: checklist.id,
             name: checklist.name,
-            link: `/manager/checklist/edit?checklistId=${checklist.id}`,
+            link: `/${currentOrganization.urlSegment}/manager/checklist/edit?checklistId=${checklist.id}`,
           })),
           ...submissions,
         ];
