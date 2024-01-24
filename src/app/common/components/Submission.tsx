@@ -15,7 +15,7 @@ interface SubmissionProps {
 
 const Submission = ({ submissionId }: SubmissionProps) => {
   const session = useSession();
-  const userRole = session.data?.user?.role;
+  const userRole = session.data?.user?.currentOrganization.role;
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState<Question[]>();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

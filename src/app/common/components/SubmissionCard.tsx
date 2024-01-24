@@ -4,14 +4,15 @@ import DropdownMenu, { MenuItem } from "./DropdownMenu";
 
 interface SubmissionCardProps {
   submission: Submission;
+  organization: string;
 }
 
-const SubmissionCard = ({ submission }: SubmissionCardProps) => {
+const SubmissionCard = ({ submission, organization }: SubmissionCardProps) => {
   const items: MenuItem[] = [
     {
       label: "Open",
       type: "link",
-      href: `/user/submission/` + submission.id,
+      href: `/${organization}/user/submission/${submission.id}`,
     },
     {
       label: "Cancel",
@@ -22,12 +23,12 @@ const SubmissionCard = ({ submission }: SubmissionCardProps) => {
     {
       label: "Open",
       type: "link",
-      href: `/user/submission/` + submission.id,
+      href: `/${organization}/user/submission/${submission.id}`,
     },
     {
       label: "View Feedback",
       type: "link",
-      href: `/user/feedback/` + submission.id,
+      href: `/${organization}/user/feedback/${submission.id}`,
     },
     {
       label: "Cancel",
