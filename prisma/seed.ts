@@ -7,6 +7,7 @@ async function seedOrganizations() {
   const organization = await prisma.organization.create({
     data: {
       name: "TaskTracker Corp",
+      urlSegment: "tasktrackercorp",
     },
   });
 
