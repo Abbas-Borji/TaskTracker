@@ -14,16 +14,17 @@ const SignupRedirect = () => {
   useEffect(() => {
     // This function fetches the user role and redirects the user to the appropriate page
     const fetchUserRoleAndRedirect = () => {
-      const userRole = session!.user.role;
+      const organization = session?.user.currentOrganization;
+      const userRole = organization?.role;
       switch (userRole) {
         case "ADMIN":
-          router.replace("/admin/users");
+          router.replace(`${organization?.urlSegment}/admin/users`);
           break;
         case "USER":
-          router.replace("/api/user/entry");
+          router.replace(`/api/user/entry`);
           break;
         case "MANAGER":
-          router.replace("/manager/mychecklists");
+          router.replace(`${organization?.urlSegment}/manager/mychecklists`);
           break;
         default:
           break;
