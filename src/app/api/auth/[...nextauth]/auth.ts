@@ -5,15 +5,19 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcrypt";
 import prisma from "prisma/client";
 
+interface Organization {
+  id: number;
+  name: string;
+  urlSegment: string;
+  role: "USER" | "MANAGER" | "ADMIN";
+}
+
 declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      organizations: {
-        id: number;
-        name: string;
-        role: "USER" | "MANAGER" | "ADMIN";
-      }[];
+      organizations: Organization[];
+      currentOrganization: Organization;
     } & DefaultSession["user"];
   }
 }
@@ -92,6 +96,7 @@ export const authOptions: AuthOptions = {
         (membership) => ({
           id: membership.organizationId,
           name: membership.organization.name,
+          urlSegment: membership.organization.urlSegment,
           role: membership.role as "USER" | "MANAGER" | "ADMIN",
         }),
       );
@@ -102,7 +107,8 @@ export const authOptions: AuthOptions = {
         session.user.id = token.sub;
       }
       if (token.organizations && session.user) {
-        session.user.organizations = token.organizations as any;
+        session.user.organizations = token.organizations as Organization[];
+        session.user.currentOrganization = session.user.organizations[0] as Organization;
       }
       return session;
     },
