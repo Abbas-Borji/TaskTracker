@@ -7,8 +7,8 @@ import { Bars3Icon, BellIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { Fragment, useEffect, useState } from "react";
-import Sidebar from "../common/components/Sidebar";
-import classNames from "../common/functions/ClassNames";
+import Sidebar from "@/app/common/components/Sidebar";
+import classNames from "@/app/common/functions/ClassNames";
 
 interface SearchResult {
   id: number;
@@ -16,11 +16,21 @@ interface SearchResult {
   link: string;
 }
 
-const UserNavigationLayout = ({ children }: { children: React.ReactNode }) => {
+const UserNavigationLayout = ({
+  params,
+  children,
+}: {
+  params: { organization: string };
+  children: React.ReactNode;
+}) => {
+  const organizationUrlSegment = params?.organization;
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const userNavigation = [
-    { name: "Your profile", href: "/user/profile/" + session?.user?.id },
+    {
+      name: "Your profile",
+      href: `/${organizationUrlSegment}/user/profile/${session?.user?.id}`,
+    },
     { name: "Sign out", href: "/api/auth/signout" },
   ];
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);

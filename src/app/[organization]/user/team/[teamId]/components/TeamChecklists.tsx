@@ -16,9 +16,10 @@ interface Team {
 
 type ChecklistsProps = {
   teamId: number;
+  organization: string;
 };
 
-const TeamChecklists = ({ teamId }: ChecklistsProps) => {
+const TeamChecklists = ({ teamId, organization }: ChecklistsProps) => {
   const [team, setTeam] = useState<Team>({ name: null });
   const [checklists, setChecklists] = useState<Checklist[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
@@ -43,7 +44,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
     } catch (error) {
       console.error("Error updating assignment:", error);
     }
-    router.push(`/user/assignment/${assignmentId}`);
+    router.push(`/${organization}/user/assignment/${assignmentId}`);
   };
 
   const handleViewAll = (type: string) => {
@@ -115,7 +116,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
               isLoading ? (
                 <CardSkeleton key={index} />
               ) : (
-                <SubmissionCard submission={item} key={index} />
+                <SubmissionCard submission={item} key={index} organization={organization}/>
               )
             }
             onViewBack={handleViewDefault}
@@ -147,7 +148,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
                 isLoading ? (
                   <CardSkeleton key={index} />
                 ) : (
-                  <SubmissionCard submission={item} key={index} />
+                  <SubmissionCard submission={item} key={index} organization={organization}/>
                 )
               }
               onViewAll={() => handleViewAll("submissions")}
