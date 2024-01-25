@@ -18,7 +18,7 @@ interface SidebarProps {
 
 const Sidebar = ({ tabs, sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const session = useSession();
-  const userRole = session.data?.user?.role;
+  const userRole = session.data?.user.currentOrganization.role;
   const [teams, setTeams] = useState<Team[]>([]);
   const pathname = usePathname(); // Get current path
   const isActive: (href: string) => boolean = (href: string) =>
