@@ -81,6 +81,7 @@ async function seedUsers(organizationId: number) {
         OrganizationMembership: {
           create: {
             organizationId,
+            role: user.name === "Jane Smith" || user.name === "Steve Jobs" ? "MANAGER" : user.name === "Alex Bjorn" ? "ADMIN" : "USER",
           },
         },
       },
