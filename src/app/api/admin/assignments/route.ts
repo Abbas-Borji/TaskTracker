@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import prisma from "prisma/client";
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   if (userRole != "ADMIN") {
     return new NextResponse(JSON.stringify({ message: "Permission denied." }), {
@@ -16,6 +15,9 @@ export async function GET(req: NextRequest) {
 
   try {
     const assignments = await prisma.assignment.findMany({
+      where: {
+        organizationId: currentOrganization.id,
+      },
       select: {
         id: true,
         dueDate: true,
@@ -39,15 +41,15 @@ export async function GET(req: NextRequest) {
     });
 
     const dueDates = assignments.map((assignment) => {
-          const date = new Date(assignment.dueDate);
-          return date.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          });
+      const date = new Date(assignment.dueDate);
+      return date.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       });
-    
+    });
+
     const assignmentsWithFormattedDueDates = assignments.map(
       (assignment, index) => ({
         ...assignment,
@@ -55,14 +57,10 @@ export async function GET(req: NextRequest) {
       }),
     );
 
-
-    return new NextResponse(
-      JSON.stringify(assignmentsWithFormattedDueDates),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new NextResponse(JSON.stringify(assignmentsWithFormattedDueDates), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
     let errorMessage = "Unknown error occurred";
     if (typeof error === "object" && error !== null && "message" in error) {

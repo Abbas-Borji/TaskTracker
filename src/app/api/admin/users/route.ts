@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import prisma from "prisma/client";
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   if (userRole != "ADMIN") {
     return new NextResponse(JSON.stringify({ message: "Permission denied." }), {
@@ -16,11 +15,25 @@ export async function GET(req: NextRequest) {
 
   try {
     const users = await prisma.user.findMany({
+      where: {
+        OrganizationMembership: {
+          some: {
+            organizationId: currentOrganization.id,
+          },
+        },
+      },
       select: {
         id: true,
         name: true,
         email: true,
-        role: true,
+        OrganizationMembership: {
+          where: {
+            organizationId: currentOrganization.id,
+          },
+          select: {
+            role: true,
+          },
+        },
         Department: {
           select: {
             id: true,
@@ -35,7 +48,7 @@ export async function GET(req: NextRequest) {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role,
+        role: user.OrganizationMembership[0]?.role, // Each user has only one role per organization
         departmentName: user.Department?.name,
         department: user.Department,
       };

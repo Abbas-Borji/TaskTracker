@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { assignmentId: string } },
 ) {
   // Get the userRole from the session
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
+
   // Extract assignmentId
   const assignmentId = params.assignmentId ? Number(params.assignmentId) : null;
 
@@ -21,7 +21,7 @@ export async function DELETE(
   // Validate the assignmentId if it exists
   if (assignmentId) {
     const assignmentExists = await prisma.assignment.findUnique({
-      where: { id: assignmentId },
+      where: { id: assignmentId, organizationId: currentOrganization.id },
     });
     if (!assignmentExists) {
       return new NextResponse(
@@ -34,7 +34,7 @@ export async function DELETE(
     // Delete the assignment
     try {
       const assignment = await prisma.assignment.delete({
-        where: { id: assignmentId },
+        where: { id: assignmentId, organizationId: currentOrganization.id },
       });
 
       return new NextResponse(JSON.stringify(assignment), {

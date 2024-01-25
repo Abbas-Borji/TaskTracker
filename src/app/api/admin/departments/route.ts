@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import prisma from "prisma/client";
 
 interface User {
@@ -16,8 +15,8 @@ interface responseDepartment {
 }
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   if (userRole != "ADMIN") {
     return new NextResponse(JSON.stringify({ message: "Permission denied." }), {
@@ -28,6 +27,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const departments = await prisma.department.findMany({
+      where: { organizationId: currentOrganization.id },
       select: {
         id: true,
         name: true,

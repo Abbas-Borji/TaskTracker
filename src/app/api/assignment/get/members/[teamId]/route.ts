@@ -1,5 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
-import { getServerSession } from "next-auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client"; // Adjust path as necessary
 
@@ -7,9 +6,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { teamId: string } },
 ) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
-  const userId = session?.user?.id;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Allow only MANAGERs and ADMINs
   if (userRole !== "MANAGER" && userRole !== "ADMIN") {
@@ -29,8 +27,13 @@ export async function GET(
       where: {
         teamId: teamId,
         member: {
-          role: "USER",
           id: { not: userId }, // Exclude the user sending the request
+          OrganizationMembership: {
+            some: {
+              role: "USER",
+              organizationId: currentOrganization.id,
+            },
+          },
         },
       },
       include: { member: true },

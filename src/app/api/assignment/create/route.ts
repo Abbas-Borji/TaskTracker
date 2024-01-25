@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 interface AssignmentData {
   checklistId: number;
@@ -11,8 +10,8 @@ interface AssignmentData {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Allow only MANAGERs and ADMINs
   if (userRole !== "MANAGER" && userRole !== "ADMIN") {
@@ -25,7 +24,7 @@ export async function POST(request: NextRequest) {
 
   // Validate checklist
   const checklist = await prisma.checklist.findUnique({
-    where: { id: checklistId },
+    where: { id: checklistId, organizationId: currentOrganization.id },
   });
   if (!checklist) {
     return new NextResponse(
@@ -39,7 +38,9 @@ export async function POST(request: NextRequest) {
     // Check if the teamId was provided
     if (teamId) {
       // Validate team
-      const team = await prisma.team.findUnique({ where: { id: teamId } });
+      const team = await prisma.team.findUnique({
+        where: { id: teamId, organizationId: currentOrganization.id },
+      });
       if (!team) {
         return new NextResponse(
           JSON.stringify({ message: "Team not found." }),
@@ -70,7 +71,9 @@ export async function POST(request: NextRequest) {
     // Check if the teamId was provided
     if (teamId) {
       // Validate team
-      const team = await prisma.team.findUnique({ where: { id: teamId } });
+      const team = await prisma.team.findUnique({
+        where: { id: teamId, organizationId: currentOrganization.id },
+      });
       if (!team) {
         return new NextResponse(
           JSON.stringify({ message: "Team not found." }),
@@ -88,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     // Update checklist using the provided teamId
     const updatedChecklist = await prisma.checklist.update({
-      where: { id: checklistId },
+      where: { id: checklistId, organizationId: currentOrganization.id },
       data: { teamId },
     });
   }
@@ -98,7 +101,12 @@ export async function POST(request: NextRequest) {
   const employees = await prisma.user.findMany({
     where: {
       id: { in: employeeIds },
-      role: "USER",
+      OrganizationMembership: {
+        some: {
+          role: "USER",
+          organizationId: currentOrganization.id,
+        },
+      },
     },
   });
 
@@ -114,6 +122,7 @@ export async function POST(request: NextRequest) {
   const existingAssignments = await prisma.assignment.findMany({
     where: {
       employeeId: { in: employeeIds },
+      organizationId: currentOrganization.id,
       checklistId,
     },
   });
@@ -150,6 +159,7 @@ export async function POST(request: NextRequest) {
         employeeId: id,
         checklistId: checklistId,
         teamId: teamId,
+        organizationId: currentOrganization.id,
         dueDate: dueDate,
       })),
     });

@@ -1,5 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
-import { getServerSession } from "next-auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
 import bcrypt from "bcrypt";
@@ -8,10 +7,12 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { userId: string } },
 ) {
-  // Get the userId from the slug
-  const userId = params.userId;
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+ 
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
+
+   // Get the requested userId from the slug
+   const requestedUserId = params.userId;
 
   // Allow only admins to update users
   if (userRole !== "ADMIN") {
@@ -19,7 +20,7 @@ export async function PATCH(
   }
 
   // Validate the userId
-  if (!userId) {
+  if (!requestedUserId) {
     return new NextResponse(JSON.stringify({ message: "Invalid userId." }), {
       status: 400,
     });
@@ -27,7 +28,14 @@ export async function PATCH(
 
   // Check if the user exists
   const userExists = await prisma.user.findUnique({
-    where: { id: userId },
+    where: {
+      id: requestedUserId,
+      OrganizationMembership: {
+        some: {
+          organizationId: currentOrganization.id,
+        },
+      },
+    },
   });
   if (!userExists) {
     return new NextResponse(JSON.stringify({ message: "User not found." }), {
@@ -51,7 +59,14 @@ export async function PATCH(
   // Update the user
   try {
     const updatedUser = await prisma.user.update({
-      where: { id: userId },
+      where: {
+        id: requestedUserId,
+        OrganizationMembership: {
+          some: {
+            organizationId: currentOrganization.id,
+          },
+        },
+      },
       data: {
         password: hashedPassword,
       },

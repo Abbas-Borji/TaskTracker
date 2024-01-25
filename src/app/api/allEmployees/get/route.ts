@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Allow only ADMINs
   if (userRole !== "ADMIN") {
@@ -14,6 +13,13 @@ export async function GET(request: NextRequest) {
 
   try {
     const employees = await prisma.user.findMany({
+      where: {
+        OrganizationMembership: {
+          some: {
+            organizationId: currentOrganization.id,
+          },
+        },
+      },
       select: {
         id: true,
         name: true,

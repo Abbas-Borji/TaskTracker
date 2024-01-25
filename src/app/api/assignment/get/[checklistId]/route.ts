@@ -1,5 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
-import { getServerSession } from "next-auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client"; // Adjust path as necessary
 
@@ -7,9 +6,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { checklistId: string } },
 ) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
-  const userId = session?.user?.id;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Allow only MANAGERs and ADMINs
   if (userRole !== "MANAGER" && userRole !== "ADMIN") {
@@ -26,7 +24,7 @@ export async function GET(
   try {
     // Fetch checklist details
     const checklist = await prisma.checklist.findUnique({
-      where: { id: checklistId },
+      where: { id: checklistId, organizationId: currentOrganization.id },
       include: { team: true },
     });
 
@@ -43,12 +41,17 @@ export async function GET(
         name: checklist.team.name,
       };
       const employees = await prisma.memberOf.findMany({
-        where: { 
+        where: {
           teamId: checklist.team.id,
           member: {
-            role: 'USER',
-            id: { not: userId } // Exclude the user sending the request
-          }
+            id: { not: userId }, // Exclude the user sending the request
+            OrganizationMembership: {
+              some: {
+                role: "USER",
+                organizationId: currentOrganization.id,
+              },
+            },
+          },
         },
         include: { member: true },
       });
@@ -66,7 +69,12 @@ export async function GET(
       const checklistName = checklist.name;
       const hasTeam = false;
       const teams = await prisma.memberOf.findMany({
-        where: { userId: userId },
+        where: {
+          userId: userId,
+          team: {
+            organizationId: currentOrganization.id,
+          },
+        },
         include: { team: true },
       });
       const restructuredTeams = teams.map((team) => {
