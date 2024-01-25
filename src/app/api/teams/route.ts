@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user.id;
-  const userRole = session?.user.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
   console.log("Returning teams of user with userId", userId);
 
   try {
     const userWithTeams = await prisma.memberOf.findMany({
       where: {
         userId: userId,
+        team: {
+          organizationId: currentOrganization.id,
+        },
       },
     });
 
@@ -25,13 +26,17 @@ export async function GET(request: NextRequest) {
         id: {
           in: userWithTeams.map((team) => team.teamId),
         },
+        organizationId: currentOrganization.id,
       },
     });
 
     const updatedTeams = teams.map((team) => ({
       id: team.id,
       name: team.name,
-      href: userRole === 'MANAGER' ? `/manager/team/${team.id}` : `/user/team/${team.id}`,
+      href:
+        userRole === "MANAGER"
+          ? `/${currentOrganization.urlSegment}/manager/team/${team.id}`
+          : `/${currentOrganization.urlSegment}/user/team/${team.id}`,
     }));
 
     return new NextResponse(JSON.stringify(updatedTeams), {

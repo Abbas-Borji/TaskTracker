@@ -18,13 +18,13 @@ const Redirect = () => {
       const userRole = organization?.role;
       switch (userRole) {
         case "ADMIN":
-          router.replace(`${organization?.urlSegment}/admin/users`);
+          router.replace(`/${organization?.urlSegment}/admin/users`);
           break;
         case "USER":
           router.replace(`/api/user/entry`);
           break;
         case "MANAGER":
-          router.replace(`${organization?.urlSegment}/manager/mychecklists`);
+          router.replace(`/${organization?.urlSegment}/manager/mychecklists`);
           break;
         default:
           break;
