@@ -37,7 +37,7 @@ interface Submission {
   status: string;
 }
 
-const SubmissionsTable = () => {
+const SubmissionsTable = ({ params }: { params: { organization: string } }) => {
   const columns = [
     { title: "ID", dataKey: "id", sortable: true },
     { title: "Checklist", dataKey: "checklistName", sortable: true },
@@ -49,7 +49,11 @@ const SubmissionsTable = () => {
       title: "Actions",
       dataKey: "actions",
       render: (rowData: Submission) => (
-        <ActionButtons submissionId={rowData.id} onDelete={handleDelete} />
+        <ActionButtons
+          submissionId={rowData.id}
+          organization={params.organization}
+          onDelete={handleDelete}
+        />
       ),
     },
     // Add more columns if needed

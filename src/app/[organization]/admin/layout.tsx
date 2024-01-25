@@ -11,54 +11,59 @@ import {
   Bars3Icon,
   BuildingLibraryIcon,
 } from "@heroicons/react/24/outline";
-import Sidebar from "../common/components/Sidebar";
+import Sidebar from "@/app/common/components/Sidebar";
 
-const tabs = [
-  {
-    name: "Users",
-    href: "/admin/users",
-    icon: UserIcon,
-    current: false,
-  },
-  {
-    name: "Teams",
-    href: "/admin/teams",
-    icon: UserGroupIcon,
-    current: false,
-  },
-  {
-    name: "Checklists",
-    href: "/admin/checklists",
-    icon: ClipboardDocumentListIcon,
-    current: false,
-  },
-  {
-    name: "Assignments",
-    href: "/admin/assignments",
-    icon: DocumentArrowDownIcon,
-    current: false,
-  },
-  {
-    name: "Submissions",
-    href: "/admin/submissions",
-    icon: DocumentCheckIcon,
-    current: false,
-  },
-  {
-    name: "Feedbacks",
-    href: "/admin/feedbacks",
-    icon: ChatBubbleLeftIcon,
-    current: false,
-  },
-  {
-    name: "Departments",
-    href: "/admin/departments",
-    icon: BuildingLibraryIcon,
-    current: false,
-  },
-];
-
-const AdminNavigationLayout = ({ children }: { children: React.ReactNode }) => {
+const AdminNavigationLayout = ({
+  params,
+  children,
+}: {
+  params: { organization: string };
+  children: React.ReactNode;
+}) => {
+  const tabs = [
+    {
+      name: "Users",
+      href: `/${params.organization}/admin/users`,
+      icon: UserIcon,
+      current: false,
+    },
+    {
+      name: "Teams",
+      href: `/${params.organization}/admin/teams`,
+      icon: UserGroupIcon,
+      current: false,
+    },
+    {
+      name: "Checklists",
+      href: `/${params.organization}/admin/checklists`,
+      icon: ClipboardDocumentListIcon,
+      current: false,
+    },
+    {
+      name: "Assignments",
+      href: `/${params.organization}/admin/assignments`,
+      icon: DocumentArrowDownIcon,
+      current: false,
+    },
+    {
+      name: "Submissions",
+      href: `/${params.organization}/admin/submissions`,
+      icon: DocumentCheckIcon,
+      current: false,
+    },
+    {
+      name: "Feedbacks",
+      href: `/${params.organization}/admin/feedbacks`,
+      icon: ChatBubbleLeftIcon,
+      current: false,
+    },
+    {
+      name: "Departments",
+      href: `/${params.organization}/admin/departments`,
+      icon: BuildingLibraryIcon,
+      current: false,
+    },
+  ];
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (

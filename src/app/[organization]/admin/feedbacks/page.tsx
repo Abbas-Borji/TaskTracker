@@ -39,7 +39,7 @@ interface Feedback {
   createdAt: string;
 }
 
-const FeedbacksTable = () => {
+const FeedbacksTable = ({ params }: { params: { organization: string } }) => {
   const columns = [
     { title: "ID", dataKey: "id", sortable: true },
     { title: "Checklist", dataKey: "checklistName", sortable: true },
@@ -53,6 +53,7 @@ const FeedbacksTable = () => {
         <ActionButtons
           feedbackId={rowData.id}
           submissionId={rowData.submissionId}
+          organization={params.organization}
           onDelete={handleDelete}
         />
       ),
