@@ -75,17 +75,36 @@ async function seedUsers(organizationId: number) {
   ];
   const createdUsers = [];
   for (const user of users) {
+    const userData = {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+    };
     const createdUser = await prisma.user.create({
       data: {
-        ...user,
+        ...userData,
         OrganizationMembership: {
           create: {
             organizationId,
-            role: user.name === "Jane Smith" || user.name === "Steve Jobs" ? "MANAGER" : user.name === "Alex Bjorn" ? "ADMIN" : "USER",
+            role:
+              user.name === "Jane Smith" || user.name === "Steve Jobs"
+                ? "MANAGER"
+                : user.name === "Alex Bjorn"
+                  ? "ADMIN"
+                  : "USER",
           },
         },
       },
     });
+    // After the user is created, create their DepartmentMembership
+    await prisma.departmentMembership.create({
+      data: {
+        userId: createdUser.id,
+        departmentId: user.departmentId,
+        organizationId: organizationId,
+      },
+    });
+
     createdUsers.push(createdUser);
   }
 
