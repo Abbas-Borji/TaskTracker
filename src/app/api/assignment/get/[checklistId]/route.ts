@@ -24,7 +24,7 @@ export async function GET(
   try {
     // Fetch checklist details
     const checklist = await prisma.checklist.findUnique({
-      where: { id: checklistId, organizationId: currentOrganization.id },
+      where: { id: checklistId },
       include: { team: true },
     });
 

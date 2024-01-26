@@ -27,11 +27,6 @@ export async function GET(
   const userExists = await prisma.user.findUnique({
     where: {
       id: requestedUserId,
-      OrganizationMembership: {
-        some: {
-          organizationId: currentOrganization.id,
-        },
-      },
     },
   });
   if (!userExists) {
@@ -68,7 +63,7 @@ export async function GET(
       ...userWithRole,
       role: userWithRole?.OrganizationMembership[0]?.role, // Each user has only one role per organization
     };
-    
+
     delete user.OrganizationMembership;
 
     return new NextResponse(JSON.stringify(user), {

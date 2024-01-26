@@ -21,7 +21,7 @@ export async function DELETE(
   // Validate the assignmentId if it exists
   if (assignmentId) {
     const assignmentExists = await prisma.assignment.findUnique({
-      where: { id: assignmentId, organizationId: currentOrganization.id },
+      where: { id: assignmentId },
     });
     if (!assignmentExists) {
       return new NextResponse(
@@ -34,7 +34,7 @@ export async function DELETE(
     // Delete the assignment
     try {
       const assignment = await prisma.assignment.delete({
-        where: { id: assignmentId, organizationId: currentOrganization.id },
+        where: { id: assignmentId },
       });
 
       return new NextResponse(JSON.stringify(assignment), {

@@ -7,12 +7,11 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { userId: string } },
 ) {
- 
   const { userId, currentOrganization, userRole } =
     await getServerSessionUserInfo();
 
-   // Get the requested userId from the slug
-   const requestedUserId = params.userId;
+  // Get the requested userId from the slug
+  const requestedUserId = params.userId;
 
   // Allow only admins to update users
   if (userRole !== "ADMIN") {
@@ -30,11 +29,6 @@ export async function PATCH(
   const userExists = await prisma.user.findUnique({
     where: {
       id: requestedUserId,
-      OrganizationMembership: {
-        some: {
-          organizationId: currentOrganization.id,
-        },
-      },
     },
   });
   if (!userExists) {

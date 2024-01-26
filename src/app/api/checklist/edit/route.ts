@@ -1,17 +1,16 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import {
   Checklist,
   Option,
   Question,
 } from "@/app/common/types/CreateOrEditChecklist";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
 
 export async function PATCH(request: NextRequest) {
-  // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  // Get the user role from the session
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Permission check to ensure only managers can access this route
   if (userRole === "USER") {

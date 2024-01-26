@@ -1,15 +1,13 @@
 // pages/api/checklists/index.ts
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import { Checklist } from "@/app/common/types/CreateOrEditChecklist";
 
 export async function POST(request: NextRequest) {
   // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
-  const userId = session?.user?.id;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
   let teamId;
 
   // Permission check to ensure only admins and managers can access this route
@@ -55,6 +53,7 @@ export async function POST(request: NextRequest) {
         name: checklistData.name,
         managerId: userId as string,
         teamId: teamId, // teamId can be null
+        organizationId: currentOrganization.id,
         questions: {
           create: checklistData.questions.map((q) => ({
             content: q.content,

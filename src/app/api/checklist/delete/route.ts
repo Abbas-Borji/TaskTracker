@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 export async function DELETE(request: NextRequest) {
-  // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  // Get the userRole from the session
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
   // Extract checklistId from the query parameter, if present
   const url = request.nextUrl;
   const checklistIdQuery = url.searchParams.get("checklistId");

@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
   // Validate checklist
   const checklist = await prisma.checklist.findUnique({
-    where: { id: checklistId, organizationId: currentOrganization.id },
+    where: { id: checklistId },
   });
   if (!checklist) {
     return new NextResponse(
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     if (teamId) {
       // Validate team
       const team = await prisma.team.findUnique({
-        where: { id: teamId, organizationId: currentOrganization.id },
+        where: { id: teamId },
       });
       if (!team) {
         return new NextResponse(
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     if (teamId) {
       // Validate team
       const team = await prisma.team.findUnique({
-        where: { id: teamId, organizationId: currentOrganization.id },
+        where: { id: teamId },
       });
       if (!team) {
         return new NextResponse(
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     // Update checklist using the provided teamId
     const updatedChecklist = await prisma.checklist.update({
-      where: { id: checklistId, organizationId: currentOrganization.id },
+      where: { id: checklistId },
       data: { teamId },
     });
   }
@@ -122,7 +122,6 @@ export async function POST(request: NextRequest) {
   const existingAssignments = await prisma.assignment.findMany({
     where: {
       employeeId: { in: employeeIds },
-      organizationId: currentOrganization.id,
       checklistId,
     },
   });
