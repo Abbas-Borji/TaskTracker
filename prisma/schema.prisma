@@ -212,10 +212,13 @@ model Account {
 
 model Department {
     id             Int           @id @default(autoincrement())
-    name           String        @unique
+    name           String
     createdAt      DateTime      @default(now())
     updatedAt      DateTime      @updatedAt
     users          User[]
     Organization   Organization? @relation(fields: [organizationId], references: [id])
     organizationId Int?
+
+    @@unique([name, organizationId])
 }
+
