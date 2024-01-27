@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 interface User {
   id: string;
@@ -14,8 +13,8 @@ interface responseDepartment {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Allow only ADMINs
   if (userRole !== "ADMIN") {
@@ -26,13 +25,21 @@ export async function POST(request: NextRequest) {
   const { name, members }: responseDepartment = await request.json();
   console.log(name, members);
 
-  // Check for duplicate department
+  /// Check for duplicate department
   const isDepartmentDuplicate = await prisma.department.findUnique({
-    where: { name: name },
+    where: {
+      name_organizationId: {
+        name: name,
+        organizationId: currentOrganization.id,
+      },
+    },
   });
+
   if (isDepartmentDuplicate) {
     return new NextResponse(
-      JSON.stringify({ message: "Another department with the same name found." }),
+      JSON.stringify({
+        message: "Another department with the same name found.",
+      }),
       { status: 400 },
     );
   }
@@ -42,6 +49,11 @@ export async function POST(request: NextRequest) {
   const validMembers = await prisma.user.findMany({
     where: {
       id: { in: members.map((member) => member.id) },
+      OrganizationMembership: {
+        some: {
+          organizationId: currentOrganization.id,
+        },
+      },
     },
   });
 
@@ -54,16 +66,27 @@ export async function POST(request: NextRequest) {
 
   // Create department
   try {
+    // Step 1: Create the department
     const department = await prisma.department.create({
       data: {
         name: name,
-        users: {
-          connect: validMembers.map((member) => ({
-            id: member.id,
-          })),
-        },
+        organizationId: currentOrganization.id,
       },
     });
+
+    // Step 2: Associate users with the newly created department
+    await Promise.all(
+      validMembers.map((member) =>
+        prisma.departmentMembership.create({
+          data: {
+            userId: member.id,
+            departmentId: department.id,
+            organizationId: currentOrganization.id,
+          },
+        }),
+      ),
+    );
+
     return new NextResponse(JSON.stringify(department), { status: 201 });
   } catch (error) {
     return new NextResponse(

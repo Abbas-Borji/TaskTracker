@@ -50,21 +50,28 @@ export async function GET(
             role: true,
           },
         },
-        Department: {
+        DepartmentMembership: {
+          where: {
+            organizationId: currentOrganization.id,
+          },
           select: {
-            id: true,
-            name: true,
+            department: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },
     });
 
     const user = {
-      ...userWithRole,
+      name: userWithRole?.name,
+      email: userWithRole?.email,
       role: userWithRole?.OrganizationMembership[0]?.role, // Each user has only one role per organization
+      Department: userWithRole?.DepartmentMembership[0]?.department,
     };
-
-    delete user.OrganizationMembership;
 
     return new NextResponse(JSON.stringify(user), {
       status: 200,

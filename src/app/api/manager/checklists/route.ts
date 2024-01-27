@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 export async function GET(request: NextRequest) {
   // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Permission check to ensure only managers can access this route
   if (userRole === "ADMIN" || userRole === "USER") {
@@ -18,6 +16,7 @@ export async function GET(request: NextRequest) {
   const checklists = await prisma.checklist.findMany({
     where: {
       managerId: userId,
+      organizationId: currentOrganization.id,
     },
     include: {
       team: true,

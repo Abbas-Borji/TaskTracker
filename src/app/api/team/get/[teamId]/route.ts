@@ -1,5 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
-import { getServerSession } from "next-auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
 
@@ -19,8 +18,8 @@ export async function GET(
   { params }: { params: { teamId: number } },
 ) {
   // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Permission check to ensure only ADMINS can access this route
   if (userRole !== "ADMIN") {

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import prisma from "prisma/client";
 
 interface Submission {
@@ -17,9 +16,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { assignmentId: string } },
 ) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user.role;
-  const userId = session!.user.id;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
+
   // Only users can submit
   if (userRole === "ADMIN" || userRole === "MANAGER") {
     return new NextResponse("Permission denied", { status: 403 });
@@ -57,6 +56,7 @@ export async function POST(
       data: {
         userId,
         assignmentId,
+        organizationId: currentOrganization.id,
       },
     });
 

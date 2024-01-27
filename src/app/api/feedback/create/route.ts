@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 interface FeedbackData {
   submissionId: number;
@@ -9,9 +8,8 @@ interface FeedbackData {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
-  const userId = session?.user?.id;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Allow only MANAGERs and ADMINs
   if (userRole !== "MANAGER" && userRole !== "ADMIN") {
@@ -68,6 +66,7 @@ export async function POST(request: NextRequest) {
         assignmentId: submission.assignmentId,
         content: feedbackContent,
         managerId: userId!,
+        organizationId: currentOrganization.id,
       },
     });
     await prisma.submission.update({

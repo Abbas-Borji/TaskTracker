@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { submissionId: string } },
 ) {
   // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Allow only MANAGERs and ADMINs
   if (userRole !== "MANAGER" && userRole !== "ADMIN") {

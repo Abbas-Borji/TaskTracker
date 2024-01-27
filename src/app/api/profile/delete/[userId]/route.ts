@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { userId: string } },
 ) {
-  // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
-  // Extract userId
-  const userId = params.userId ? params.userId : null;
+  // Get the userInfo from the session
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
+
+  // Extract the requested userId
+  const reqUserId = params.userId ? params.userId : null;
 
   // Permission check to ensure only admins can access this route
   if (userRole !== "ADMIN") {
@@ -19,9 +19,16 @@ export async function DELETE(
   }
 
   // Validate the userId if it exists
-  if (userId) {
+  if (reqUserId) {
     const userExists = await prisma.user.findUnique({
-      where: { id: userId },
+      where: {
+        id: reqUserId,
+        OrganizationMembership: {
+          some: {
+            organizationId: currentOrganization.id,
+          },
+        },
+      },
     });
     if (!userExists) {
       return new NextResponse(JSON.stringify({ message: "User not found." }), {
@@ -31,7 +38,7 @@ export async function DELETE(
     // Delete the user
     try {
       const user = await prisma.user.delete({
-        where: { id: userId },
+        where: { id: reqUserId },
       });
 
       return new NextResponse(JSON.stringify(user), {

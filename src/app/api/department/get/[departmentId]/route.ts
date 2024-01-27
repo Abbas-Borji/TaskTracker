@@ -1,5 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
-import { getServerSession } from "next-auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
 
@@ -17,9 +16,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { departmentId: number } },
 ) {
-  // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  // Get the userRole from the session
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Permission check to ensure only ADMINS can access this route
   if (userRole !== "ADMIN") {
@@ -44,14 +43,19 @@ export async function GET(
     const department = await prisma.department.findUnique({
       where: { id: departmentId },
       include: {
-        users: {
+        DepartmentMembership: {
           select: {
-            id: true,
-            name: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },
     });
+
     if (!department) {
       return new NextResponse(
         JSON.stringify({ message: "Department not found." }),
@@ -62,7 +66,7 @@ export async function GET(
     } else {
       const restructuredDepartment: responseDepartment = {
         name: department.name,
-        members: department.users,
+        members: department.DepartmentMembership.map((dm) => dm.user),
       };
       return new NextResponse(JSON.stringify(restructuredDepartment), {
         status: 200,

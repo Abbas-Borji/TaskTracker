@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 interface User {
   id: string;
@@ -18,8 +17,8 @@ export async function PATCH(
   { params }: { params: { departmentId: string } },
 ) {
   // Get the user role from the session
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Permission check
   if (userRole !== "ADMIN") {
@@ -54,10 +53,11 @@ export async function PATCH(
   // Parse request body
   const departmentData: DepartmentData = await request.json();
 
-  // Check if department name is duplicated
+  // Check if department name is duplicated in this organization
   const departmentNameExists = await prisma.department.findFirst({
     where: {
       name: departmentData.name,
+      organizationId: currentOrganization.id,
       id: {
         not: departmentId, // Exclude the current department's name
       },
@@ -75,7 +75,14 @@ export async function PATCH(
   // Validate members
   const memberIds = departmentData.members.map((member) => member.id);
   const validMembers = await prisma.user.findMany({
-    where: { id: { in: memberIds } },
+    where: {
+      id: { in: memberIds },
+      OrganizationMembership: {
+        some: {
+          organizationId: currentOrganization.id,
+        },
+      },
+    },
   });
   if (memberIds.length !== validMembers.length) {
     return new NextResponse(JSON.stringify({ message: "Invalid members." }), {
@@ -90,47 +97,109 @@ export async function PATCH(
       where: { id: departmentId },
       data: { name: departmentData.name },
     });
+
     // Fetch existing department members
-    const existingMembers = await prisma.user.findMany({
-      where: { departmentId: departmentId },
+    const existingMembers = await prisma.departmentMembership.findMany({
+      where: {
+        departmentId: departmentId,
+        organizationId: currentOrganization.id,
+      },
+      select: {
+        userId: true,
+      },
     });
 
+    const existingMemberIds = existingMembers.map((member) => member.userId);
+
     // Get the IDs of members to be removed
-    const membersToRemove = existingMembers
-      .filter((member) => !memberIds.includes(member.id))
-      .map((member) => member.id);
+    const membersToRemove = existingMemberIds.filter(
+      (id) => !memberIds.includes(id),
+    );
 
     // Remove members no longer in the department
     if (membersToRemove.length > 0) {
-      await prisma.user.updateMany({
-        where: { id: { in: membersToRemove } },
-        data: { departmentId: null },
+      await prisma.departmentMembership.deleteMany({
+        where: {
+          departmentId: departmentId,
+          userId: { in: membersToRemove },
+        },
       });
     }
 
     // Add new members
     const newMemberIds = memberIds.filter(
-      (id) => !existingMembers.find((m) => m.id === id),
+      (id) => !existingMemberIds.includes(id),
     );
     if (newMemberIds.length > 0) {
-      await prisma.user.updateMany({
-        where: { id: { in: newMemberIds } },
-        data: { departmentId: departmentId },
-      });
+      await Promise.all(
+        newMemberIds.map(async (id) => {
+          // Check if the user is already a member of a department in this organization
+          const existingMembership =
+            await prisma.departmentMembership.findUnique({
+              where: {
+                userId_organizationId: {
+                  userId: id,
+                  organizationId: currentOrganization.id,
+                },
+              },
+            });
+
+          if (existingMembership) {
+            // Update existing membership
+            return prisma.departmentMembership.update({
+              where: {
+                userId_organizationId: {
+                  userId: id,
+                  organizationId: currentOrganization.id,
+                },
+              },
+              data: {
+                departmentId: departmentId,
+              },
+            });
+          } else {
+            // Create new membership
+            return prisma.departmentMembership.create({
+              data: {
+                departmentId: departmentId,
+                userId: id,
+                organizationId: currentOrganization.id,
+              },
+            });
+          }
+        }),
+      );
     }
 
     // Prepare response
     const updatedDepartment = await prisma.department.findUnique({
       where: { id: departmentId },
-      include: { users: true },
-    });
-
-    return new NextResponse(JSON.stringify(updatedDepartment), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
+      include: {
+        DepartmentMembership: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
+
+    return new NextResponse(
+      JSON.stringify({
+        ...updatedDepartment,
+        users: updatedDepartment?.DepartmentMembership.map((dm) => dm.user),
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
   } catch (error: any) {
     console.error("Update department error:", error.message);
     return new NextResponse(

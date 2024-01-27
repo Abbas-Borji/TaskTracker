@@ -1,15 +1,13 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
-import { getServerSession } from "next-auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "prisma/client"; // Adjust path as necessary
+import prisma from "prisma/client"; 
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { submissionId: string } },
 ) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
-  const userId = session?.user?.id;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Extract submissionId from the URL
   const submissionId = params.submissionId
@@ -21,7 +19,6 @@ export async function GET(
   }
 
   try {
-    // Assuming role and userId are defined
     let submission;
 
     switch (userRole) {
@@ -86,8 +83,6 @@ export async function GET(
       default:
         return new NextResponse("Undefined role.", { status: 400 });
     }
-
-    // Continue with the rest of your code
 
     if (!submission) {
       return new NextResponse("Submission not found.", { status: 404 });

@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { departmentId: string } },
 ) {
   // Get the userRole from the session
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Extract departmentId from URL
   const departmentId = params.departmentId ? Number(params.departmentId) : null;

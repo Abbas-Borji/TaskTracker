@@ -39,6 +39,7 @@ const UserModal = ({
   setUserData,
   isUserModalLoading,
 }: UserModalProps) => {
+
   const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserData((prevState) => ({
       ...prevState,

@@ -1,5 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
-import { getServerSession } from "next-auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
 
@@ -7,9 +6,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { userId: string } },
 ) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
-  const userId = session?.user?.id;
+  const { currentOrganization, userRole } = await getServerSessionUserInfo();
+
+  const userId = params.userId ? params.userId : null;
 
   if (!userId) {
     return new NextResponse("User ID is required.", { status: 400 });
@@ -22,17 +21,31 @@ export async function GET(
       select: {
         name: true,
         email: true,
-        Department: {
-          select: { name: true },
+        DepartmentMembership: {
+          select: {
+            department: {
+              select: {
+                name: true,
+              },
+            },
+          },
         },
       },
     });
+
+    const reshapedUser = {
+      name: user?.name,
+      email: user?.email,
+      Department: {
+        name: user?.DepartmentMembership[0]?.department.name,
+      },
+    };
 
     if (!user) {
       return new NextResponse("User not found.", { status: 404 });
     }
 
-    return new NextResponse(JSON.stringify(user), { status: 200 });
+    return new NextResponse(JSON.stringify(reshapedUser), { status: 200 });
   } catch (error) {
     console.error("Request error", error);
     return new NextResponse("Internal Server Error.", { status: 500 });

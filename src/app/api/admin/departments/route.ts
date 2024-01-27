@@ -31,10 +31,14 @@ export async function GET(req: NextRequest) {
       select: {
         id: true,
         name: true,
-        users: {
+        DepartmentMembership: {
           select: {
-            id: true,
-            name: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },
@@ -42,8 +46,12 @@ export async function GET(req: NextRequest) {
 
     const departmentsWithTotalNumberOfMembers: responseDepartment[] =
       departments.map((department) => ({
-        ...department,
-        totalMembers: department.users.length,
+        id: department.id,
+        name: department.name,
+        totalMembers: department.DepartmentMembership.length,
+        users: department.DepartmentMembership.map(
+          (membership) => membership.user,
+        ),
       }));
 
     return new NextResponse(
@@ -54,6 +62,7 @@ export async function GET(req: NextRequest) {
       },
     );
   } catch (error) {
+    console.error(error); // Log the error for debugging
     return new NextResponse(
       JSON.stringify({ message: "Internal Server Error." }),
       { status: 500 },

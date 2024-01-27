@@ -34,10 +34,17 @@ export async function GET(req: NextRequest) {
             role: true,
           },
         },
-        Department: {
+        DepartmentMembership: {
+          where: {
+            organizationId: currentOrganization.id,
+          },
           select: {
-            id: true,
-            name: true,
+            department: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },
@@ -49,8 +56,10 @@ export async function GET(req: NextRequest) {
         name: user.name,
         email: user.email,
         role: user.OrganizationMembership[0]?.role, // Each user has only one role per organization
-        departmentName: user.Department?.name,
-        department: user.Department,
+        department: user.DepartmentMembership.map((dm) => dm.department),
+        departmentName: user.DepartmentMembership.map(
+          (dm) => dm.department.name,
+        ),
       };
     });
 
@@ -59,6 +68,7 @@ export async function GET(req: NextRequest) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
+    console.error(error); // Log the error for debugging
     return new NextResponse(
       JSON.stringify({ message: "Internal Server Error." }),
       { status: 500 },

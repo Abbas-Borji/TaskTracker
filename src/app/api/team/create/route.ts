@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 interface User {
   id: string;
@@ -15,8 +14,8 @@ interface TeamData {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Allow only ADMINs
   if (userRole !== "ADMIN") {
@@ -53,6 +52,11 @@ export async function POST(request: NextRequest) {
   const validMembers = await prisma.user.findMany({
     where: {
       id: { in: members.map((member) => member.id) },
+      OrganizationMembership: {
+        some: {
+          organizationId: currentOrganization.id,
+        },
+      },
     },
   });
 
@@ -74,6 +78,7 @@ export async function POST(request: NextRequest) {
       data: {
         name: name,
         manager: { connect: { id: manager.id } },
+        Organization: { connect: { id: currentOrganization.id } },
         MemberOf: {
           create: [
             ...membersWithoutManager.map((member) => ({

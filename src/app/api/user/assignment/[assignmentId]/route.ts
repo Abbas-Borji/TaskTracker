@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { assignmentId: string } },
 ) {
   // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Permission check to ensure only users can access this route
   if (userRole === "ADMIN" || userRole === "MANAGER") {
@@ -23,7 +21,7 @@ export async function GET(
   try {
     // Get the assignment from the database
     const assignment = await prisma.assignment.findUnique({
-      where: { id: assignmentId, AND: { employeeId: userId } },
+      where: { id: assignmentId, employeeId: userId },
       include: {
         checklist: {
           include: {
@@ -69,9 +67,8 @@ export async function PATCH(
   { params }: { params: { assignmentId: string } },
 ) {
   // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Permission check to ensure only users can access this route
   if (userRole === "ADMIN" || userRole === "MANAGER") {

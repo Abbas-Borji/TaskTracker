@@ -1,5 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
-import { getServerSession } from "next-auth";
+import { getServerSessionUserInfo } from "@/app/common/functions/getServerSessionUserInfo";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "prisma/client";
 
@@ -19,8 +18,8 @@ export async function PATCH(
   { params }: { params: { teamId: number } },
 ) {
   // Get the userId from the session
-  const session = await getServerSession(authOptions);
-  const userRole = session?.user?.role;
+  const { userId, currentOrganization, userRole } =
+    await getServerSessionUserInfo();
 
   // Permission check to ensure only ADMINS can access this route
   if (userRole !== "ADMIN") {
@@ -53,7 +52,14 @@ export async function PATCH(
   // Validate manager
   // Check if manager is a valid user
   const validManager = await prisma.user.findUnique({
-    where: { id: teamData.manager.id },
+    where: {
+      id: teamData.manager.id,
+      OrganizationMembership: {
+        some: {
+          organizationId: currentOrganization.id,
+        },
+      },
+    },
   });
   if (!validManager) {
     return new NextResponse(JSON.stringify({ message: "Invalid manager." }), {
@@ -66,6 +72,11 @@ export async function PATCH(
   const validMembers = await prisma.user.findMany({
     where: {
       id: { in: teamData.members.map((member) => member.id) },
+      OrganizationMembership: {
+        some: {
+          organizationId: currentOrganization.id,
+        },
+      },
     },
   });
 
