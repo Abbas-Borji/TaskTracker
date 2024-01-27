@@ -10,8 +10,10 @@ import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ManagerChecklistCard from "../team/[teamId]/components/ManagerChecklistCard";
+import { useSession } from "next-auth/react";
 
 const MyChecklists = () => {
+  const { status, data: session } = useSession();
   const router = useRouter();
   const [checklists, setChecklists] = useState<ManagerChecklist[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Added loading state
@@ -110,13 +112,18 @@ const MyChecklists = () => {
               checklist={item}
               key={index}
               onDelete={handleDelete}
+              organization={session?.user.currentOrganization.urlSegment}
             />
           )
         }
         actionButton={
           <Button
             text="Create"
-            onClick={() => router.push("/manager/checklist/create")}
+            onClick={() =>
+              router.push(
+                `/${session?.user.currentOrganization.urlSegment}/manager/checklist/create`,
+              )
+            }
           />
         }
       />

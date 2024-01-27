@@ -94,28 +94,51 @@ export async function PATCH(
 
   // Update the user
   try {
-    // Update the user
+    // Update basic user information
     const updatedUser = await prisma.user.update({
       where: { id: requestedUserId },
       data: {
         name: profileData.name,
         email: profileData.email,
-        departmentId: profileData.Department ? profileData.Department.id : null,
       },
     });
 
-    // Update the role in OrganizationMembership
-    const updatedMembership = await prisma.organizationMembership.update({
-      where: {
-        userId_organizationId: {
+    // Handle department membership update
+    if (profileData.Department) {
+      // Remove existing department memberships
+      await prisma.departmentMembership.deleteMany({
+        where: { userId: requestedUserId },
+      });
+
+      // Add new department membership
+      await prisma.departmentMembership.create({
+        data: {
           userId: requestedUserId,
+          departmentId: profileData.Department.id,
           organizationId: currentOrganization.id,
         },
-      },
-      data: {
-        role: profileData.role,
-      },
-    });
+      });
+    } else {
+      // If no department is provided, remove existing memberships
+      await prisma.departmentMembership.deleteMany({
+        where: { userId: requestedUserId },
+      });
+    }
+
+    // Update the role in OrganizationMembership
+    if (profileData.role) {
+      await prisma.organizationMembership.update({
+        where: {
+          userId_organizationId: {
+            userId: requestedUserId,
+            organizationId: currentOrganization.id,
+          },
+        },
+        data: {
+          role: profileData.role,
+        },
+      });
+    }
 
     return new NextResponse(JSON.stringify(updatedUser), {
       status: 200,

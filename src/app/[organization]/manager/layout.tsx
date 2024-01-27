@@ -9,18 +9,9 @@ import {
 } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import React, { Fragment, useState, useEffect } from "react";
-import Sidebar from "../common/components/Sidebar";
-import UserAvatar from "../common/components/UserAvatar";
-import classNames from "../common/functions/ClassNames";
-
-const tabs = [
-  {
-    name: "My Checklists",
-    href: "/manager/mychecklists",
-    icon: DocumentDuplicateIcon,
-    current: true,
-  },
-];
+import Sidebar from "@/app/common/components/Sidebar";
+import UserAvatar from "@/app/common/components/UserAvatar";
+import classNames from "@/app/common/functions/ClassNames";
 
 interface SearchResult {
   id: number;
@@ -34,9 +25,20 @@ const ManagerNavigationLayout = ({
   children: React.ReactNode;
 }) => {
   const { status, data: session } = useSession();
+  const tabs = [
+    {
+      name: "My Checklists",
+      href: `/${session?.user.currentOrganization.urlSegment}/manager/mychecklists`,
+      icon: DocumentDuplicateIcon,
+      current: true,
+    },
+  ];
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const userNavigation = [
-    { name: "Your profile", href: "/manager/profile/" + session?.user?.id },
+    {
+      name: "Your profile",
+      href: `/${session?.user.currentOrganization.urlSegment}/manager/profile/${session?.user?.id}`,
+    },
     { name: "Sign out", href: "/api/auth/signout" },
   ];
 

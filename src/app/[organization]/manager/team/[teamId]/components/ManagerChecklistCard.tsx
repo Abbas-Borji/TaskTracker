@@ -6,11 +6,13 @@ import AssignmentModal from "@/app/common/components/AssignModal";
 
 interface ManagerChecklistCardProps {
   checklist: ManagerChecklist;
+  organization: string | undefined;
   onDelete: (id: number) => void;
 }
 
 const ManagerChecklistCard = ({
   checklist,
+  organization,
   onDelete,
 }: ManagerChecklistCardProps) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -53,8 +55,7 @@ const ManagerChecklistCard = ({
               {
                 label: "Edit",
                 type: "link",
-                href:
-                  `/manager/checklist/edit?checklistId=` + checklist.info.id,
+                href: `/${organization}/manager/checklist/edit?checklistId=${checklist.info.id}`,
               },
               {
                 label: "Assign to",

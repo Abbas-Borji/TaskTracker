@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ManagerChecklistCard from "./ManagerChecklistCard";
 import ManagerSubmissionCard from "./ManagerSubmissionCard";
+import { useSession } from "next-auth/react";
 
 interface Team {
   name: string | null;
@@ -22,6 +23,7 @@ type ChecklistsProps = {
 };
 
 const TeamChecklists = ({ teamId }: ChecklistsProps) => {
+  const { status, data: session } = useSession();
   const router = useRouter();
   const [team, setTeam] = useState<Team>({ name: null });
   const [checklists, setChecklists] = useState<Checklist[]>([]);
@@ -129,6 +131,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
                   checklist={item}
                   key={index}
                   onDelete={handleDelete}
+                  organization={session?.user.currentOrganization.urlSegment}
                 />
               )
             }
@@ -152,7 +155,11 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
               isLoading ? (
                 <CardSkeleton key={index} />
               ) : (
-                <ManagerSubmissionCard submission={item} key={index} />
+                <ManagerSubmissionCard
+                  submission={item}
+                  key={index}
+                  organization={session?.user.currentOrganization.urlSegment}
+                />
               )
             }
             onViewBack={handleViewDefault}
@@ -172,6 +179,7 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
                     checklist={item}
                     key={index}
                     onDelete={handleDelete}
+                    organization={session?.user.currentOrganization.urlSegment}
                   />
                 )
               }
@@ -192,7 +200,11 @@ const TeamChecklists = ({ teamId }: ChecklistsProps) => {
                 isLoading ? (
                   <CardSkeleton key={index} />
                 ) : (
-                  <ManagerSubmissionCard submission={item} key={index} />
+                  <ManagerSubmissionCard
+                    submission={item}
+                    key={index}
+                    organization={session?.user.currentOrganization.urlSegment}
+                  />
                 )
               }
               onViewAll={() => handleViewAll("submissions")}

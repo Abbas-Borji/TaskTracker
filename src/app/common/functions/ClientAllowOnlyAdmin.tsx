@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 const AllowOnlyAdmin = () => {
   const session = useSession();
-  const userRole = session.data?.user?.role;
+  const userRole = session.data?.user.currentOrganization.role;
   const router = useRouter();
   if (userRole === "MANAGER" || userRole === "USER") {
     router.replace("/redirect");

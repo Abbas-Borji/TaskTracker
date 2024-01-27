@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import React, { Fragment } from "react";
 import Badge from "./Badge";
 import ComboBox from "./ComboBox";
-import { ComboBoxItem } from "@/app/admin/departments/page";
+import { ComboBoxItem } from "@/app/[organization]/admin/departments/page";
 import CircularProgress from "@mui/material/CircularProgress";
 
 interface DepartmentModalProps {
@@ -32,7 +32,7 @@ const DepartmentModal = ({
   selectedMembers,
   setSelectedMembers,
   isEmployeeLoading,
-  isDepartmentProvided
+  isDepartmentProvided,
 }: DepartmentModalProps) => {
   // Handle member selection
   const handleSelectMember = (item: ComboBoxItem) => {
