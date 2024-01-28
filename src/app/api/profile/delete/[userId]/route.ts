@@ -7,11 +7,11 @@ export async function DELETE(
   { params }: { params: { userId: string } },
 ) {
   // Get the userInfo from the session
-  const { userId, currentOrganization, userRole } =
+  const { currentOrganization, userRole } =
     await getServerSessionUserInfo();
 
   // Extract the requested userId
-  const reqUserId = params.userId ? params.userId : null;
+  const userId = params.userId ? params.userId : null;
 
   // Permission check to ensure only admins can access this route
   if (userRole !== "ADMIN") {
@@ -19,10 +19,10 @@ export async function DELETE(
   }
 
   // Validate the userId if it exists
-  if (reqUserId) {
+  if (userId) {
     const userExists = await prisma.user.findUnique({
       where: {
-        id: reqUserId,
+        id: userId,
         OrganizationMembership: {
           some: {
             organizationId: currentOrganization.id,
@@ -38,7 +38,7 @@ export async function DELETE(
     // Delete the user
     try {
       const user = await prisma.user.delete({
-        where: { id: reqUserId },
+        where: { id: userId },
       });
 
       return new NextResponse(JSON.stringify(user), {

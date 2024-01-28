@@ -46,8 +46,8 @@ model OrganizationMembership {
     userId         String
     organizationId Int
     role           Role         @default(USER)
-    user           User         @relation(fields: [userId], references: [id])
-    organization   Organization @relation(fields: [organizationId], references: [id])
+    user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
     @@id([userId, organizationId])
 }
@@ -227,9 +227,9 @@ model DepartmentMembership {
     departmentId   Int
     organizationId Int
 
-    user         User         @relation(fields: [userId], references: [id])
-    department   Department   @relation(fields: [departmentId], references: [id])
-    organization Organization @relation(fields: [organizationId], references: [id])
+    user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    department   Department   @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+    organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
     @@id([userId, departmentId, organizationId])
     @@unique([userId, organizationId])
