@@ -79,7 +79,11 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token }) {
+    async jwt({ token, trigger, session }) {
+      if (trigger === "update" && session?.name) {
+        token.name = session.name
+      }
+
       if (!token.sub) return token;
       const existingUser = await prisma.user.findUnique({
         where: { id: token.sub },

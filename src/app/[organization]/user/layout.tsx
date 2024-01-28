@@ -25,6 +25,8 @@ const UserNavigationLayout = ({
 }) => {
   const organizationUrlSegment = params?.organization;
   const { data: session } = useSession();
+  const userImage = session?.user?.image;
+  const userName = session?.user?.name;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const userNavigation = [
     {
@@ -100,7 +102,7 @@ const UserNavigationLayout = ({
                   <Menu as="div" className="relative">
                     <Menu.Button className="-m-1.5 flex items-center p-1.5">
                       <span className="sr-only">Open user menu</span>
-                      <UserAvatar session={session} />
+                      <UserAvatar userImage={userImage} userName={userName} />
                       <span className="hidden xl:flex xl:items-center">
                         <span
                           className="ml-4 text-sm font-semibold leading-6 text-gray-900"

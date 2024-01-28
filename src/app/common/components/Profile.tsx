@@ -22,9 +22,12 @@ interface ProfileEditableData {
   fullName: string;
 }
 
-const Profile = () => {
-  const { data: session, update: sessionUpdate } = useSession();
-  const userId = session?.user?.id;
+interface ProfileProps {
+  userId: string | null;
+}
+
+const Profile = ({ userId }: ProfileProps) => {
+  const { data: session, status, update } = useSession();
   const [isEditingName, setIsEditingName] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,14 +38,7 @@ const Profile = () => {
 
   const updateSession = async () => {
     // After updating the name in database, update the session
-    const updatedSession = await sessionUpdate({
-      ...session,
-      user: {
-        ...session?.user,
-        name: fullName,
-      },
-    });
-    window.location.reload();
+    if (session) update({ name: fullName });
   };
 
   useEffect(() => {
@@ -66,7 +62,9 @@ const Profile = () => {
         setIsLoading(false);
       }
     };
-    fetchProfile();
+    if (userId) {
+      fetchProfile();
+    }
   }, [userId]);
 
   const handleUpdate = async () => {
@@ -75,7 +73,6 @@ const Profile = () => {
     const profileData: ProfileEditableData = {
       fullName,
     };
-    console.log(profileData);
     const response = await fetch(`/api/profile/update/${userId}`, {
       method: "PATCH",
       headers: {
