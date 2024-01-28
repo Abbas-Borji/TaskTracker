@@ -7,9 +7,14 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 interface ActionButtonsProps {
   checklistId: number;
   onDelete: (id: number) => void;
+  organization: string;
 }
 
-const ActionButtons = ({ checklistId, onDelete }: ActionButtonsProps) => {
+const ActionButtons = ({
+  checklistId,
+  onDelete,
+  organization,
+}: ActionButtonsProps) => {
   // Assign Modal
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const handleCloseAssignModal = () => {
@@ -31,7 +36,7 @@ const ActionButtons = ({ checklistId, onDelete }: ActionButtonsProps) => {
       />
       <div className="flex">
         <Link
-          href={`/admin/checklist/edit?checklistId=` + checklistId}
+          href={`/${organization}/admin/checklist/edit?checklistId=${checklistId}`}
           className="mr-4 px-2 font-medium text-primary"
         >
           Edit

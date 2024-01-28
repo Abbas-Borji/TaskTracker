@@ -6,12 +6,14 @@ interface ActionButtonsProps {
   assignmentId: number;
   checklistId: number;
   onDelete: (id: number) => void;
+  organization: string;
 }
 
 const ActionButtons = ({
   assignmentId,
   checklistId,
   onDelete,
+  organization,
 }: ActionButtonsProps) => {
   const handleDelete = () => {
     onDelete(assignmentId);
@@ -19,7 +21,7 @@ const ActionButtons = ({
   return (
     <div className="flex">
       <Link
-        href={`/admin/checklist/edit?checklistId=` + checklistId}
+        href={`/${organization}/admin/checklist/edit?checklistId=${checklistId}`}
         className="mr-4 px-2 font-medium text-primary"
       >
         Edit Checklist

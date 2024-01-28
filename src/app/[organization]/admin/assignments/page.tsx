@@ -33,7 +33,7 @@ interface Assignment {
   dueDate: string;
 }
 
-const AssignmentsTable = () => {
+const AssignmentsTable = ({ params }: { params: { organization: string } }) => {
   const columns = [
     { title: "ID", dataKey: "id", sortable: true },
     { title: "Checklist", dataKey: "checklistName", sortable: true },
@@ -48,6 +48,7 @@ const AssignmentsTable = () => {
           assignmentId={rowData.id}
           checklistId={rowData.checklistId}
           onDelete={handleDelete}
+          organization={params.organization}
         />
       ),
     },

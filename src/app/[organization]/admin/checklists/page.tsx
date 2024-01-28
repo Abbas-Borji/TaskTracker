@@ -30,7 +30,7 @@ interface Checklist {
   totalQuestions: number;
 }
 
-const ChecklistsTable = () => {
+const ChecklistsTable = ({ params }: { params: { organization: string } }) => {
   const columns = [
     { title: "ID", dataKey: "id", sortable: true },
     { title: "Name", dataKey: "name", sortable: true },
@@ -43,6 +43,7 @@ const ChecklistsTable = () => {
         <ActionButtons
           checklistId={rowData.id}
           onDelete={handleDelete}
+          organization={params.organization}
         />
       ),
     },
