@@ -18,8 +18,7 @@ export async function PATCH(
   { params }: { params: { teamId: number } },
 ) {
   // Get the userId from the session
-  const { userId, currentOrganization, userRole } =
-    await getServerSessionUserInfo();
+  const { currentOrganization, userRole } = await getServerSessionUserInfo();
 
   // Permission check to ensure only ADMINS can access this route
   if (userRole !== "ADMIN") {
@@ -89,6 +88,20 @@ export async function PATCH(
 
   // Update the team
   try {
+    // Fetch the current manager's ID
+    const currentTeam = await prisma.team.findUnique({
+      where: { id: teamId },
+      select: { managerId: true },
+    });
+
+    if (!currentTeam) {
+      throw new Error("Team not found");
+    }
+
+    const oldManagerId = currentTeam.managerId;
+    const newManagerId = teamData.manager.id;
+    const newManagerName = teamData.manager.name;
+
     // First, update the team's basic information
     const updatedTeam = await prisma.team.update({
       where: { id: teamId },
@@ -97,13 +110,33 @@ export async function PATCH(
       },
     });
 
-    // Update the manager
-    await prisma.team.update({
-      where: { id: teamId },
-      data: {
-        manager: { connect: { id: teamData.manager.id } },
-      },
-    });
+    // Update the manager if changed
+    if (oldManagerId !== newManagerId) {
+      await prisma.team.update({
+        where: { id: teamId },
+        data: {
+          manager: { connect: { id: newManagerId } },
+        },
+      });
+
+      // Add new manager to team members if not already a member
+      const isManagerAlreadyMember = await prisma.memberOf.findUnique({
+        where: {
+          userId_teamId: {
+            userId: newManagerId,
+            teamId: teamId,
+          },
+        },
+      });
+
+      // Add new manager to teamData.members if not already present
+      if (!isManagerAlreadyMember) {
+        if (!teamData.members.some((member) => member.id === newManagerId)) {
+          const newManager = { id: newManagerId, name: newManagerName };
+          teamData.members.push(newManager);
+        }
+      }
+    }
 
     // Fetch existing users for this team
     const existingMembers = await prisma.memberOf.findMany({
